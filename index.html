@@ -32,11 +32,14 @@ button{cursor:pointer;background:none;border:0;padding:0;touch-action:manipulati
 .glow{position:absolute;pointer-events:none;width:120vmax;height:70vmax;left:50%;top:-38vmax;transform:translateX(-50%);background:radial-gradient(closest-side,color-mix(in srgb,var(--up) 13%,transparent),transparent);transition:background 1s;animation:gl 12s ease-in-out infinite alternate}
 .app[data-trend="down"] .glow{background:radial-gradient(closest-side,color-mix(in srgb,var(--down) 12%,transparent),transparent)}
 @keyframes gl{to{transform:translateX(-46%) scale(1.08)}}
-.scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
-.wrap{max-width:720px;margin:0 auto;padding:0 var(--gxr) calc(120px + env(safe-area-inset-bottom,0px)) var(--gx)}
+.panes{position:absolute;inset:0;overflow:hidden;transform-origin:50% 0;transition:transform .6s cubic-bezier(.2,1.05,.3,1),filter .6s,border-radius .6s}
+.pane{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;visibility:hidden;pointer-events:none;contain:strict}
+.pane.on{visibility:visible;pointer-events:auto}
+.pane.out{pointer-events:none}
+.wrap{max-width:720px;margin:0 auto;padding:calc(62px + env(safe-area-inset-top,0px)) var(--gxr) calc(130px + env(safe-area-inset-bottom,0px)) var(--gx)}
 
 /* header */
-.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;margin:0 calc(-1*var(--gxr)) 0 calc(-1*var(--gx));padding:calc(12px + env(safe-area-inset-top,0px)) var(--gxr) 12px var(--gx);transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
+.top{position:absolute;top:0;left:0;right:0;z-index:25;display:flex;align-items:center;gap:12px;padding:calc(12px + env(safe-area-inset-top,0px)) max(var(--gxr),calc((100% - 720px)/2 + var(--gxr))) 12px max(var(--gx),calc((100% - 720px)/2 + var(--gx)));transition:background .3s,backdrop-filter .3s,border-color .3s;border-bottom:1px solid transparent}
 .app.scrolled .top{background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border-color:var(--line)}
 .logo{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--acc);color:var(--acc-ink);flex:none;box-shadow:0 8px 24px -8px color-mix(in srgb,var(--up) 70%,transparent)}
 .logo svg{width:19px;height:19px}
@@ -52,13 +55,10 @@ button{cursor:pointer;background:none;border:0;padding:0;touch-action:manipulati
 .avatar svg{width:18px;height:18px}
 
 /* views */
-.view{animation:vIn .55s var(--ease) both}
-@keyframes vIn{from{opacity:0;transform:translateY(16px)}}
-.view.back{animation-name:vInB}@keyframes vInB{from{opacity:0;transform:translateY(-10px)}}
 .vt{font-size:clamp(30px,8vw,40px);font-weight:700;letter-spacing:-.04em;margin:14px 0 4px;line-height:1.05}
 .vs{font-size:14.5px;color:var(--mute);margin:0 0 18px}
-.st-in>*{animation:rise .6s var(--ease) both}
-.st-in>*:nth-child(1){animation-delay:.04s}.st-in>*:nth-child(2){animation-delay:.09s}.st-in>*:nth-child(3){animation-delay:.14s}.st-in>*:nth-child(4){animation-delay:.19s}.st-in>*:nth-child(5){animation-delay:.24s}.st-in>*:nth-child(6){animation-delay:.29s}.st-in>*:nth-child(7){animation-delay:.34s}.st-in>*:nth-child(n+8){animation-delay:.38s}
+.ent .st-in>*{animation:rise .6s var(--ease) both}
+.ent .st-in>*:nth-child(1){animation-delay:.03s}.ent .st-in>*:nth-child(2){animation-delay:.07s}.ent .st-in>*:nth-child(3){animation-delay:.11s}.ent .st-in>*:nth-child(4){animation-delay:.15s}.ent .st-in>*:nth-child(5){animation-delay:.19s}.ent .st-in>*:nth-child(n+6){animation-delay:.23s}
 @keyframes rise{from{opacity:0;transform:translateY(18px) scale(.98)}}
 .card{background:var(--p1);border:1px solid var(--line);border-radius:24px;padding:18px;position:relative;overflow:hidden}
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:28px 0 12px}
@@ -372,25 +372,9 @@ html,body{overscroll-behavior:none}
 button{transition:transform .35s var(--spring)}
 button:active:not(:disabled){transform:scale(.96)}
 .dock button:active{transform:scale(.9)}
-/* view transitions */
-main#view{view-transition-name:pg}
-::view-transition-old(root),::view-transition-new(root){animation:none}
-::view-transition-group(pg){animation-duration:.5s}
-::view-transition-old(pg){animation:vtOut .28s cubic-bezier(.4,0,1,1) both}
-::view-transition-new(pg){animation:vtIn .55s var(--ease) both}
-[data-dir="b"]::view-transition-old(pg){animation-name:vtOutB}
-[data-dir="b"]::view-transition-new(pg){animation-name:vtInB}
-@keyframes vtOut{to{opacity:0;transform:translateX(-36px) scale(.98);filter:blur(6px)}}
-@keyframes vtIn{from{opacity:0;transform:translateX(48px) scale(.98);filter:blur(8px)}}
-@keyframes vtOutB{to{opacity:0;transform:translateX(36px) scale(.98);filter:blur(6px)}}
-@keyframes vtInB{from{opacity:0;transform:translateX(-48px) scale(.98);filter:blur(8px)}}
-.view{animation:vIn .6s var(--ease) both}
-@keyframes vIn{from{opacity:0;transform:translateX(30px);filter:blur(6px)}}
-.view.back{animation-name:vInB}@keyframes vInB{from{opacity:0;transform:translateX(-30px);filter:blur(6px)}}
-.view.vtx,.view.quiet{animation:none}
 .quiet .st-in>*,.quiet .tile,.quiet .rw span,.quiet .hc,.quiet .chip,.quiet .spsv{animation:none!important;clip-path:none}
 /* scroll reveal */
-.st-in>.rv{animation:none}
+.ent .st-in>.rv{animation:none}
 .rv{opacity:0;transform:translateY(26px) scale(.985);transition:opacity .7s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0)*70ms)}
 .rv.in{opacity:1;transform:none}
 .quiet .rv{transition:none}
@@ -447,23 +431,21 @@ main#view{view-transition-name:pg}
 .sbody.fresh>*:nth-child(1){animation-delay:.08s}.sbody.fresh>*:nth-child(2){animation-delay:.14s}.sbody.fresh>*:nth-child(3){animation-delay:.2s}.sbody.fresh>*:nth-child(4){animation-delay:.26s}.sbody.fresh>*:nth-child(n+5){animation-delay:.32s}
 .sheet.on .s-orb{animation:orb .9s var(--spring) .15s both}
 @keyframes orb{from{transform:scale(.4) rotate(-30deg);opacity:0}}
-.app.sheet-open .scroll{transform:scale(.94) translateY(10px);border-radius:28px;filter:brightness(.8)}
-.scroll{transition:transform .6s cubic-bezier(.2,1.05,.3,1),border-radius .6s,filter .6s;transform-origin:50% 0}
+.app.sheet-open .panes,.app.sheet-open .top{transform:scale(.94) translateY(10px);border-radius:28px;filter:brightness(.75)}
+.top{transform-origin:50% 0;transition:transform .6s cubic-bezier(.2,1.05,.3,1),filter .6s,background .3s,border-color .3s}
 .app.sheet-open .dock{transform:translate(-50%,140%);opacity:0}
 .dock{transition:transform .55s var(--spring),opacity .4s}
 .toast{display:flex;align-items:center;gap:8px;justify-content:center}
 .toast::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--up);flex:none;box-shadow:0 0 10px var(--up)}
-@media (min-width:900px){.app.sheet-open .scroll{transform:none;filter:brightness(.85);border-radius:0}}
+@media (min-width:900px){.app.sheet-open .panes,.app.sheet-open .top{transform:none;filter:brightness(.85);border-radius:0}}
 @media (prefers-reduced-motion: reduce){.rv{opacity:1;transform:none}.spsv{clip-path:none}}
 
 /* ===== v5 scroll choreography ===== */
-.zs{scale:var(--zs,1);translate:0 var(--zy,0px);transform-origin:50% 50%}
-.zs.zo,.zs.rv.in.settled{opacity:var(--zo,1)}
 .rv.settled{transition:transform .35s var(--spring);transition-delay:0s}
-.hero .price{transform-origin:0 85%;will-change:transform,opacity,filter}
+.hero .price{transform-origin:0 0;will-change:transform}
 .hero .lab,.hero .chg,.hero .chartw{will-change:transform,opacity}
 .glow{will-change:translate}
-.carousel .hc{scale:var(--cs,1);filter:brightness(var(--cb,1));transform-origin:100% 50%}
+.carousel .hc{transform-origin:100% 50%}
 .mini{display:flex;align-items:center;gap:6px;height:34px;max-width:0;padding:0;border:0 solid var(--line2);border-radius:99px;background:color-mix(in srgb,var(--p2) 85%,transparent);overflow:hidden;white-space:nowrap;opacity:0;transform:translateY(-10px) scale(.8);pointer-events:none;flex:none;font-variant-numeric:tabular-nums;transition:max-width .55s var(--spring),padding .55s var(--spring),opacity .3s,transform .55s var(--spring),border-width .3s}
 .app.mini-on .mini{max-width:190px;padding:0 10px 0 9px;border-width:1px;opacity:1;transform:none;pointer-events:auto}
 .mini i{width:6px;height:6px;border-radius:50%;background:var(--up);flex:none;animation:live 2s infinite}
@@ -481,24 +463,91 @@ main#view{view-transition-name:pg}
 .app.titled .hd2 b{animation:none}
 .og-h{position:sticky;top:calc(63px + env(safe-area-inset-top,0px));z-index:6;margin-left:-6px;margin-right:-6px;padding:8px 10px;border-radius:14px;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%)}
 @media (max-width:380px){.mini .ms2{display:none}.app.mini-on .mini{max-width:130px}.app.titled .hd2 b{font-size:15px}}
-@media (prefers-reduced-motion: reduce){.zs{scale:1;translate:none}.zs.zo,.zs.rv.in.settled{opacity:1}}
+
+
+/* ===== v6: panes, sticky index, accents, light ===== */
+.glow{background:radial-gradient(closest-side,color-mix(in srgb,var(--glowc,var(--up)) 15%,transparent),transparent)}
+.glow.g2{width:80vmax;height:60vmax;top:auto;bottom:-30vmax;left:10%;transform:none;background:radial-gradient(closest-side,color-mix(in srgb,var(--glowc,var(--up)) 9%,transparent),transparent);animation:g2 16s ease-in-out infinite alternate}
+@keyframes g2{to{transform:translate(30vw,-12vh) scale(1.2)}}
+.app[data-dark="0"] .glow{opacity:.9}
+/* pane transitions: pure transform + opacity on the GPU */
+.pane.in.if{animation:pIF .5s cubic-bezier(.2,.9,.25,1) both}
+.pane.in.ib{animation:pIB .5s cubic-bezier(.2,.9,.25,1) both}
+.pane.out.of{animation:pOF .36s cubic-bezier(.4,0,.6,1) both}
+.pane.out.ob{animation:pOB .36s cubic-bezier(.4,0,.6,1) both}
+@keyframes pIF{from{opacity:0;transform:translate3d(16%,0,0) scale(.97)}}
+@keyframes pIB{from{opacity:0;transform:translate3d(-16%,0,0) scale(.97)}}
+@keyframes pOF{to{opacity:0;transform:translate3d(-9%,0,0) scale(.94)}}
+@keyframes pOB{to{opacity:0;transform:translate3d(9%,0,0) scale(.94)}}
+.pane.in{z-index:2}.pane.out{z-index:1}
+/* header */
+.app.scrolled .top{background:color-mix(in srgb,var(--bg) 72%,transparent)}
+/* sticky Life Index */
+.hstick{position:sticky;top:calc(62px + env(safe-area-inset-top,0px));z-index:12;pointer-events:none}
+.hbg{position:absolute;left:-10px;right:-10px;top:-4px;height:84px;border-radius:24px;opacity:0;transform-origin:50% 0;background:linear-gradient(115deg,color-mix(in srgb,var(--up) 9%,var(--p1)),var(--p1) 55%);border:1px solid var(--line2);box-shadow:0 18px 40px -22px rgba(0,0,0,.55),inset 0 1px 0 color-mix(in srgb,#fff 8%,transparent);overflow:hidden}
+.hbg::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 30%,color-mix(in srgb,var(--up) 14%,transparent) 50%,transparent 70%);transform:translateX(-100%);animation:hsh 5s ease-in-out infinite}
+@keyframes hsh{0%,60%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.hstick .lab,.hstick .price,.hstick .chg{position:relative;transform-origin:0 0;will-change:transform}
+.hstick .chg{pointer-events:auto}
+.hright{position:absolute;right:2px;top:12px;display:flex;flex-direction:column;align-items:flex-end;gap:6px;opacity:0;pointer-events:none}
+.hstick.stuck .hright{pointer-events:auto}
+.hright svg{width:84px;height:26px;display:block;overflow:visible}
+.hright .spsv{animation:none;clip-path:none}
+
+.chartw{will-change:transform,opacity}
+/* light: buttons and fills use the bright accent with dark ink */
+.ord{background:var(--acc)}
+.ord[data-on="1"] .ckb{background:var(--acc);border-color:var(--acc)}
+.ord[data-on="1"] .oin{background:color-mix(in srgb,var(--acc) 14%,var(--p1));border-color:color-mix(in srgb,var(--acc) 45%,transparent)}
+.chk:checked{background:var(--acc);border-color:var(--acc)}
+.prog .bar i,.ring .v{background:var(--up)}
+.app[data-dark="0"] .prog .bar i{background:var(--acc)}
+.app[data-dark="0"] .ring .v{stroke:color-mix(in srgb,var(--acc) 60%,var(--up))}
+.cta,.btn:not(.ghost):not(.bad){box-shadow:0 10px 28px -12px color-mix(in srgb,var(--acc) 85%,transparent)}
+.logo{background:var(--acc);color:var(--acc-ink)}
+.dock button[aria-current="true"]{color:var(--bg)}
+
+.dock .ink{background:var(--acc)}
+.dock button[aria-current="true"]{color:var(--acc-ink)}
+.pills .ink{background:var(--acc)}.pills button[aria-pressed="true"]{color:var(--acc-ink)}
+.ctb[aria-pressed="true"]{background:var(--acc);color:var(--acc-ink);border-color:var(--acc)}
+.tabs .tk{background:var(--acc)}.tabs button[aria-selected="true"]{color:var(--acc-ink)}
+.sbody .seg button[aria-pressed="true"]{background:var(--acc);color:var(--acc-ink)}
+/* spotlight following the finger */
+.card,.hr,.mv,.oin,.rate{background-image:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--up) var(--spa,0%),transparent),transparent 70%)}
+.lit{--spa:13%}
+@property --spa{syntax:'<percentage>';inherits:true;initial-value:0%}
+.card,.hr,.mv,.oin,.rate{transition:--spa .45s ease,transform .4s var(--spring),scale .2s linear}
+.hc.lit,.tile.lit{filter:brightness(1.12)}
+.rp{z-index:3}
+/* accent switch */
+.app.recolor *{transition:color .6s,background-color .6s,border-color .6s,fill .6s,stroke .6s!important}
+.acc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.acc button{position:relative;height:64px;border-radius:18px;background:linear-gradient(150deg,var(--s),color-mix(in srgb,var(--s) 70%,#000));color:#141414;font-size:12.5px;font-weight:650;display:flex;align-items:flex-end;padding:8px 10px;border:2px solid transparent;transition:transform .4s var(--spring),border-color .3s}
+.acc button[aria-pressed="true"]{border-color:var(--ink);transform:scale(1.04)}
+.acc button[aria-pressed="true"]::after{content:"";position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:#141414 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7'/%3E%3C/svg%3E") center/11px no-repeat;animation:pop .45s var(--spring)}
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){.pane.in,.pane.out{animation:none!important}}
 @media (min-width:900px){.wrap{max-width:760px}.sheet{left:auto;right:24px;top:24px;bottom:24px;width:480px;max-height:none;border-radius:30px;border:1px solid var(--line2);transform:translateX(calc(100% + 40px))}.sheet.on{transform:none}.grab{display:none}}
 @media (max-width:380px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dock button{padding:0 13px}.hr{grid-template-columns:40px minmax(0,1fr) auto}.hr svg{display:none}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.12s!important}}
 </style>
 
 <div class="app" id="app">
-  <div class="glow" aria-hidden="true"></div>
-  <div class="scroll" id="scroll"><div class="wrap">
-    <header class="top">
+  <div class="glow" aria-hidden="true"></div><div class="glow g2" aria-hidden="true"></div>
+  <header class="top">
       <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-9"/></svg></div>
       <div class="hd"><div class="hd1"><b id="appName">Equity</b><span id="greet"></span></div><div class="hd2" aria-hidden="true"><b id="hdT"></b></div></div>
       <button class="mini" id="mini" data-action="go" data-v="home" aria-label="Life Index" tabindex="-1"><i></i><b id="miniP">0.00</b><span class="mc" id="miniC"></span><span class="ms2" id="miniS"></span></button><span class="sync" id="sync" data-s=""></span>
       <button class="avatar" data-action="settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h3M11 17h9"/><circle cx="16" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
       <span class="sprog" id="sprog"></span>
     </header>
-    <main id="view"></main>
-  </div></div>
+  <div class="panes" id="panes">
+    <div class="pane" id="pane-home"><div class="wrap"><main class="view" id="v-home"></main></div></div>
+    <div class="pane" id="pane-orders"><div class="wrap"><main class="view" id="v-orders"></main></div></div>
+    <div class="pane" id="pane-hold"><div class="wrap"><main class="view" id="v-hold"></main></div></div>
+    <div class="pane" id="pane-desk"><div class="wrap"><main class="view" id="v-desk"></main></div></div>
+  </div>
   <div class="fadeb" aria-hidden="true"></div>
   <nav class="dock" id="dock" aria-label="Sections"><span class="ink"></span>
     <button data-action="go" data-v="home" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-9"/><path d="M15 6h5v5"/></svg><span>Market</span></button>
@@ -623,7 +672,7 @@ async function connect(){if(DEMO){setSync('demo');return}try{if(!window.claude||
   if(snap.exists){const s=migrate(JSON.parse(snap.data().json||'null'));const localNewer=state.updatedAt&&(!s||!s.updatedAt||state.updatedAt>s.updatedAt)&&!state.example;if(s&&!localNewer){state=s;saveLocal();applyTheme();renderAll();syncBlobs(true)}setSync('ok');if(localNewer)flush()}else{await flush();setSync('ok')}
   const a=await claude.use('assets');if(a){PH.assets=a;renderPhoto()}}catch(e){setSync('ok')}}
 const flushNow=()=>{saveLocal();if(dbRef){clearTimeout(saveTimer);flush()}};document.addEventListener('visibilitychange',()=>{if(document.hidden)flushNow()});addEventListener('pagehide',flushNow);
-function applyTheme(){app.dataset.mode=state.settings.mode==='auto'?'':state.settings.mode;const c=state.domains.map(d=>d.color);app.style.setProperty('--a1',c[0]||'#3DDC97');app.style.setProperty('--a2',c[1]||'#6C8CFF')}
+function applyTheme(){applyTheme2()}
 
 /* ---------- daily frame ---------- */
 const PH={assets:null,urls:{},busy:false};
@@ -684,7 +733,7 @@ function renderSettings(fresh){const sb=$('#layer .sbody');if(!sb)return;const s
   sb.innerHTML=`<div class="s-hd"><div class="s-orb" style="--c:#6C8CFF;background:linear-gradient(145deg,#C8FF4D,#3B5A10)"></div><div><h2>Settings</h2><p>Make it yours</p></div><button class="xbtn" data-action="close-sheet" aria-label="Close">${ICON.x}</button></div>
    <div class="card"><span class="lbl">App name</span><input class="field" style="width:100%" value="${esc(state.profile.name)}" data-bind="profile:name" aria-label="App name"></div>
    <div class="card"><span class="lbl">Appearance</span><div class="seg">${[['auto','Device'],['night','Dark'],['day','Light']].map(([k,l])=>`<button aria-pressed="${s.mode===k}" data-action="mode" data-m="${k}">${l}</button>`).join('')}</div>
-    <div class="row" style="margin-top:12px"><span style="font-size:14px">Vibration on tap</span><span class="sp"></span><input class="tgl" type="checkbox" ${s.haptics?'checked':''} data-bind="set:haptics" aria-label="Vibration"></div></div>
+    <span class="lbl" style="margin-top:16px">Accent colour</span><div class="acc">${Object.entries(ACC).map(([k,a])=>`<button style="--s:${a.c}" data-action="accent" data-k="${k}" aria-pressed="${(s.accent||'lime')===k}">${a.n}</button>`).join('')}</div><div class="row" style="margin-top:14px"><span style="font-size:14px">Vibration on tap</span><span class="sp"></span><input class="tgl" type="checkbox" ${s.haptics?'checked':''} data-bind="set:haptics" aria-label="Vibration"></div></div>
    <div class="card"><span class="lbl">Holdings</span>${state.domains.map(d=>`<div class="row" style="padding:6px 0"><span style="width:14px;height:14px;border-radius:50%;background:${esc(d.color)}"></span><span style="flex:1;font-size:15px">${esc(d.name)}</span><button class="btn ghost" style="height:34px;padding:0 12px" data-action="open" data-d="${d.id}">Edit</button></div>`).join('')}<button class="btn" style="width:100%;margin-top:8px" data-action="new-area">New holding</button></div>
    <div class="card"><span class="lbl">Your data</span><p style="margin:0 0 12px;font-size:13.5px;color:var(--mute);line-height:1.5">Saved as you go${dbRef?' and synced to your account':' on this device'}. Backups from Aura, Strata, Mixdown and Life Orrery work here too.</p><div class="row"><button class="btn ghost" data-action="copy">Copy backup</button><button class="btn ghost" data-action="sample">Load sample</button><button class="btn bad" data-action="erase">Erase all</button></div>
     <form data-form="restore" style="margin-top:12px"><textarea id="rbox" class="field" name="json" rows="3" style="width:100%;font-family:var(--mono);font-size:12px" placeholder="Paste a backup here"></textarea><button class="btn" style="margin-top:8px">Restore</button></form></div>`;sb.scrollTop=st}
@@ -709,7 +758,7 @@ function handleBind(el){const[sc,f]=el.dataset.bind.split(':');let v=el.type==='
   if(sc==='h'){const h=d.habits.find(x=>x.id===el.dataset.h);if(!h||!v){renderAll();return}h.name=v;commit();return}
   if(sc==='ms'){const m=d.milestones.find(x=>x.id===el.dataset.ms);if(!m)return;if(f==='text'&&!v){renderAll();return}m[f]=v;if(f==='done'&&v){toast('Goal reached: '+m.text);haptic([10,40,10,40,20]);const b=OR.blobs.find(x=>x.id===d.id);if(b)b.kick=.12}commit()}}
 const actions={
-  rng:a=>{UI2.range=+a.dataset.v;updHero(true);haptic(6)},ctype:a=>{UI2.ctype=UI2.ctype==='candle'?'line':'candle';updHero(true);haptic(6)},go:a=>{if(SH.kind)closeSheet();go(a.dataset.v)},fill:a=>fill(a.dataset.d,a.dataset.h,a),'open-goals':a=>{ui.tab='milestones';openSheet('area',a.dataset.d)},
+  rng:a=>{UI2.range=+a.dataset.v;updHero(true);haptic(6)},ctype:a=>{UI2.ctype=UI2.ctype==='candle'?'line':'candle';updHero(true);haptic(6)},go:a=>{if(SH.kind)closeSheet();go(a.dataset.v)},totop:()=>pane().scrollTo({top:0,behavior:RM.matches?'auto':'smooth'}),accent:a=>{state.settings.accent=a.dataset.k;app.classList.add('recolor');applyTheme();haptic([6,20,6]);commit();renderSettings();clearTimeout(app._rc);app._rc=setTimeout(()=>app.classList.remove('recolor'),700)},fill:a=>fill(a.dataset.d,a.dataset.h,a),'open-goals':a=>{ui.tab='milestones';openSheet('area',a.dataset.d)},
   focus:a=>setFocus(ui.focus===a.dataset.d?null:a.dataset.d),
   open:a=>{const changed=SH.id!==a.dataset.d;if(changed||SH.kind!=='area')ui.tab='signals';openSheet('area',a.dataset.d)},
   'close-sheet':closeSheet,'close-lb':()=>$$('.lb').forEach(x=>x.remove()),
@@ -760,28 +809,35 @@ function bindBodyDrag(sh){const sb=sh.querySelector('.sbody');let y0=null,dy=0,t
   sb.addEventListener('touchmove',e=>{if(y0==null)return;const d=e.touches[0].clientY-y0;if(!on){if(d>6&&sb.scrollTop<=0){on=true;sh.classList.add('drag')}else if(d<-4){y0=null;return}else return}e.preventDefault();dy=Math.max(0,d);sh.style.transform=`translateY(${dy*.85}px)`},{passive:false});
   const end=()=>{if(y0==null)return;y0=null;if(!on)return;on=false;sh.classList.remove('drag');sh.style.transform='';if(dy>120||dy/(performance.now()-t0)>.7)closeSheet();dy=0};sb.addEventListener('touchend',end);sb.addEventListener('touchcancel',end)}
 
-let TKC=null,TKT=0;function TK(){const n=performance.now();if(!TKC||n-TKT>800){const c=getComputedStyle(app);TKC={};for(const k of['ink','faint','line2','up','down','p1','mono','bg'])TKC[k]=c.getPropertyValue('--'+k).trim();TKT=n}return TKC}
+let TKC=null,TKT=0,THEMEV=0;function TK(){const n=performance.now();if(!TKC||n-TKT>1500){const c=getComputedStyle(app);TKC={};for(const k of['ink','faint','line2','up','down','p1','mono','bg'])TKC[k]=c.getPropertyValue('--'+k).trim();TKT=n}return TKC}
 function hexA(h,a){h=String(h).trim();if(h[0]!=='#')return h;const n=parseInt(h.slice(1),16);return`rgba(${n>>16&255},${n>>8&255},${n&255},${a})`}
-/* ---------- chart engine (line + candles, crosshair, animated) ---------- */
-function makeChart(box,cv,opts){const C={box,cv,ctx:cv.getContext('2d'),vals:[],raw:[],disp:[],t0:0,hover:-1,opts};
-  C.size=()=>{const r=Math.min(2,devicePixelRatio||1);cv.width=Math.round(cv.clientWidth*r);cv.height=Math.round(cv.clientHeight*r);C.r=r};
-  C.set=(vals,raw,keep)=>{const old=C.disp;C.vals=vals;C.raw=raw||vals;if(keep&&old.length){C.disp=vals.map((_,i)=>{const t=i/(vals.length-1||1)*(old.length-1),a=Math.floor(t),b=Math.min(old.length-1,a+1);return old[a]+(old[b]-old[a])*(t-a)})}else C.disp=vals.map(()=>vals[0]??0);C.t0=performance.now()};
+/* ---------- chart engine: line + candles, crosshair, morphing, cached when still ---------- */
+function makeChart(box,cv,opts){const C={box,cv,ctx:cv.getContext('2d'),vals:[],raw:[],disp:[],t0:0,hover:-1,opts,_cache:null,_ck:''};
+  C.size=()=>{const r=Math.min(2,devicePixelRatio||1);cv.width=Math.round(cv.clientWidth*r);cv.height=Math.round(cv.clientHeight*r);C.r=r;C._ck=''};
+  C.set=(vals,raw,keep)=>{const old=C.disp;C.vals=vals;C.raw=raw||vals;if(keep&&old.length){C.disp=vals.map((_,i)=>{const t=i/(vals.length-1||1)*(old.length-1),a=Math.floor(t),b=Math.min(old.length-1,a+1);return old[a]+(old[b]-old[a])*(t-a)})}else{C.disp=vals.map(()=>vals[0]??0);C.t0=performance.now()}C._ck=''};
+  C.pulse=(now)=>{const p=C.lp;if(!p)return;const{ctx}=C,r=C.r||1,pu=(Math.sin(now/420)+1)/2;ctx.fillStyle=p.col;ctx.globalAlpha=.22*pu;ctx.beginPath();ctx.arc(p.x,p.y,(5+7*pu)*r,0,6.283);ctx.fill();ctx.globalAlpha=1;ctx.beginPath();ctx.arc(p.x,p.y,3.6*r,0,6.283);ctx.fill()};
   C.draw=(now,dt)=>{const{ctx}=C,W=cv.width,H=cv.height,r=C.r||1;if(!W||!C.vals.length)return;const cs=TK(),ink=cs.ink,mute=cs.faint,line=cs.line2,up=cs.up,down=cs.down;
-    const k=Math.min(1,dt/220);for(let i=0;i<C.vals.length;i++)C.disp[i]+=(C.vals[i]-C.disp[i])*k;
-    const v=C.disp,n=v.length,padL=6*r,padR=(opts.axis?42:8)*r,padT=12*r,padB=(opts.axis?22:6)*r;let lo=Math.min(...v,...(opts.candle?C.lows():[])),hi=Math.max(...v,...(opts.candle?C.highs():[]));if(hi-lo<.04){const m=(hi+lo)/2;lo=m-.02;hi=m+.02}const pd=(hi-lo)*.12;lo=Math.max(0,lo-pd);hi=Math.min(1,hi+pd);if(hi-lo<.04)hi=lo+.04;
+    const k=Math.min(1,dt/200);let moving=false;for(let i=0;i<C.vals.length;i++){const df=C.vals[i]-C.disp[i];if(Math.abs(df)>2e-5){moving=true;C.disp[i]+=df*k}else C.disp[i]=C.vals[i]}
+    const prog=Math.min(1,(now-C.t0)/900),v=C.disp,n=v.length;const rise=v[n-1]>=v[0],col=opts.color||(rise?up:down);
+    const key=W+'|'+H+'|'+col+'|'+!!opts.candle+'|'+C.hover+'|'+THEMEV;
+    if(!moving&&prog>=1&&C._cache&&C._ck===key){ctx.clearRect(0,0,W,H);ctx.drawImage(C._cache,0,0);C.pulse(now);return}
+    const padL=6*r,padR=(opts.axis?42:8)*r,padT=14*r,padB=(opts.axis?22:6)*r;let lo=Math.min(...v,...(opts.candle?C.lows():[])),hi=Math.max(...v,...(opts.candle?C.highs():[]));if(hi-lo<.04){const m=(hi+lo)/2;lo=m-.02;hi=m+.02}const pd=(hi-lo)*.12;lo=Math.max(0,lo-pd);hi=Math.min(1,hi+pd);if(hi-lo<.04)hi=lo+.04;
     const X=i=>padL+i/(n-1||1)*(W-padL-padR),Y=y=>padT+(1-(y-lo)/(hi-lo))*(H-padT-padB);ctx.clearRect(0,0,W,H);
     if(opts.axis){ctx.font=`${10*r}px ${cs.mono}`;ctx.fillStyle=mute;ctx.textAlign='left';ctx.textBaseline='middle';for(let g=0;g<=3;g++){const yv=lo+(hi-lo)*(g/3),yy=Y(yv);ctx.strokeStyle=line;ctx.globalAlpha=.5;ctx.setLineDash([2*r,4*r]);ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(W-padR,yy);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;ctx.fillText((yv*100).toFixed(1),W-padR+6*r,yy)}
       const T=today(),step=Math.max(1,Math.round(n/5));ctx.textAlign='center';ctx.textBaseline='alphabetic';for(let i=n-1;i>=0;i-=step){const d2=parseKey(addDays(T,i-(n-1)));ctx.fillText(i===n-1?'Today':`${d2.getDate()} ${MON[d2.getMonth()]}`,Math.min(Math.max(X(i),24*r),W-padR-20*r),H-6*r)}}
-    const rise=v[n-1]>=v[0],col=opts.color||(rise?up:down);C.rise=rise;if(opts.onTrend)opts.onTrend(rise);const prog=Math.min(1,(now-C.t0)/900),ease=1-Math.pow(1-prog,3);
+    C.rise=rise;const ease=1-Math.pow(1-prog,3);
     ctx.save();ctx.beginPath();ctx.rect(0,0,padL+(W-padL-padR)*ease+2,H);ctx.clip();
     if(opts.candle&&C.ohlc){const cw=Math.max(1.5*r,(W-padL-padR)/n*.62);C.ohlc.forEach((c,i)=>{const x=X(i),u=c.c>=c.o;ctx.strokeStyle=ctx.fillStyle=u?up:down;ctx.lineWidth=Math.max(1,r);ctx.beginPath();ctx.moveTo(x,Y(c.h));ctx.lineTo(x,Y(c.l));ctx.stroke();const y1=Y(Math.max(c.o,c.c)),y2=Y(Math.min(c.o,c.c));ctx.fillRect(x-cw/2,y1,cw,Math.max(1.5*r,y2-y1))})}
-    else{const g=ctx.createLinearGradient(0,padT,0,H-padB);g.addColorStop(0,hexA(col,.32));g.addColorStop(.6,hexA(col,.08));g.addColorStop(1,hexA(col,0));ctx.beginPath();ctx.moveTo(X(0),Y(v[0]));for(let i=1;i<n;i++){const xm=(X(i-1)+X(i))/2;ctx.bezierCurveTo(xm,Y(v[i-1]),xm,Y(v[i]),X(i),Y(v[i]))}ctx.lineTo(X(n-1),H-padB);ctx.lineTo(X(0),H-padB);ctx.closePath();ctx.fillStyle=g;ctx.fill();
-      ctx.beginPath();ctx.moveTo(X(0),Y(v[0]));for(let i=1;i<n;i++){const xm=(X(i-1)+X(i))/2;ctx.bezierCurveTo(xm,Y(v[i-1]),xm,Y(v[i]),X(i),Y(v[i]))}ctx.strokeStyle=col;ctx.lineWidth=2.2*r;ctx.lineJoin='round';ctx.shadowColor=hexA(col,.55);ctx.shadowBlur=14*r;ctx.stroke();ctx.shadowBlur=0}
+    else{const g=ctx.createLinearGradient(0,padT,0,H-padB);g.addColorStop(0,hexA(col,.34));g.addColorStop(.6,hexA(col,.08));g.addColorStop(1,hexA(col,0));const path=()=>{ctx.beginPath();ctx.moveTo(X(0),Y(v[0]));for(let i=1;i<n;i++){const xm=(X(i-1)+X(i))/2;ctx.bezierCurveTo(xm,Y(v[i-1]),xm,Y(v[i]),X(i),Y(v[i]))}};
+      path();ctx.lineTo(X(n-1),H-padB);ctx.lineTo(X(0),H-padB);ctx.closePath();ctx.fillStyle=g;ctx.fill();
+      path();ctx.strokeStyle=hexA(col,.35);ctx.lineWidth=7*r;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();
+      path();ctx.strokeStyle=col;ctx.lineWidth=2.4*r;ctx.stroke()}
     ctx.restore();
     if(opts.axis&&!opts.candle){ctx.strokeStyle=line;ctx.setLineDash([3*r,3*r]);ctx.beginPath();ctx.moveTo(padL,Y(v[0]));ctx.lineTo(W-padR,Y(v[0]));ctx.stroke();ctx.setLineDash([])}
-    if(prog>=1){const lx=X(n-1),ly=Y(v[n-1]),pu=(Math.sin(now/400)+1)/2;ctx.fillStyle=col;ctx.globalAlpha=.25*pu;ctx.beginPath();ctx.arc(lx,ly,(5+6*pu)*r,0,6.283);ctx.fill();ctx.globalAlpha=1;ctx.beginPath();ctx.arc(lx,ly,3.5*r,0,6.283);ctx.fill()}
-    if(C.hover>=0&&C.hover<n){const x=X(C.hover),y=Y(v[C.hover]);ctx.strokeStyle=ink;ctx.globalAlpha=.5;ctx.lineWidth=r;ctx.beginPath();ctx.moveTo(x,padT);ctx.lineTo(x,H-padB);ctx.stroke();ctx.globalAlpha=1;ctx.fillStyle=cs.p1;ctx.strokeStyle=col;ctx.lineWidth=2*r;ctx.beginPath();ctx.arc(x,y,5*r,0,6.283);ctx.fill();ctx.stroke()}
-    C.geo={X,padL,padR,W,n,r}};
+    if(C.hover>=0&&C.hover<n){const x=X(C.hover),y=Y(v[C.hover]);ctx.strokeStyle=ink;ctx.globalAlpha=.45;ctx.lineWidth=r;ctx.setLineDash([3*r,3*r]);ctx.beginPath();ctx.moveTo(x,padT);ctx.lineTo(x,H-padB);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;ctx.fillStyle=cs.p1;ctx.strokeStyle=col;ctx.lineWidth=2.4*r;ctx.beginPath();ctx.arc(x,y,6*r,0,6.283);ctx.fill();ctx.stroke()}
+    C.lp=prog>=1?{x:X(n-1),y:Y(v[n-1]),col}:null;C.geo={X,padL,padR,W,n,r};
+    if(!moving&&prog>=1){if(!C._cache)C._cache=document.createElement('canvas');if(C._cache.width!==W||C._cache.height!==H){C._cache.width=W;C._cache.height=H}const cc=C._cache.getContext('2d');cc.clearRect(0,0,W,H);cc.drawImage(cv,0,0);C._ck=key}
+    C.pulse(now)};
   C.lows=()=>C.ohlc?C.ohlc.map(c=>c.l):[];C.highs=()=>C.ohlc?C.ohlc.map(c=>c.h):[];
   C.idx=e=>{const g=C.geo;if(!g)return-1;const rr=cv.getBoundingClientRect(),x=(e.clientX-rr.left)*g.r;return Math.max(0,Math.min(g.n-1,Math.round((x-g.padL)/(g.W-g.padL-g.padR)*(g.n-1))))};
   C.size();return C}
@@ -797,33 +853,56 @@ function steady(perDay){const H=state.domains.reduce((n,d)=>n+(d.muted?0:d.habit
 function curFill(){const T=today();let H=0,f=0;for(const d of state.domains){if(d.muted)continue;for(const h of d.habits){H++;for(let i=0;i<7;i++)if(h.days[addDays(T,-i)])f++}}return{H,avg:f/7}}
 function burst(el){const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;for(let q=0;q<14;q++){const sp=document.createElement('span');sp.className='pt';const a=Math.random()*6.283,d=34+Math.random()*46,sz=3+Math.random()*4;sp.style.cssText=`left:${cx}px;top:${cy}px;width:${sz}px;height:${sz}px`;app.appendChild(sp);sp.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:1},{transform:`translate(calc(-50% + ${Math.cos(a)*d}px),calc(-50% + ${Math.sin(a)*d-14}px)) scale(.2)`,opacity:0}],{duration:700+Math.random()*300,easing:'cubic-bezier(.2,.8,.3,1)'}).onfinish=()=>sp.remove()}}
 
-/* ---------- navigation ---------- */
+/* ---------- accent palettes ---------- */
+const ACC={lime:{n:'Lime',c:'#C8FF4D',d:'#3E8A0E'},mango:{n:'Mango',c:'#FFB547',d:'#B86200'},peach:{n:'Peach',c:'#FF9E7D',d:'#CC4B22'},berry:{n:'Berry',c:'#FF6E9C',d:'#C8235E'},mint:{n:'Mint',c:'#52F0BC',d:'#0B9467'},sky:{n:'Sky',c:'#62CCFF',d:'#0A78B8'},grape:{n:'Grape',c:'#B9A2FF',d:'#6A45D8'},lemon:{n:'Lemon',c:'#FFE95E',d:'#9A7E00'}};
+function mixHex(a,b,t){const p=h=>{const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255]};const A=p(a),B=p(b);return'#'+A.map((v,i)=>Math.round(B[i]+(v-B[i])*t).toString(16).padStart(2,'0')).join('')}
+const DARKQ=matchMedia('(prefers-color-scheme: dark)');
+function applyTheme2(){const m=state.settings.mode||'auto';app.dataset.mode=m==='auto'?'':m;const dark=m==='night'||(m==='auto'&&DARKQ.matches);const A=ACC[state.settings.accent]||ACC.lime;const st=app.style;
+  st.setProperty('--up',dark?A.c:A.d);st.setProperty('--acc',A.c);st.setProperty('--acc-ink','#0D0E08');st.setProperty('--glowc',A.c);
+  st.setProperty('--bg',dark?mixHex(A.c,'#060607',.035):mixHex(A.c,'#F6F6F2',.075));st.setProperty('--p2',dark?mixHex(A.c,'#18191C',.025):mixHex(A.c,'#F1F1EC',.06));
+  app.dataset.dark=dark?1:0;TKC=null;THEMEV++;try{let mt=document.querySelector('meta[name=theme-color]');if(mt)mt.content=dark?'#060607':'#F6F6F2'}catch(_){}}
+DARKQ.addEventListener?.('change',()=>{if((state.settings.mode||'auto')==='auto'){applyTheme2();renderAll()}});
+
+/* ---------- panes & navigation ---------- */
 const NAV={v:'home',order:['home','orders','hold','desk']};
 const TITLES={home:'Market',orders:'Orders',hold:'Holdings',desk:'Desk'};
-function go(v){if(v===NAV.v){$('#scroll').scrollTo({top:0,behavior:RM.matches?'auto':'smooth'});return}const back=NAV.order.indexOf(v)<NAV.order.indexOf(NAV.v);NAV.v=v;
-  $$('#dock button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.v===v)));moveDock();haptic(6);
-  const run=()=>{$('#scroll').scrollTop=0;app.classList.remove('scrolled','titled');renderView(back,false,!!VT)};
-  const VT=document.startViewTransition&&!RM.matches;
-  if(VT){document.documentElement.dataset.dir=back?'b':'f';try{document.startViewTransition(run)}catch(e){run()}}else run()}
-function moveDock(){const f=()=>{const a=$('#dock [aria-current="true"]'),k=$('#dock .ink');if(a&&k){k.style.left=a.offsetLeft+'px';k.style.width=a.offsetWidth+'px'}};requestAnimationFrame(f);setTimeout(f,540)}
+const PANE={},DIRTY={home:true,orders:true,hold:true,desk:true},BUILT={};
+NAV.order.forEach(v=>{PANE[v]=$('#pane-'+v)});
+const pane=()=>PANE[NAV.v];
+let navT=0;
+function go(v){const p0=pane();if(v===NAV.v){p0.scrollTo({top:0,behavior:RM.matches?'auto':'smooth'});return}
+  const back=NAV.order.indexOf(v)<NAV.order.indexOf(NAV.v),from=NAV.v;NAV.v=v;haptic(6);
+  $$('#dock button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.v===v)));moveDock(true);
+  if(DIRTY[v])renderPane(v,BUILT[v]?'quiet':'fresh');
+  const p1=PANE[v];clearTimeout(navT);NAV.order.forEach(k=>{if(k!==v&&k!==from)PANE[k].className='pane'});
+  p0.className='pane on out '+(back?'ob':'of');p1.className='pane on in '+(back?'ib':'if');
+  const vw=$('#v-'+v);vw.classList.remove('ent');void vw.offsetWidth;if(!RM.matches)vw.classList.add('ent');
+  navT=setTimeout(()=>{p0.className='pane';p1.className='pane on'},520);
+  $('#hdT').textContent=TITLES[v];scrollFX();updMini()}
+function moveDock(stretch){const f=()=>{const a=$('#dock [aria-current="true"]'),k=$('#dock .ink');if(a&&k){k.style.left=a.offsetLeft+'px';k.style.width=a.offsetWidth+'px'}};requestAnimationFrame(f);setTimeout(f,560);
+  if(stretch&&!RM.matches){const k=$('#dock .ink');k.animate([{scale:'1 1'},{scale:'1.12 .86',offset:.35},{scale:'.96 1.04',offset:.7},{scale:'1 1'}],{duration:560,easing:'ease-out'})}}
+
 /* ---------- scroll choreography ---------- */
-const SC={els:[],raf:0,hero:null};
-function collectZ(){SC.els=$$('#view .zs');const h=$('#view .hero');SC.hero=h?{lab:h.querySelector('.lab'),price:$('#price'),chg:$('#chg'),cw:$('#cw')}:null;const car=$('#car');if(car&&!car._b){car._b=1;car.addEventListener('scroll',()=>{if(!car._r)car._r=requestAnimationFrame(()=>{car._r=0;carFX(car)})},{passive:true});carFX(car)}}
-function onScroll(){if(!SC.raf)SC.raf=requestAnimationFrame(scrollFX)}
-function carFX(car){if(RM.matches)return;const L=car.getBoundingClientRect().left+parseFloat(getComputedStyle(car).paddingLeft||0);$$('.hc',car).forEach(c=>{const r=c.getBoundingClientRect(),o=(r.left-L)/(r.width+10);const past=Math.max(0,-o),far=Math.max(0,o-1.2);c.style.setProperty('--cs',(1-Math.min(.18,past*.2)-Math.min(.06,far*.05)).toFixed(4));c.style.setProperty('--cb',(1-Math.min(.5,past*.55)).toFixed(3))})}
-function scrollFX(){SC.raf=0;const sc=$('#scroll'),y=sc.scrollTop,H=sc.clientHeight,max=sc.scrollHeight-H;
-  app.classList.toggle('scrolled',y>8);app.classList.toggle('titled',NAV.v!=='home'&&y>64);app.classList.toggle('mini-on',NAV.v==='home'?y>135:y>40);
-  $('#sprog').style.transform=`scaleX(${max>0?Math.min(1,y/max):0})`;
-  $('.glow').style.translate=`0 ${(-y*.25).toFixed(1)}px`;
-  if(RM.matches)return;
-  if(SC.hero&&NAV.v==='home'){const k=Math.min(1,Math.max(0,y/330)),e=k*k*(3-2*k),hr=SC.hero;
-    hr.price.style.transform=`translate3d(0,${(y*.46).toFixed(1)}px,0) scale(${(1-.32*e).toFixed(4)})`;hr.price.style.opacity=Math.max(0,1-e*1.25).toFixed(3);hr.price.style.filter=e>.002?`blur(${(e*7).toFixed(1)}px)`:'';
-    hr.lab.style.transform=hr.chg.style.transform=`translate3d(0,${(y*.46).toFixed(1)}px,0)`;hr.lab.style.opacity=hr.chg.style.opacity=Math.max(0,1-e*1.6).toFixed(3);
-    hr.cw.style.transform=`translate3d(0,${(y*.24).toFixed(1)}px,0) scale(${(1-.06*e).toFixed(4)})`;hr.cw.style.opacity=Math.max(0,1-e*.95).toFixed(3)}
-  const vh=H;for(const el of SC.els){const r=el.getBoundingClientRect();if(r.bottom<-80||r.top>vh+80)continue;const c=(r.top+r.bottom)/2,d=(c-vh*.42)/(vh*.6);
-    const top=Math.max(0,-d-.32),bot=Math.max(0,d-.5);const s=1-Math.min(.12,top*.14)-Math.min(.07,bot*.1),o=1-Math.min(.85,top*1.05),ty=-Math.min(18,top*22)+Math.min(14,bot*18);
-    el.style.setProperty('--zs',s.toFixed(4));el.style.setProperty('--zo',o.toFixed(3));el.style.setProperty('--zy',ty.toFixed(1)+'px')}}
-$('#scroll').addEventListener('scroll',onScroll,{passive:true});
+const SC={};
+function collectZ(v){const root=$('#v-'+v);const h=v==='home'?{st:$('#hstick'),lab:$('#hstick .lab'),price:$('#price'),chg:$('#chg'),bg:$('#hstick .hbg'),rt:$('#hstick .hright'),cw:$('#cw')}:null;SC[v]={els:$$('.zs',root),hero:h};
+  const car=$('#car');if(v==='home'&&car){car.addEventListener('scroll',()=>{if(!car._r)car._r=requestAnimationFrame(()=>{car._r=0;carFX(car)})},{passive:true});carFX(car)}}
+let sRaf=0;function onScroll(){if(!sRaf)sRaf=requestAnimationFrame(()=>{sRaf=0;scrollFX()})}
+function carFX(car){if(RM.matches)return;const L=car.getBoundingClientRect().left+20;$$('.hc',car).forEach(c=>{const r=c.getBoundingClientRect(),o=(r.left-L)/(r.width+10);const past=Math.max(0,-o),far=Math.max(0,o-1.2);c.style.scale=(1-Math.min(.2,past*.22)-Math.min(.06,far*.05)).toFixed(4);c.style.opacity=(1-Math.min(.6,past*.7)).toFixed(3)})}
+function scrollFX(){const v=NAV.v,p=PANE[v],y=p.scrollTop,H=p.clientHeight,max=p.scrollHeight-H,S=SC[v];
+  app.classList.toggle('scrolled',v==='home'?y>150:y>8);app.classList.toggle('titled',v!=='home'&&y>64);app.classList.toggle('mini-on',v!=='home'&&y>40);
+  $('#sprog').style.transform=`scaleX(${max>0?Math.min(1,y/max):0})`;$('.glow').style.translate=`0 ${(-Math.min(y,600)*.3).toFixed(1)}px`;
+  if(!S||RM.matches)return;
+  if(S.hero){const h=S.hero,k=Math.min(1,Math.max(0,y/170)),e=k*k*(3-2*k);
+    h.price.style.transform=`translate3d(${(14*e).toFixed(2)}px,${(4*e).toFixed(2)}px,0) scale(${(1-.4*e).toFixed(4)})`;
+    h.lab.style.transform=`translate3d(${(14*e).toFixed(2)}px,${(10*e).toFixed(2)}px,0) scale(${(1-.1*e).toFixed(4)})`;
+    h.chg.style.opacity=Math.max(0,1-e*2.2).toFixed(3);h.chg.style.transform=`translate3d(0,${(-26*e).toFixed(1)}px,0) scale(${(1-.1*e).toFixed(3)})`;
+    h.bg.style.opacity=e.toFixed(3);h.bg.style.transform=`scale(${(.94+.06*e).toFixed(4)})`;
+    h.rt.style.opacity=Math.max(0,e*1.6-.6).toFixed(3);h.rt.style.transform=`translate3d(${((1-e)*16).toFixed(1)}px,0,0)`;h.st.classList.toggle('stuck',e>.7);
+    const kc=Math.min(1,y/420);h.cw.style.transform=`translate3d(0,${(y*.32).toFixed(1)}px,0) scale(${(1-.08*kc).toFixed(4)})`;h.cw.style.opacity=Math.max(0,1-kc*1.15).toFixed(3)}
+  for(const el of S.els){const r=el.getBoundingClientRect();if(r.bottom<-60||r.top>H+60)continue;const c=(r.top+r.bottom)/2,d=(c-H*.44)/(H*.6);
+    const top=Math.max(0,-d-.3),bot=Math.max(0,d-.5);el.style.scale=(1-Math.min(.12,top*.14)-Math.min(.07,bot*.1)).toFixed(4);el.style.translate=`0 ${(-Math.min(18,top*22)+Math.min(16,bot*20)).toFixed(1)}px`;
+    if(el.classList.contains('zo')||el.classList.contains('settled'))el.style.opacity=(1-Math.min(.85,top*1.05)).toFixed(3)}}
+NAV.order.forEach(v=>PANE[v].addEventListener('scroll',()=>{if(v===NAV.v)onScroll()},{passive:true}));
 function updMini(){const a=lifeSeries(30),v=a[a.length-1]||0,d=(a[a.length-1]-a[a.length-2])*100;const pb=$('#miniP'),old=parseFloat(pb.textContent)||0,nv=v*100;
   pb.textContent=nv.toFixed(2);const mc=$('#miniC');mc.className='mc '+cls(d/100);mc.textContent=sgn(d);$('#miniS').innerHTML=sparkSvg(a,d>=0?'var(--up)':'var(--down)');
   if(old&&Math.abs(old-nv)>.001){const m=$('#mini');m.classList.remove('flash');void m.offsetWidth;m.classList.add('flash')}}
@@ -832,15 +911,21 @@ function updMini(){const a=lifeSeries(30),v=a[a.length-1]||0,d=(a[a.length-1]-a[
 const cu=(v,d=0)=>`<span class="cu" data-v="${v}" data-d="${d}">${(+v).toFixed(d)}</span>`;
 function countUp(root){if(RM.matches)return;$$('.cu',root).forEach(el=>{if(el._done||el.closest('.rv:not(.in)'))return;el._done=1;const v=+el.dataset.v,d=+el.dataset.d||0,t0=performance.now(),D=1000+Math.random()*300;
   const st=n=>{const k=Math.min(1,(n-t0)/D),e=1-Math.pow(1-k,4);el.textContent=(v*e).toFixed(d);if(k<1)requestAnimationFrame(st)};el.textContent=(0).toFixed(d);requestAnimationFrame(st)})}
-let IO=null;
-function reveal(root,quiet){const els=$$('.rv',root);if(quiet||RM.matches||!('IntersectionObserver' in window)){els.forEach(e=>{e.classList.add('in','settled');if(e.id==='map')renderMap()});return}
-  if(IO)IO.disconnect();IO=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');IO.unobserve(en.target);countUp(en.target);setTimeout(()=>en.target.classList.add('settled'),1100);if(en.target.id==='map')renderMap()}}),{root:$('#scroll'),rootMargin:'0px 0px -6% 0px',threshold:.08});els.forEach(e=>IO.observe(e))}
+const IOS={};
+function reveal(v,root,quiet){const els=$$('.rv',root);if(quiet||RM.matches||!('IntersectionObserver' in window)){els.forEach(e=>{e.classList.add('in','settled');if(e.id==='map')renderMap()});return}
+  if(IOS[v])IOS[v].disconnect();const io=IOS[v]=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);countUp(en.target);setTimeout(()=>en.target.classList.add('settled'),1000);if(en.target.id==='map')renderMap()}}),{root:PANE[v],rootMargin:'0px 0px -6% 0px',threshold:.06});els.forEach(e=>io.observe(e))}
 function fgOf(h){const n=parseInt(String(h).replace('#',''),16);if(isNaN(n))return'#fff';const r=n>>16&255,g=n>>8&255,b=n&255;return(.299*r+.587*g+.114*b)/255>.7?'#15160F':'#fff'}
 function letters(t){return[...t].map((c,i)=>`<span style="--i:${i}">${c===' '?'&nbsp;':esc(c)}</span>`).join('')}
 function celebrate(){if(RM.matches)return;const cols=[TK().up,'#ffffff',...state.domains.map(d=>d.color)],W=innerWidth,H=innerHeight;
   for(let q=0;q<70;q++){const sp=document.createElement('span');sp.className='cf';const sz=5+Math.random()*6;sp.style.cssText=`left:${W/2}px;top:${H*.62}px;width:${sz}px;height:${sz*(Math.random()>.5?1:.45)}px;background:${cols[q%cols.length]}`;app.appendChild(sp);
     const a=-Math.PI/2+(Math.random()-.5)*2.2,v=260+Math.random()*320,dx=Math.cos(a)*v,dy=Math.sin(a)*v,r=(Math.random()-.5)*900;
     sp.animate([{transform:'translate(-50%,-50%) rotate(0)',opacity:1},{transform:`translate(calc(-50% + ${dx*.7}px),calc(-50% + ${dy*.75}px)) rotate(${r*.6}deg)`,opacity:1,offset:.45},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy*.4+H*.45}px)) rotate(${r}deg)`,opacity:0}],{duration:1500+Math.random()*900,easing:'cubic-bezier(.15,.7,.4,1)'}).onfinish=()=>sp.remove()}}
+/* spotlight: a soft light follows your finger on cards */
+let spEl=null;const SPOT='.card,.hr,.mv,.oin,.hc,.tile,.rate';
+app.addEventListener('pointerdown',e=>{const c=e.target.closest(SPOT);if(!c)return;spEl=c;const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px');c.classList.add('lit')},{passive:true});
+app.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'){const c=e.target.closest(SPOT);if(c!==spEl){spEl&&spEl.classList.remove('lit');spEl=c;c&&c.classList.add('lit')}}if(!spEl)return;const r=spEl.getBoundingClientRect();spEl.style.setProperty('--mx',(e.clientX-r.left)+'px');spEl.style.setProperty('--my',(e.clientY-r.top)+'px')},{passive:true});
+const unlit=e=>{if(spEl&&(e.type!=='pointerup'||e.pointerType!=='mouse')){const c=spEl;setTimeout(()=>c.classList.remove('lit'),120);if(e.pointerType!=='mouse')spEl=null}};app.addEventListener('pointerup',unlit,{passive:true});app.addEventListener('pointercancel',unlit,{passive:true});
+app.addEventListener('pointerdown',e=>{if(RM.matches)return;const bt=e.target.closest('.card,.hc,.hr,.cta,.go,.mini,.tile,.addh');if(!bt||bt.closest('.btn'))return;const r=bt.getBoundingClientRect(),sz=Math.max(r.width,r.height)*2,sp=document.createElement('span');sp.className='rp';sp.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-r.left-sz/2}px;top:${e.clientY-r.top-sz/2}px`;bt.appendChild(sp);setTimeout(()=>sp.remove(),650)},{passive:true});
 
 /* ---------- views ---------- */
 let IC=null,PC=null,HC=null;const UI2={range:30,ctype:'line'};let ringPrev=0,shownPrice=null;
@@ -848,17 +933,16 @@ function idxData(n){const s=lifeSeries(n+1);const raw=[...Array(n+1)].map((_,i)=
 function renderTop(){renderAll()}
 function todayCount(){const T=today();let rt=0,rd=0;for(const d of state.domains){if(d.muted)continue;for(const h of d.habits){rt++;if(h.days[T])rd++}}return{rt,rd}}
 function bestStreak(){let b={s:0};for(const d of state.domains)for(const h of d.habits){const s=streak(h);if(s>b.s)b={s,h,d}}return b}
-function renderView(back,quiet,vt){const v=$('#view');const oldIC=IC;IC=null;PC=null;
-  v.innerHTML={home:homeHTML,orders:ordersHTML,hold:holdHTML,desk:deskHTML}[NAV.v]();
-  v.className='view'+(quiet?' quiet':vt?' vtx':back?' back':'');if(!quiet&&!vt){v.style.animation='none';void v.offsetWidth;v.style.animation=''}
-  $('#hdT').textContent=TITLES[NAV.v];
-  if(NAV.v==='home')mountHome(quiet,oldIC);if(NAV.v==='desk')mountDesk(quiet);if(NAV.v==='orders')mountOrders();if(NAV.v==='desk')renderPhoto();
-  reveal(v,quiet);if(!quiet)countUp(v);else $$('.cu',v).forEach(e=>e._done=1);collectZ();scrollFX();updMini();
-  const{rt,rd}=todayCount();const bd=$('#badge');bd.hidden=!(rt-rd)||NAV.v==='orders';bd.textContent=rt-rd;moveDock()}
+function renderPane(v,mode){const quiet=mode==='quiet',el=$('#v-'+v),p=PANE[v],y=p.scrollTop;const oldIC=v==='home'?IC:null;if(v==='home')IC=null;if(v==='desk')PC=null;
+  el.innerHTML={home:homeHTML,orders:ordersHTML,hold:holdHTML,desk:deskHTML}[v]();el.classList.toggle('quiet',quiet);
+  if(v==='home')mountHome(quiet,oldIC);if(v==='desk'){mountDesk(quiet);renderPhoto()}if(v==='orders')mountOrders();
+  reveal(v,el,quiet);if(!quiet)countUp(el);else $$('.cu',el).forEach(e=>e._done=1);
+  collectZ(v);p.scrollTop=y;DIRTY[v]=false;BUILT[v]=true;if(v===NAV.v)scrollFX()}
+function badge(){const{rt,rd}=todayCount();const bd=$('#badge');const n=rt-rd,was=bd.textContent;bd.hidden=!n||NAV.v==='orders';bd.textContent=n;if(was!==String(n)&&!bd.hidden){bd.style.animation='none';void bd.offsetWidth;bd.style.animation=''}}
 function bannerHTML(){return DEMO?`<div class="banner"><p><b>Demo portfolio.</b> Try anything. Nothing is saved.</p><button class="btn ghost" data-action="exit-demo">Open my portfolio</button></div>`:state.example?`<div class="banner"><p><b>Sample portfolio.</b> Swipe an order, open a holding, scrub the chart.</p><button class="btn" data-action="start-fresh">Start mine</button><button class="btn ghost" data-action="keep-example">Keep exploring</button></div>`:''}
 const CHKC=CHK.replace('stroke-width="3"','stroke="currentColor" stroke-width="3"');
 function homeHTML(){const{rt,rd}=todayCount(),C=2*Math.PI*29,f=rt?rd/rt:0,mg=marginal(),b=mg[0],bs=bestStreak();const top=state.domains.filter(d=>!d.muted).sort((a,b)=>momentum(b)-momentum(a))[0];
-  return`<div class="st-in"><section class="hero"><div class="lab"><i></i>Life Index · LIFX</div><div class="price" id="price"></div><div class="chg" id="chg"></div>
+  return`<div class="st-in"><div class="hstick" id="hstick"><div class="hbg"></div><div class="lab"><i></i>Life Index · LIFX</div><div class="price" id="price"></div><div class="chg" id="chg"></div><button class="hright" data-action="totop" aria-label="Back to the chart"><span id="hchip"></span><span id="hsp"></span></button></div><section class="hero">
    <div class="chartw" id="cw"><canvas id="ic"></canvas><div class="tip" id="tip"></div></div>
    <div class="rrow"><div class="pills" id="rng"><span class="ink"></span>${[[7,'1W'],[30,'1M'],[90,'3M'],[180,'6M']].map(([v,l])=>`<button data-action="rng" data-v="${v}" aria-pressed="${UI2.range===v}">${l}</button>`).join('')}</div><button class="ctb" data-action="ctype" aria-pressed="${UI2.ctype==='candle'}" aria-label="Candles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3v4M7 15v6M17 3v8M17 17v4"/><rect x="4.5" y="7" width="5" height="8" rx="1.2"/><rect x="14.5" y="11" width="5" height="6" rx="1.2"/></svg></button></div></section>
   ${bannerHTML()}
@@ -869,7 +953,7 @@ function homeHTML(){const{rt,rd}=todayCount(),C=2*Math.PI*29,f=rt?rd/rt:0,mg=mar
    ${top?`<button class="card wide zs zo" data-action="open" data-d="${top.id}"><div class="move"><div class="ml"><span class="k">Top mover this week</span><b>${esc(top.name)}</b><span class="gain"><span class="tkr" style="--c:${esc(top.color)}">${ticker(top)}</span> <span class="${cls(momentum(top))}">${sgn(momentum(top)*100)}</span></span></div><div style="width:110px;height:44px">${sparkSvg(series(top,30),momentum(top)>=0?'var(--up)':'var(--down)',120)}</div></div></button>`:''}
   </div>
   <div class="sec-h rv zs"><h3>Holdings</h3><button class="link" data-action="go" data-v="hold">See all ${ARR}</button></div>
-  <div class="carousel rv zs" id="car">${state.domains.map((d,i)=>{const m=momentum(d)*100;return`<button class="hc" style="--c:${esc(d.color)};--fg:${fgOf(d.color)};--i:${i}" data-action="open" data-d="${d.id}"><span class="t">${ticker(d)}</span><span class="n">${esc(d.name)}</span>${sparkSvg(series(d,30),'currentColor',120)}<span class="p"><b>${cu(prog(d)*100,2)}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(1)}</span></span></button>`}).join('')}<button class="hc add" data-action="new-area" style="--i:${state.domains.length}"><i>+</i>Add</button></div>
+  <div class="carousel rv" id="car">${state.domains.map((d,i)=>{const m=momentum(d)*100;return`<button class="hc" style="--c:${esc(d.color)};--fg:${fgOf(d.color)};--i:${i}" data-action="open" data-d="${d.id}"><span class="t">${ticker(d)}</span><span class="n">${esc(d.name)}</span>${sparkSvg(series(d,30),'currentColor',120)}<span class="p"><b>${cu(prog(d)*100,2)}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(1)}</span></span></button>`}).join('')}<button class="hc add" data-action="new-area" style="--i:${state.domains.length}"><i>+</i>Add</button></div>
   <div class="sec-h rv zs"><h3>Market map</h3><span class="eb">Size = weight · colour = 7d</span></div>
   <div class="map rv zs" id="map"></div></div>`}
 function heat(c){const t=Math.max(-1,Math.min(1,c/12)),k=Math.abs(t);const base=[38,40,46],up=[92,170,40],dn=[200,52,78];const to=t>=0?up:dn;return`linear-gradient(145deg,rgb(${base.map((v,i)=>Math.round(v+(to[i]-v)*(k*.9+.1)+18)).join(',')}),rgb(${base.map((v,i)=>Math.round(v+(to[i]-v)*(k*.9+.1)*.75)).join(',')}))`}
@@ -881,11 +965,13 @@ function setPrice(v,instant){const el=$('#price');if(!el)return;const s=(v*100).
   if(!instant&&shownPrice!=null&&Math.abs(v-shownPrice)>1e-6){el.classList.remove('pup','pdn');void el.offsetWidth;el.classList.add(v>shownPrice?'pup':'pdn')}shownPrice=v}
 function updHero(keep){if(!IC)return;const n=UI2.range,{vals,ohlc}=idxData(n);IC.opts.candle=UI2.ctype==='candle';IC.ohlc=ohlc;IC.set(vals,null,keep);const cb=$('.ctb');if(cb)cb.setAttribute('aria-pressed',String(UI2.ctype==='candle'));setPrice(LIFX());
   const all=lifeSeries(n+1),d1=(all[all.length-1]-all[all.length-2])*100,dn=(vals[vals.length-1]-vals[0])*100;app.dataset.trend=dn>=0?'up':'down';IC.opts.color=dn>=0?TK().up:TK().down;
-  $('#chg').innerHTML=`<span class="chip ${cls(dn/100)}">${dn>=0?UPA:DNA}${sgn(dn)}</span><span class="muted">${({7:'past week',30:'past month',90:'past 3 months',180:'past 6 months'})[n]}</span><span class="chip ${cls(d1/100)}" style="margin-left:auto">${sgn(d1)} today</span>`;
+  const lbl=({7:'past week',30:'past month',90:'past 3 months',180:'past 6 months'})[n];
+  $('#chg').innerHTML=`<span class="chip ${cls(dn/100)}">${dn>=0?UPA:DNA}${sgn(dn)}</span><span class="muted">${lbl}</span><span class="chip ${cls(d1/100)}" style="margin-left:auto">${sgn(d1)} today</span>`;
+  $('#hchip').innerHTML=`<span class="chip ${cls(d1/100)}">${d1>=0?UPA:DNA}${sgn(d1)}</span>`;$('#hsp').innerHTML=sparkSvg(vals,dn>=0?'var(--up)':'var(--down)',120);
   $$('#rng button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.v===n)));inkTo('#rng')}
 function inkTo(sel){requestAnimationFrame(()=>{const s=$(sel),a=s&&s.querySelector('[aria-pressed="true"]'),k=s&&s.querySelector('.ink');if(a&&k){k.style.left=a.offsetLeft+'px';k.style.width=a.offsetWidth+'px'}})}
 function mountHome(quiet,old){IC=makeChart($('#cw'),$('#ic'),{axis:false});
-  if(quiet&&old&&old.disp.length){IC.disp=old.disp.slice();IC.vals=old.vals;IC.t0=-1e9;setPrice(shownPrice??LIFX(),true);updHero(true);IC.t0=-1e9}
+  if(quiet&&old&&old.disp.length){IC.disp=old.disp.slice();IC.vals=old.vals;setPrice(shownPrice??LIFX(),true);updHero(true);IC.t0=-1e9}
   else{shownPrice=null;setPrice(0,true);shownPrice=null;updHero(false);setTimeout(()=>{if(IC)setPrice(LIFX())},60)}
   requestAnimationFrame(()=>requestAnimationFrame(()=>{$$('.ring .v').forEach(c=>{c.style.strokeDashoffset=c.dataset.off;ringPrev=+c.dataset.f})}));
   const box=$('#cw'),tip=$('#tip');let lastI=-1;const mv=e=>{if(!IC)return;const i=IC.idx(e);if(i!==lastI&&lastI!==-1&&e.pointerType!=='mouse')haptic(2);lastI=i;IC.hover=i;const n=IC.vals.length,d2=parseKey(addDays(today(),i-(n-1)));const g=IC.geo;tip.innerHTML=`${P(IC.vals[i])}<small>${d2.getDate()} ${MON[d2.getMonth()]}${i===n-1?' · today':''}</small>`;tip.style.left=Math.min(Math.max(g.X(i)/g.r,56),box.clientWidth-56)+'px';tip.classList.add('on')};
@@ -895,7 +981,7 @@ function ordersHTML(){const T=today(),{rt,rd}=todayCount();const groups=state.do
    <div class="prog zs zo"><div class="bar"><i id="pbar" style="--w:${rt?rd/rt*100:0}%"></i></div><b id="pnum">${rd}/${rt}</b></div>
    ${groups.map(d=>`<div class="og"><div class="og-h" style="--c:${esc(d.color)}"><i></i>${esc(d.name)}<span class="tkr" style="--c:${esc(d.color)};margin-left:auto">${ticker(d)}</span></div>${d.habits.map(h=>{const s=streak(h);return`<div class="ord rv zs" style="--i:${n++%3}" data-d="${d.id}" data-h="${h.id}" data-on="${h.days[T]?1:0}"><div class="bgtxt">${CHKC} Fill order</div><div class="oin"><button class="ckb" data-action="fill" data-d="${d.id}" data-h="${h.id}" aria-label="Fill ${esc(h.name)}">${CHK}</button><div class="ot"><b>${esc(h.name)}</b><span>${habitWeek(h)} of 7 this week</span></div><span class="str ${s>=3?'hot':''}">${s?FL+s:''}</span></div></div>`}).join('')}</div>`).join('')||`<div class="empty"><b>No orders yet</b>Open a holding and add a ritual: something you do on a day.</div>`}
    ${groups.length?`<p class="hint">Swipe right on an order ${ARR}</p>`:''}</div>`}
-function mountOrders(){$$('.ord').forEach(o=>{const inn=o.querySelector('.oin');let x0=null,y0=0,dx=0,mode=null;
+function mountOrders(){$$('#v-orders .ord').forEach(o=>{const inn=o.querySelector('.oin');let x0=null,y0=0,dx=0,mode=null;
   o.addEventListener('pointerdown',e=>{if(e.target.closest('.ckb'))return;x0=e.clientX;y0=e.clientY;dx=0;mode=null});
   o.addEventListener('pointermove',e=>{if(x0==null)return;const mx=e.clientX-x0,my=e.clientY-y0;if(!mode&&Math.hypot(mx,my)>8){mode=Math.abs(mx)>Math.abs(my)&&mx>0?'swipe':'scroll';if(mode==='swipe'){o.classList.add('dragging');try{o.setPointerCapture(e.pointerId)}catch(_){}}}
     if(mode==='swipe'){dx=Math.max(0,mx);const lim=o.clientWidth*.38;inn.style.transform=`translateX(${dx<lim?dx:lim+(dx-lim)*.25}px)`;o.style.setProperty('--sw',Math.min(1,dx/lim));if(dx>lim&&!o._arm){o._arm=1;o.classList.add('armed');haptic(8)}else if(dx<=lim&&o._arm){o._arm=0;o.classList.remove('armed')}}});
@@ -916,7 +1002,7 @@ function deskHTML(){const all=lifeSeries(15),w=(all[all.length-1]-all[all.length
    <div class="sec-h rv zs"><h3>Daily frame</h3><span class="eb" id="phStreak"></span></div><section class="card rv zs" id="phBox"></section></div>`}
 let projV=null;
 function mountDesk(quiet){const cf=curFill(),rg=$('#projR');rg.max=Math.max(1,cf.H);rg.value=projV!=null&&quiet?Math.min(projV,cf.H):Math.min(cf.H,Math.round(cf.avg));PC=makeChart($('#pcb'),$('#pc'),{axis:false});renderProj();rg.addEventListener('input',()=>{projV=+rg.value;renderProj();haptic(3)})}
-function renderProj(){const rg=$('#projR');if(!rg)return;const n=+rg.value,cf=curFill();$('#projN').textContent=`${n}/${cf.H}`;rg.style.setProperty('--f',(cf.H?n/cf.H*100:0)+'%');
+function renderProj(){const rg=$('#projR');if(!rg||!PC)return;const n=+rg.value,cf=curFill();$('#projN').textContent=`${n}/${cf.H}`;rg.style.setProperty('--f',(cf.H?n/cf.H*100:0)+'%');
   const cur=LIFX(),tgt=steady(n),D=60,vals=[...Array(D+1)].map((_,t)=>tgt+(cur-tgt)*Math.exp(-t/7));PC.opts.color=tgt>=cur?TK().up:TK().down;PC.set(vals,null,true);
   const end=new Date();end.setDate(end.getDate()+D);const dl=(tgt-cur)*100;const pb=$('#pvB');const from=parseFloat(pb.textContent)||0,to=tgt*100,t0=performance.now();cancelAnimationFrame(pb._r);const st=nw=>{const k=Math.min(1,(nw-t0)/450),e=1-Math.pow(1-k,3);pb.textContent=(from+(to-from)*e).toFixed(2);if(k<1)pb._r=requestAnimationFrame(st)};pb._r=requestAnimationFrame(st);
   $('#pvD').innerHTML=`<span class="${cls(dl/100)}">${sgn(dl)}</span> by ${end.getDate()} ${MON[end.getMonth()]}`;
@@ -926,24 +1012,25 @@ function renderProj(){const rg=$('#projR');if(!rg)return;const n=+rg.value,cf=cu
 function fill(did,hid,el){const d=D_(did),h=d?.habits.find(x=>x.id===hid);if(!h)return;const k=today(),was=!!h.days[k];const before=LIFX();if(was)delete h.days[k];else h.days[k]=1;
   haptic(was?6:[8,24,12]);if(!was&&el&&!RM.matches)burst(el);commit({render:false});const after=LIFX();
   $$(`.ord[data-h="${hid}"]`).forEach(o=>{o.dataset.on=was?0:1;if(!was){o.classList.remove('just');void o.offsetWidth;o.classList.add('just')}});
-  const{rt,rd}=todayCount();const pb=$('#pbar');if(pb){pb.style.setProperty('--w',(rt?rd/rt*100:0)+'%');$('#pnum').textContent=`${rd}/${rt}`;const pn=$('#pnum');pn.classList.remove('bump');void pn.offsetWidth;pn.classList.add('bump')}
-  const bd=$('#badge');bd.textContent=rt-rd;bd.hidden=!(rt-rd)||NAV.v==='orders';
+  const{rt,rd}=todayCount();const pb=$('#pbar');if(pb){pb.style.setProperty('--w',(rt?rd/rt*100:0)+'%');const pn=$('#pnum');pn.textContent=`${rd}/${rt}`;pn.classList.remove('bump');void pn.offsetWidth;pn.classList.add('bump')}
+  badge();updMini();
   if(!was&&rt&&rd===rt){setTimeout(celebrate,250);toast('Every order filled. A full day.')}else if(!was)toast(`${ticker(d)} filled · LIFX ${sgn((after-before)*100)}`);
-  if(NAV.v==='home'||NAV.v==='desk')setTimeout(()=>{const y=$('#scroll').scrollTop;renderView(false,true);$('#scroll').scrollTop=y},was?0:650);
+  NAV.order.forEach(v=>{if(v!=='orders')DIRTY[v]=true});DIRTY.orders=NAV.v!=='orders';
+  if(NAV.v==='home'||NAV.v==='desk'){const v=NAV.v;setTimeout(()=>{if(NAV.v===v)renderPane(v,'quiet')},was?0:650)}
   if(SH.kind==='area')renderArea()}
 function tick(btn){fill(btn.dataset.d,btn.dataset.h,btn)}
 function renderAll(){const n=new Date(),h=n.getHours();$('#appName').textContent=state.profile.name||'Equity';$('#greet').textContent=`${h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening'} · ${DOW[n.getDay()].slice(0,3)} ${n.getDate()} ${MON[n.getMonth()]}`;
-  const y=$('#scroll').scrollTop;renderView(false,!!app._booted);app._booted=1;$('#scroll').scrollTop=y;if(SH.kind==='area')renderArea();if(SH.kind==='settings')renderSettings()}
+  NAV.order.forEach(v=>DIRTY[v]=true);renderPane(NAV.v,BUILT[NAV.v]?'quiet':'fresh');badge();updMini();if(SH.kind==='area')renderArea();if(SH.kind==='settings')renderSettings()}
 function renderMain(){renderAll()}function renderHero(){renderAll()}function setFocus(id){if(id)openSheet('area',id)}
 
 /* ---------- loop & boot ---------- */
 let last=performance.now();
-function frame(now){const dt=Math.min(50,now-last);last=now;if(!document.hidden){if(IC&&IC.cv.isConnected)IC.draw(now,dt);if(PC&&PC.cv.isConnected)PC.draw(now,dt);if(HC&&HC.cv.isConnected)HC.draw(now,dt)}requestAnimationFrame(frame)}
+function frame(now){const dt=Math.min(50,now-last);last=now;if(!document.hidden){const hv=PANE.home.classList.contains('on'),dv=PANE.desk.classList.contains('on');if(IC&&hv&&IC.cv.isConnected)IC.draw(now,dt);if(PC&&dv&&PC.cv.isConnected)PC.draw(now,dt);if(HC&&SH.kind==='area'&&HC.cv.isConnected)HC.draw(now,dt)}requestAnimationFrame(frame)}
 function drawHolding(d){const cv=$('#hc');if(!cv)return;const old=HC&&HC._d===d.id?HC:null;HC=makeChart(cv.parentElement,cv,{axis:true});HC._d=d.id;HC.opts.color=momentum(d)>=0?TK().up:TK().down;const s=series(d,90);
   if(old&&old.disp.length===s.length){HC.disp=old.disp.slice();HC.set(s,null,true);HC.t0=-1e9}else HC.set(s);const box=cv.parentElement;let lastI=-1;const mv=e=>{const i=HC.idx(e);if(i!==lastI&&lastI!==-1&&e.pointerType!=='mouse')haptic(2);lastI=i;HC.hover=i};box.onpointermove=mv;box.onpointerdown=mv;box.onpointerleave=box.onpointercancel=()=>{HC.hover=-1;lastI=-1}}
 if(DEMO)demoPhotos();
-applyTheme();renderAll();
-addEventListener('resize',()=>{onScroll();if(IC)IC.size();if(PC)PC.size();if(HC&&HC.cv.isConnected)HC.size();if($('#map')?.classList.contains('in'))renderMap();moveDock();inkTo('#rng')});
+applyTheme();PANE.home.className='pane on';renderAll();$('#v-home').classList.add('ent');
+addEventListener('resize',()=>{if(IC){IC.size();IC._ck=''}if(PC)PC.size();if(HC&&HC.cv.isConnected)HC.size();if($('#map')?.classList.contains('in'))renderMap();moveDock();inkTo('#rng');onScroll()});
 document.fonts?.ready.then(()=>{moveDock();inkTo('#rng')});
 requestAnimationFrame(t=>{last=t;frame(t)});
 setInterval(()=>{const k=today();if(k!==app._day){app._day=k;renderAll()}},60000);app._day=today();
