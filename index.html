@@ -131,7 +131,7 @@ button{cursor:pointer;background:none;border:0;padding:0;touch-action:manipulati
 .hc svg{width:100%;height:36px;margin-top:auto;overflow:visible}
 .hc .p{display:flex;align-items:baseline;justify-content:space-between;margin-top:8px}
 .hc .p b{font-size:22px;font-weight:650;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.hc .p span{font-size:12px;font-weight:600;padding:3px 7px;border-radius:99px;background:rgba(0,0,0,.22)}
+.hc .p>span{font-size:12px;font-weight:600;padding:3px 7px;border-radius:99px;background:rgba(0,0,0,.22)}
 .hc.add{background:var(--p1);color:var(--mute);border:1.5px dashed var(--line2);box-shadow:none;align-items:center;justify-content:center;gap:8px;font-weight:600}
 .hc.add::after{display:none}
 .hc.add i{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--p2);font-style:normal;font-size:24px;font-weight:300;color:var(--ink)}
@@ -188,7 +188,7 @@ button{cursor:pointer;background:none;border:0;padding:0;touch-action:manipulati
 .hr svg{width:64px;height:28px;overflow:visible}
 .hr .pr{text-align:right}
 .hr .pr b{display:block;font-size:15.5px;font-weight:650;font-variant-numeric:tabular-nums}
-.hr .pr span{display:inline-block;margin-top:3px;font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:99px;background:color-mix(in srgb,currentColor 13%,transparent)}
+.hr .pr>span{display:inline-block;margin-top:3px;font-size:11.5px;font-weight:600;padding:2px 7px;border-radius:99px;background:color-mix(in srgb,currentColor 13%,transparent)}
 .addh{width:100%;height:54px;border-radius:20px;border:1.5px dashed var(--line2);color:var(--mute);font-weight:600;font-size:14.5px;margin-top:4px}
 
 /* desk */
@@ -344,6 +344,116 @@ textarea.field{height:auto;padding:12px 14px;resize:vertical}
 .lb h3{margin:0;font-size:24px;font-weight:700}
 .rp{position:absolute;border-radius:50%;pointer-events:none;background:currentColor;opacity:.2;transform:scale(0);animation:rp .6s ease-out forwards}
 @keyframes rp{to{transform:scale(1);opacity:0}}
+
+/* ===== v4 motion & mobile layer ===== */
+:root{--dk:0%}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){--dk:42%}}
+:root[data-theme="light"],.app[data-mode="day"]{--dk:42%}
+.app[data-mode="night"]{--dk:0%}
+.app{color:var(--ink);-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+input,textarea,select,[contenteditable="true"]{-webkit-user-select:text;user-select:text}
+html,body{overscroll-behavior:none}
+.tkr{color:color-mix(in srgb,var(--c),#000 var(--dk))}
+.str.hot,.streak.hot{color:color-mix(in srgb,#FFA62B,#000 var(--dk))}
+.og-h{color:var(--mute)}
+.hc{color:var(--fg,#fff);background:linear-gradient(155deg,color-mix(in srgb,var(--c) 90%,#fff 10%),color-mix(in srgb,var(--c) 68%,#000))}
+.hc .p>span{background:color-mix(in srgb,currentColor 16%,transparent)}
+.av{color:var(--fg,#fff);background:linear-gradient(145deg,var(--c),color-mix(in srgb,var(--c) 70%,#000))}
+.hc.add{color:var(--mute)}
+/* header title swap */
+.hd{position:relative;height:36px}
+.hd1,.hd2{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;transition:opacity .35s var(--ease),transform .45s var(--ease)}
+.hd2{opacity:0;transform:translateY(10px)}
+.hd2 b{font-size:17px}
+.app.titled .hd1{opacity:0;transform:translateY(-10px)}
+.app.titled .hd2{opacity:1;transform:none}
+/* universal press */
+button{transition:transform .35s var(--spring)}
+button:active:not(:disabled){transform:scale(.96)}
+.dock button:active{transform:scale(.9)}
+/* view transitions */
+main#view{view-transition-name:pg}
+::view-transition-old(root),::view-transition-new(root){animation:none}
+::view-transition-group(pg){animation-duration:.5s}
+::view-transition-old(pg){animation:vtOut .28s cubic-bezier(.4,0,1,1) both}
+::view-transition-new(pg){animation:vtIn .55s var(--ease) both}
+[data-dir="b"]::view-transition-old(pg){animation-name:vtOutB}
+[data-dir="b"]::view-transition-new(pg){animation-name:vtInB}
+@keyframes vtOut{to{opacity:0;transform:translateX(-36px) scale(.98);filter:blur(6px)}}
+@keyframes vtIn{from{opacity:0;transform:translateX(48px) scale(.98);filter:blur(8px)}}
+@keyframes vtOutB{to{opacity:0;transform:translateX(36px) scale(.98);filter:blur(6px)}}
+@keyframes vtInB{from{opacity:0;transform:translateX(-48px) scale(.98);filter:blur(8px)}}
+.view{animation:vIn .6s var(--ease) both}
+@keyframes vIn{from{opacity:0;transform:translateX(30px);filter:blur(6px)}}
+.view.back{animation-name:vInB}@keyframes vInB{from{opacity:0;transform:translateX(-30px);filter:blur(6px)}}
+.view.vtx,.view.quiet{animation:none}
+.quiet .st-in>*,.quiet .tile,.quiet .rw span,.quiet .hc,.quiet .chip,.quiet .spsv{animation:none!important;clip-path:none}
+/* scroll reveal */
+.st-in>.rv{animation:none}
+.rv{opacity:0;transform:translateY(26px) scale(.985);transition:opacity .7s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--i,0)*70ms)}
+.rv.in{opacity:1;transform:none}
+.quiet .rv{transition:none}
+.map:not(.in) .tile{animation-play-state:paused}
+.carousel .hc{animation:cIn .8s var(--spring) both;animation-delay:calc(var(--i)*70ms + .1s)}
+.carousel:not(.in) .hc{animation-play-state:paused}
+@keyframes cIn{from{opacity:0;transform:translateX(60px) rotate(3deg) scale(.9)}}
+/* sparkline draw */
+.spsv{clip-path:inset(-6px 100% -6px -6px);animation:clipr 1.5s cubic-bezier(.3,.7,.2,1) .3s forwards}
+.rv:not(.in) .spsv{animation-play-state:paused}
+@keyframes clipr{to{clip-path:inset(-6px -6px -6px -6px)}}
+/* odometer stagger + instant */
+.odo .dg{transition:transform 1.3s cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--i,0)*55ms)}
+.price.nt .dg{transition:none}
+.hero .price{filter:drop-shadow(0 8px 30px color-mix(in srgb,var(--up) 22%,transparent))}
+/* sheen on holding cards */
+.hc:not(.add)::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.32) 50%,transparent 62%);transform:translateX(-130%);animation:sheen 7s ease-in-out infinite;animation-delay:calc(var(--i)*.5s + 1.5s)}
+@keyframes sheen{0%,72%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+/* animated border on the best-move card */
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+.glowb::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;background:conic-gradient(from var(--ang),transparent 0 62%,color-mix(in srgb,var(--up) 90%,transparent) 80%,transparent 92%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 3.6s linear infinite}
+@keyframes spin{to{--ang:360deg}}
+.cta:not(.done){animation:breathe 2.6s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 10px 34px -6px color-mix(in srgb,var(--up) 75%,transparent)}}
+/* rating letters */
+.rw span{display:inline-block;animation:lt .8s var(--spring) both;animation-delay:calc(var(--i)*40ms + .25s)}
+@keyframes lt{from{opacity:0;transform:translateY(.5em) rotate(8deg);filter:blur(4px)}}
+.rate::after{content:"";position:absolute;width:220px;height:220px;right:-80px;top:-90px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--rc) 30%,transparent),transparent 70%);animation:float 7s ease-in-out infinite alternate;pointer-events:none}
+@keyframes float{to{transform:translate(-40px,30px) scale(1.15)}}
+/* dock */
+.dock button[aria-current="true"] svg{animation:pop .55s var(--spring)}
+@keyframes pop{0%{transform:scale(.6) rotate(-12deg)}60%{transform:scale(1.18)}}
+.dock .badge{animation:bdg .6s var(--spring)}
+@keyframes bdg{from{transform:scale(0)}}
+/* orders */
+.ord .bgtxt{opacity:calc(.35 + var(--sw,0)*.65);transform:translateX(calc(var(--sw,0)*6px - 6px)) scale(calc(.9 + var(--sw,0)*.1));transform-origin:left center}
+.ord.armed .bgtxt svg{animation:pop .45s var(--spring)}
+.ord.just .oin{animation:just .7s var(--spring)}
+@keyframes just{30%{transform:scale(1.025)}}
+.ord.just .ckb{animation:ck .6s var(--spring)}
+@keyframes ck{0%{transform:scale(.6)}60%{transform:scale(1.25)}}
+.ord[data-on="1"] .ot b{text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--ink) 30%,transparent);text-decoration-thickness:1.5px}
+#pnum.bump{animation:bump .5s var(--spring)}
+@keyframes bump{40%{transform:scale(1.3);color:var(--up)}}
+#pnum{display:inline-block}
+.cf{position:fixed;z-index:95;pointer-events:none;border-radius:2px}
+/* ring + chips */
+.ring .v{transition:stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1) .1s}
+.chip{animation:chipIn .6s var(--spring) both}
+@keyframes chipIn{from{opacity:0;transform:scale(.7)}}
+.quiet .chip{animation:none}
+/* sheet */
+.sbody.fresh>*{animation:rise .6s var(--ease) both}
+.sbody.fresh>*:nth-child(1){animation-delay:.08s}.sbody.fresh>*:nth-child(2){animation-delay:.14s}.sbody.fresh>*:nth-child(3){animation-delay:.2s}.sbody.fresh>*:nth-child(4){animation-delay:.26s}.sbody.fresh>*:nth-child(n+5){animation-delay:.32s}
+.sheet.on .s-orb{animation:orb .9s var(--spring) .15s both}
+@keyframes orb{from{transform:scale(.4) rotate(-30deg);opacity:0}}
+.app.sheet-open .scroll{transform:scale(.94) translateY(10px);border-radius:28px;filter:brightness(.8)}
+.scroll{transition:transform .6s cubic-bezier(.2,1.05,.3,1),border-radius .6s,filter .6s;transform-origin:50% 0}
+.app.sheet-open .dock{transform:translate(-50%,140%);opacity:0}
+.dock{transition:transform .55s var(--spring),opacity .4s}
+.toast{display:flex;align-items:center;gap:8px;justify-content:center}
+.toast::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--up);flex:none;box-shadow:0 0 10px var(--up)}
+@media (min-width:900px){.app.sheet-open .scroll{transform:none;filter:brightness(.85);border-radius:0}}
+@media (prefers-reduced-motion: reduce){.rv{opacity:1;transform:none}.spsv{clip-path:none}}
 @media (min-width:900px){.wrap{max-width:760px}.sheet{left:auto;right:24px;top:24px;bottom:24px;width:480px;max-height:none;border-radius:30px;border:1px solid var(--line2);transform:translateX(calc(100% + 40px))}.sheet.on{transform:none}.grab{display:none}}
 @media (max-width:380px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dock button{padding:0 13px}.hr{grid-template-columns:40px minmax(0,1fr) auto}.hr svg{display:none}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.12s!important}}
@@ -354,7 +464,7 @@ textarea.field{height:auto;padding:12px 14px;resize:vertical}
   <div class="scroll" id="scroll"><div class="wrap">
     <header class="top">
       <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-9"/></svg></div>
-      <div class="hd"><b id="appName">Equity</b><span id="greet"></span></div>
+      <div class="hd"><div class="hd1"><b id="appName">Equity</b><span id="greet"></span></div><div class="hd2" aria-hidden="true"><b id="hdT"></b></div></div>
       <span class="sync" id="sync" data-s=""></span>
       <button class="avatar" data-action="settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h3M11 17h9"/><circle cx="16" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
     </header>
@@ -461,7 +571,9 @@ const ARR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wid
 const UPA='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5l7 9H5z"/></svg>',DNA='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 19l7-9H5z"/></svg>';
 const FL='<svg class="fl" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 2-5 3-6 0 2 1 3 2 3 0-4-1-6 1-9z" fill="currentColor"/></svg>';
 const dayDiff=(a,b)=>Math.round((parseKey(b)-parseKey(a))/864e5);
-const haptic=p=>{if(!state.settings.haptics)return;try{navigator.vibrate&&navigator.vibrate(p)}catch(_){}};
+let HB=null;function iosTap(){try{if(!HB){const l=document.createElement('label');l.setAttribute('aria-hidden','true');l.style.cssText='position:fixed;left:-200px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none';const i=document.createElement('input');i.type='checkbox';i.setAttribute('switch','');i.tabIndex=-1;l.appendChild(i);document.body.appendChild(l);HB=l}HB.click()}catch(_){}}
+const CANVIB=typeof navigator.vibrate==='function'&&!/iPhone|iPad|iPod/.test(navigator.userAgent);
+const haptic=p=>{if(!state.settings.haptics)return;try{if(CANVIB)navigator.vibrate(p);else iosTap()}catch(_){}};
 const OR={blobs:[],rip:[]};function syncBlobs(){}let wkSel=null;
 function dayScore(k){const ds=state.domains.filter(d=>!d.muted);const tw=ds.reduce((s,d)=>s+(d.weight??.75),0)||1;return ds.reduce((s,d)=>s+dayRaw(d,k)*(d.weight??.75),0)/tw}
 function moodOf(v){return v>=.75?'Bull':v>=.55?'Strong':v>=.4?'Neutral':v>=.25?'Soft':'Bear'}
@@ -469,7 +581,7 @@ function ticker(d){if(d.ticker)return d.ticker;const n=d.name.toUpperCase().repl
 const P=v=>(v*100).toFixed(2);
 const cls=v=>v>.0005?'up':v<-.0005?'down':'';
 const sgn=v=>(v>0?'+':v<0?'−':'')+Math.abs(v).toFixed(2);
-function sparkSvg(vals,col,w=100){if(vals.length<2)return'<svg viewBox="0 0 100 34"></svg>';const lo=Math.min(...vals),hi=Math.max(...vals,lo+.02);const X=i=>i/(vals.length-1)*100,Y=v=>31-(v-lo)/(hi-lo)*28;const pts=vals.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');return`<svg viewBox="0 0 100 34" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="${w>100?2.4:2}" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/></svg>`}
+function sparkSvg(vals,col,w=100){if(vals.length<2)return'<svg viewBox="0 0 100 34"></svg>';const lo=Math.min(...vals),hi=Math.max(...vals,lo+.02);const X=i=>i/(vals.length-1)*100,Y=v=>31-(v-lo)/(hi-lo)*28;const pts=vals.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');return`<svg class="spsv" viewBox="0 0 100 34" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="${w>100?2.4:2}" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/></svg>`}
 /* ---------- persistence ---------- */
 let dbRef=null,saveTimer=null,saving=false,again=false;
 function setSync(s){$('#sync').dataset.s=s}
@@ -510,11 +622,11 @@ function demoPhotos(){const T=today(),pal=[['#FFB547','#FF5C8A','#2B1B4A'],['#5E
 
 /* ---------- sheets ---------- */
 const SH={kind:null,id:null};
-function openSheet(kind,id){SH.kind=kind;SH.id=id;let veil=$('#layer .veil'),sh=$('#layer .sheet');
-  if(!sh){$('#layer').innerHTML=`<div class="veil" data-action="close-sheet"></div><section class="sheet" role="dialog" aria-modal="true"><div class="grab" aria-hidden="true"><i></i></div><div class="sbody"></div></section>`;veil=$('#layer .veil');sh=$('#layer .sheet');bindDrag(sh);
+function openSheet(kind,id){SH.kind=kind;SH.id=id;app.classList.add('sheet-open');let veil=$('#layer .veil'),sh=$('#layer .sheet');
+  if(!sh){$('#layer').innerHTML=`<div class="veil" data-action="close-sheet"></div><section class="sheet" role="dialog" aria-modal="true"><div class="grab" aria-hidden="true"><i></i></div><div class="sbody"></div></section>`;veil=$('#layer .veil');sh=$('#layer .sheet');bindDrag(sh);bindBodyDrag(sh);const sbf=sh.querySelector('.sbody');sbf.classList.add('fresh');setTimeout(()=>sbf.classList.remove('fresh'),1000);
     requestAnimationFrame(()=>requestAnimationFrame(()=>{veil.classList.add('on');sh.classList.add('on')}))}
   kind==='area'?renderArea(true):renderSettings(true)}
-function closeSheet(){const v=$('#layer .veil'),s=$('#layer .sheet');SH.kind=null;if(!s)return;v.classList.remove('on');s.classList.remove('on');setTimeout(()=>{if(!SH.kind)$('#layer').innerHTML=''},450)}
+function closeSheet(){const v=$('#layer .veil'),s=$('#layer .sheet');SH.kind=null;app.classList.remove('sheet-open');if(!s)return;v.classList.remove('on');s.classList.remove('on');setTimeout(()=>{if(!SH.kind)$('#layer').innerHTML=''},450)}
 function closeLayer(){$$('.lb').forEach(x=>x.remove());$$('.modal,.mveil').forEach(x=>x.remove())}
 function bindDrag(sh){const g=sh.querySelector('.grab');let y0=null,dy=0,t0=0;g.addEventListener('pointerdown',e=>{y0=e.clientY;t0=performance.now();g.setPointerCapture(e.pointerId);sh.classList.add('drag')});g.addEventListener('pointermove',e=>{if(y0==null)return;dy=Math.max(0,e.clientY-y0);sh.style.transform=`translateY(${dy}px)`});
   const end=()=>{if(y0==null)return;sh.classList.remove('drag');sh.style.transform='';if(dy>110||dy/(performance.now()-t0)>.6)closeSheet();y0=null;dy=0};g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end)}
@@ -613,6 +725,11 @@ window.addEventListener('error',e=>{try{toast('Something went wrong: '+String(e.
 
 
 
+function bindBodyDrag(sh){const sb=sh.querySelector('.sbody');let y0=null,dy=0,t0=0,on=false;
+  sb.addEventListener('touchstart',e=>{if(sb.scrollTop>0||innerWidth>=900||e.target.closest('input,textarea,select,[contenteditable],.hchart'))return;y0=e.touches[0].clientY;t0=performance.now();on=false;dy=0},{passive:true});
+  sb.addEventListener('touchmove',e=>{if(y0==null)return;const d=e.touches[0].clientY-y0;if(!on){if(d>6&&sb.scrollTop<=0){on=true;sh.classList.add('drag')}else if(d<-4){y0=null;return}else return}e.preventDefault();dy=Math.max(0,d);sh.style.transform=`translateY(${dy*.85}px)`},{passive:false});
+  const end=()=>{if(y0==null)return;y0=null;if(!on)return;on=false;sh.classList.remove('drag');sh.style.transform='';if(dy>120||dy/(performance.now()-t0)>.7)closeSheet();dy=0};sb.addEventListener('touchend',end);sb.addEventListener('touchcancel',end)}
+
 let TKC=null,TKT=0;function TK(){const n=performance.now();if(!TKC||n-TKT>800){const c=getComputedStyle(app);TKC={};for(const k of['ink','faint','line2','up','down','p1','mono','bg'])TKC[k]=c.getPropertyValue('--'+k).trim();TKT=n}return TKC}
 function hexA(h,a){h=String(h).trim();if(h[0]!=='#')return h;const n=parseInt(h.slice(1),16);return`rgba(${n>>16&255},${n>>8&255},${n&255},${a})`}
 /* ---------- chart engine (line + candles, crosshair, animated) ---------- */
@@ -652,104 +769,131 @@ function burst(el){const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.t
 
 /* ---------- navigation ---------- */
 const NAV={v:'home',order:['home','orders','hold','desk']};
-function go(v,silent){const back=NAV.order.indexOf(v)<NAV.order.indexOf(NAV.v);NAV.v=v;$$('#dock button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.v===v)));moveDock();renderView(back);if(!silent){$('#scroll').scrollTo({top:0,behavior:RM.matches?'auto':'smooth'});haptic(6)}}
-function moveDock(){requestAnimationFrame(()=>{const a=$('#dock [aria-current="true"]'),k=$('#dock .ink');if(a&&k){k.style.left=a.offsetLeft+'px';k.style.width=a.offsetWidth+'px'}});setTimeout(()=>{const a=$('#dock [aria-current="true"]'),k=$('#dock .ink');if(a&&k){k.style.left=a.offsetLeft+'px';k.style.width=a.offsetWidth+'px'}},520)}
-$('#scroll').addEventListener('scroll',()=>app.classList.toggle('scrolled',$('#scroll').scrollTop>8),{passive:true});
+const TITLES={home:'Market',orders:'Today’s orders',hold:'Holdings',desk:'Analyst desk'};
+function go(v){if(v===NAV.v){$('#scroll').scrollTo({top:0,behavior:RM.matches?'auto':'smooth'});return}const back=NAV.order.indexOf(v)<NAV.order.indexOf(NAV.v);NAV.v=v;
+  $$('#dock button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.v===v)));moveDock();haptic(6);
+  const run=()=>{$('#scroll').scrollTop=0;app.classList.remove('scrolled','titled');renderView(back,false,!!VT)};
+  const VT=document.startViewTransition&&!RM.matches;
+  if(VT){document.documentElement.dataset.dir=back?'b':'f';try{document.startViewTransition(run)}catch(e){run()}}else run()}
+function moveDock(){const f=()=>{const a=$('#dock [aria-current="true"]'),k=$('#dock .ink');if(a&&k){k.style.left=a.offsetLeft+'px';k.style.width=a.offsetWidth+'px'}};requestAnimationFrame(f);setTimeout(f,540)}
+$('#scroll').addEventListener('scroll',()=>{const y=$('#scroll').scrollTop;app.classList.toggle('scrolled',y>8);app.classList.toggle('titled',NAV.v!=='home'&&y>64)},{passive:true});
+
+/* ---------- motion helpers ---------- */
+const cu=(v,d=0)=>`<span class="cu" data-v="${v}" data-d="${d}">${(+v).toFixed(d)}</span>`;
+function countUp(root){if(RM.matches)return;$$('.cu',root).forEach(el=>{if(el._done||el.closest('.rv:not(.in)'))return;el._done=1;const v=+el.dataset.v,d=+el.dataset.d||0,t0=performance.now(),D=1000+Math.random()*300;
+  const st=n=>{const k=Math.min(1,(n-t0)/D),e=1-Math.pow(1-k,4);el.textContent=(v*e).toFixed(d);if(k<1)requestAnimationFrame(st)};el.textContent=(0).toFixed(d);requestAnimationFrame(st)})}
+let IO=null;
+function reveal(root,quiet){const els=$$('.rv',root);if(quiet||RM.matches||!('IntersectionObserver' in window)){els.forEach(e=>{e.classList.add('in');if(e.id==='map')renderMap()});return}
+  if(IO)IO.disconnect();IO=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');IO.unobserve(en.target);countUp(en.target);if(en.target.id==='map')renderMap()}}),{root:$('#scroll'),rootMargin:'0px 0px -6% 0px',threshold:.08});els.forEach(e=>IO.observe(e))}
+function fgOf(h){const n=parseInt(String(h).replace('#',''),16);if(isNaN(n))return'#fff';const r=n>>16&255,g=n>>8&255,b=n&255;return(.299*r+.587*g+.114*b)/255>.7?'#15160F':'#fff'}
+function letters(t){return[...t].map((c,i)=>`<span style="--i:${i}">${c===' '?'&nbsp;':esc(c)}</span>`).join('')}
+function celebrate(){if(RM.matches)return;const cols=[TK().up,'#ffffff',...state.domains.map(d=>d.color)],W=innerWidth,H=innerHeight;
+  for(let q=0;q<70;q++){const sp=document.createElement('span');sp.className='cf';const sz=5+Math.random()*6;sp.style.cssText=`left:${W/2}px;top:${H*.62}px;width:${sz}px;height:${sz*(Math.random()>.5?1:.45)}px;background:${cols[q%cols.length]}`;app.appendChild(sp);
+    const a=-Math.PI/2+(Math.random()-.5)*2.2,v=260+Math.random()*320,dx=Math.cos(a)*v,dy=Math.sin(a)*v,r=(Math.random()-.5)*900;
+    sp.animate([{transform:'translate(-50%,-50%) rotate(0)',opacity:1},{transform:`translate(calc(-50% + ${dx*.7}px),calc(-50% + ${dy*.75}px)) rotate(${r*.6}deg)`,opacity:1,offset:.45},{transform:`translate(calc(-50% + ${dx}px),calc(-50% + ${dy*.4+H*.45}px)) rotate(${r}deg)`,opacity:0}],{duration:1500+Math.random()*900,easing:'cubic-bezier(.15,.7,.4,1)'}).onfinish=()=>sp.remove()}}
 
 /* ---------- views ---------- */
-let IC=null,PC=null,HC=null;const UI2={range:30,ctype:'line'};
+let IC=null,PC=null,HC=null;const UI2={range:30,ctype:'line'};let ringPrev=0,shownPrice=null;
 function idxData(n){const s=lifeSeries(n+1);const raw=[...Array(n+1)].map((_,i)=>dayScore(addDays(today(),i-n)));return{vals:s.slice(1),ohlc:s.slice(1).map((c,i)=>{const o=s[i],r=raw[i+1];return{o,c,h:Math.max(o,c,(c+r)/2),l:Math.min(o,c,(c+r)/2*.9+Math.min(o,c)*.1)}})}}
 function renderTop(){renderAll()}
 function todayCount(){const T=today();let rt=0,rd=0;for(const d of state.domains){if(d.muted)continue;for(const h of d.habits){rt++;if(h.days[T])rd++}}return{rt,rd}}
 function bestStreak(){let b={s:0};for(const d of state.domains)for(const h of d.habits){const s=streak(h);if(s>b.s)b={s,h,d}}return b}
-function renderView(back){const v=$('#view');IC=null;PC=null;v.className='view'+(back?' back':'');void v.offsetWidth;
-  v.innerHTML={home:homeHTML,orders:ordersHTML,hold:holdHTML,desk:deskHTML}[NAV.v]();v.className='view'+(back?' back':'');
-  if(NAV.v==='home')mountHome();if(NAV.v==='desk')mountDesk();if(NAV.v==='orders')mountOrders();if(NAV.v==='desk')renderPhoto();
+function renderView(back,quiet,vt){const v=$('#view');const oldIC=IC;IC=null;PC=null;
+  v.innerHTML={home:homeHTML,orders:ordersHTML,hold:holdHTML,desk:deskHTML}[NAV.v]();
+  v.className='view'+(quiet?' quiet':vt?' vtx':back?' back':'');if(!quiet&&!vt){v.style.animation='none';void v.offsetWidth;v.style.animation=''}
+  $('#hdT').textContent=TITLES[NAV.v];
+  if(NAV.v==='home')mountHome(quiet,oldIC);if(NAV.v==='desk')mountDesk(quiet);if(NAV.v==='orders')mountOrders();if(NAV.v==='desk')renderPhoto();
+  reveal(v,quiet);if(!quiet)countUp(v);else $$('.cu',v).forEach(e=>e._done=1);
   const{rt,rd}=todayCount();const bd=$('#badge');bd.hidden=!(rt-rd)||NAV.v==='orders';bd.textContent=rt-rd;moveDock()}
 function bannerHTML(){return DEMO?`<div class="banner"><p><b>Demo portfolio.</b> Try anything. Nothing is saved.</p><button class="btn ghost" data-action="exit-demo">Open my portfolio</button></div>`:state.example?`<div class="banner"><p><b>Sample portfolio.</b> Swipe an order, open a holding, scrub the chart.</p><button class="btn" data-action="start-fresh">Start mine</button><button class="btn ghost" data-action="keep-example">Keep exploring</button></div>`:''}
+const CHKC=CHK.replace('stroke-width="3"','stroke="currentColor" stroke-width="3"');
 function homeHTML(){const{rt,rd}=todayCount(),C=2*Math.PI*29,f=rt?rd/rt:0,mg=marginal(),b=mg[0],bs=bestStreak();const top=state.domains.filter(d=>!d.muted).sort((a,b)=>momentum(b)-momentum(a))[0];
   return`<div class="st-in"><section class="hero"><div class="lab"><i></i>Life Index · LIFX</div><div class="price" id="price"></div><div class="chg" id="chg"></div>
    <div class="chartw" id="cw"><canvas id="ic"></canvas><div class="tip" id="tip"></div></div>
    <div class="rrow"><div class="pills" id="rng"><span class="ink"></span>${[[7,'1W'],[30,'1M'],[90,'3M'],[180,'6M']].map(([v,l])=>`<button data-action="rng" data-v="${v}" aria-pressed="${UI2.range===v}">${l}</button>`).join('')}</div><button class="ctb" data-action="ctype" aria-pressed="${UI2.ctype==='candle'}" aria-label="Candles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3v4M7 15v6M17 3v8M17 17v4"/><rect x="4.5" y="7" width="5" height="8" rx="1.2"/><rect x="14.5" y="11" width="5" height="6" rx="1.2"/></svg></button></div></section>
   ${bannerHTML()}
   <div class="bento">
-   <button class="card" data-action="go" data-v="orders"><span class="k">Today</span><div class="ringc"><svg class="ring" viewBox="0 0 66 66"><circle class="t" cx="33" cy="33" r="29"/><circle class="v" cx="33" cy="33" r="29" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-off="${C*(1-f)}"/></svg><div><div class="big">${rd}<small>/${rt}</small></div><div class="sub">orders filled</div></div></div></button>
-   <div class="card"><span class="k">${FL} Best streak</span><div class="big">${bs.s}<small>days</small></div><div class="sub">${bs.h?esc(bs.h.name):'Start one today'}</div></div>
-   <div class="card wide">${b?`<div class="move"><div class="ml"><span class="k">Best next move</span><b>${esc(b.h.name)}</b><span class="gain"><span class="tkr" style="--c:${esc(b.d.color)}">${ticker(b.d)}</span> <span class="up">+${b.gain.toFixed(2)} LIFX</span></span></div><button class="cta" data-action="fill" data-d="${b.d.id}" data-h="${b.h.id}">${CHK.replace('stroke-width="3"','stroke="currentColor" stroke-width="3"')}Fill</button></div>`:`<div class="move"><div class="ml"><span class="k">Best next move</span><b>Every order is filled</b><span class="gain up">A full day. Well run.</span></div></div>`}</div>
+   <button class="card" data-action="go" data-v="orders"><span class="k">Today</span><div class="ringc"><svg class="ring" viewBox="0 0 66 66"><circle class="t" cx="33" cy="33" r="29"/><circle class="v" cx="33" cy="33" r="29" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-ringPrev)}" data-off="${C*(1-f)}" data-f="${f}"/></svg><div><div class="big">${cu(rd)}<small>/${rt}</small></div><div class="sub">orders filled</div></div></div></button>
+   <div class="card"><span class="k">${FL} Best streak</span><div class="big">${cu(bs.s)}<small>days</small></div><div class="sub">${bs.h?esc(bs.h.name):'Start one today'}</div></div>
+   <div class="card wide ${b?'glowb':''}">${b?`<div class="move"><div class="ml"><span class="k">Best next move</span><b>${esc(b.h.name)}</b><span class="gain"><span class="tkr" style="--c:${esc(b.d.color)}">${ticker(b.d)}</span> <span class="up">+${b.gain.toFixed(2)} LIFX</span></span></div><button class="cta" data-action="fill" data-d="${b.d.id}" data-h="${b.h.id}">${CHKC}Fill</button></div>`:`<div class="move"><div class="ml"><span class="k">Best next move</span><b>Every order is filled</b><span class="gain up">A full day. Well run.</span></div></div>`}</div>
    ${top?`<button class="card wide" data-action="open" data-d="${top.id}"><div class="move"><div class="ml"><span class="k">Top mover this week</span><b>${esc(top.name)}</b><span class="gain"><span class="tkr" style="--c:${esc(top.color)}">${ticker(top)}</span> <span class="${cls(momentum(top))}">${sgn(momentum(top)*100)}</span></span></div><div style="width:110px;height:44px">${sparkSvg(series(top,30),momentum(top)>=0?'var(--up)':'var(--down)',120)}</div></div></button>`:''}
   </div>
-  <div class="sec-h"><h3>Holdings</h3><button class="link" data-action="go" data-v="hold">See all ${ARR}</button></div>
-  <div class="carousel">${state.domains.map(d=>{const m=momentum(d)*100;return`<button class="hc" style="--c:${esc(d.color)}" data-action="open" data-d="${d.id}"><span class="t">${ticker(d)}</span><span class="n">${esc(d.name)}</span>${sparkSvg(series(d,30),'#fff',120)}<span class="p"><b>${P(prog(d))}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(1)}</span></span></button>`}).join('')}<button class="hc add" data-action="new-area"><i>+</i>Add</button></div>
-  <div class="sec-h"><h3>Market map</h3><span class="eb">Size = weight · colour = 7d</span></div>
-  <div class="map" id="map"></div></div>`}
+  <div class="sec-h rv"><h3>Holdings</h3><button class="link" data-action="go" data-v="hold">See all ${ARR}</button></div>
+  <div class="carousel rv">${state.domains.map((d,i)=>{const m=momentum(d)*100;return`<button class="hc" style="--c:${esc(d.color)};--fg:${fgOf(d.color)};--i:${i}" data-action="open" data-d="${d.id}"><span class="t">${ticker(d)}</span><span class="n">${esc(d.name)}</span>${sparkSvg(series(d,30),'currentColor',120)}<span class="p"><b>${cu(prog(d)*100,2)}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(1)}</span></span></button>`}).join('')}<button class="hc add" data-action="new-area" style="--i:${state.domains.length}"><i>+</i>Add</button></div>
+  <div class="sec-h rv"><h3>Market map</h3><span class="eb">Size = weight · colour = 7d</span></div>
+  <div class="map rv" id="map"></div></div>`}
 function heat(c){const t=Math.max(-1,Math.min(1,c/12)),k=Math.abs(t);const base=[38,40,46],up=[92,170,40],dn=[200,52,78];const to=t>=0?up:dn;return`linear-gradient(145deg,rgb(${base.map((v,i)=>Math.round(v+(to[i]-v)*(k*.9+.1)+18)).join(',')}),rgb(${base.map((v,i)=>Math.round(v+(to[i]-v)*(k*.9+.1)*.75)).join(',')}))`}
 function renderMap(){const box=$('#map');if(!box)return;const W=box.clientWidth,H=box.clientHeight;if(!W)return;const items=state.domains.map(d=>({d,v:Math.max(.08,(d.muted?.2:d.weight??.75)*(.4+prog(d))),c:momentum(d)*100})).sort((a,b)=>b.v-a.v);const g=4;
   box.innerHTML=squarify(items,0,0,W,H).map((t,i)=>{const lg=t.w>140&&t.h>100;return`<button class="tile ${lg?'lg':''}" style="left:${t.x+g/2}px;top:${t.y+g/2}px;width:${t.w-g}px;height:${t.h-g}px;background:${heat(t.c)};--i:${i}" data-action="open" data-d="${t.d.id}" aria-label="${esc(t.d.name)}"><div><b>${ticker(t.d)}</b>${t.h>70&&t.w>80?`<small>${esc(t.d.name)}</small>`:''}</div>${t.h>48?`<em>${t.c>=0?'+':'−'}${Math.abs(t.c).toFixed(1)}</em>`:''}</button>`}).join('')}
-let lastPrice=null;
-function setPrice(v){const el=$('#price');if(!el)return;const s=(v*100).toFixed(2);if(!el.querySelector('.odo')||el.dataset.len!==String(s.length)){el.dataset.len=s.length;el.innerHTML='<span class="odo">'+[...s].map(ch=>ch==='.'?'<span class="sep">.</span>':'<span class="dg">'+[...'0123456789'].map(x=>`<span>${x}</span>`).join('')+'</span>').join('')+'</span>'}
-  requestAnimationFrame(()=>{const dgs=el.querySelectorAll('.dg');let k=0;[...s].forEach(ch=>{if(ch==='.')return;dgs[k++].style.transform=`translateY(-${(+ch)*10}%)`})});
-  if(lastPrice!=null&&Math.abs(v-lastPrice)>1e-6){el.classList.remove('pup','pdn');void el.offsetWidth;el.classList.add(v>lastPrice?'pup':'pdn')}lastPrice=v}
-function idxVals(n){return lifeSeries(n)}
-function updHero(keep){if(!IC)return;const n=UI2.range,{vals,ohlc}=idxData(n);IC.opts.candle=UI2.ctype==='candle';IC.ohlc=ohlc;IC.set(vals,null,keep);const cb=$('.ctb');if(cb)cb.setAttribute('aria-pressed',String(UI2.ctype==='candle'));const lv=LIFX();setPrice(lv);
+function setPrice(v,instant){const el=$('#price');if(!el)return;const s=(v*100).toFixed(2);let fresh=false;if(!el.querySelector('.odo')||el.dataset.len!==String(s.length)){fresh=true;el.dataset.len=s.length;el.innerHTML='<span class="odo">'+[...s].map((ch,i)=>ch==='.'?'<span class="sep">.</span>':`<span class="dg" style="--i:${i}">`+[...'0123456789'].map(x=>`<span>${x}</span>`).join('')+'</span>').join('')+'</span>'}
+  if(instant)el.classList.add('nt');else if(fresh)void el.offsetWidth;const dgs=el.querySelectorAll('.dg');let k=0;[...s].forEach(ch=>{if(ch==='.')return;dgs[k++].style.transform=`translateY(-${(+ch)*10}%)`});
+  if(instant){void el.offsetWidth;el.classList.remove('nt')}
+  if(!instant&&shownPrice!=null&&Math.abs(v-shownPrice)>1e-6){el.classList.remove('pup','pdn');void el.offsetWidth;el.classList.add(v>shownPrice?'pup':'pdn')}shownPrice=v}
+function updHero(keep){if(!IC)return;const n=UI2.range,{vals,ohlc}=idxData(n);IC.opts.candle=UI2.ctype==='candle';IC.ohlc=ohlc;IC.set(vals,null,keep);const cb=$('.ctb');if(cb)cb.setAttribute('aria-pressed',String(UI2.ctype==='candle'));setPrice(LIFX());
   const all=lifeSeries(n+1),d1=(all[all.length-1]-all[all.length-2])*100,dn=(vals[vals.length-1]-vals[0])*100;app.dataset.trend=dn>=0?'up':'down';IC.opts.color=dn>=0?TK().up:TK().down;
   $('#chg').innerHTML=`<span class="chip ${cls(dn/100)}">${dn>=0?UPA:DNA}${sgn(dn)}</span><span class="muted">${({7:'past week',30:'past month',90:'past 3 months',180:'past 6 months'})[n]}</span><span class="chip ${cls(d1/100)}" style="margin-left:auto">${sgn(d1)} today</span>`;
   $$('#rng button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.v===n)));inkTo('#rng')}
 function inkTo(sel){requestAnimationFrame(()=>{const s=$(sel),a=s&&s.querySelector('[aria-pressed="true"]'),k=s&&s.querySelector('.ink');if(a&&k){k.style.left=a.offsetLeft+'px';k.style.width=a.offsetWidth+'px'}})}
-function mountHome(){IC=makeChart($('#cw'),$('#ic'),{axis:false});lastPrice=null;setPrice(0);updHero(false);setTimeout(()=>setPrice(LIFX()),80);renderMap();
-  setTimeout(()=>{$$('.ring .v').forEach(c=>c.style.strokeDashoffset=c.dataset.off)},120);
-  const box=$('#cw'),tip=$('#tip');const mv=e=>{if(!IC)return;const i=IC.idx(e);IC.hover=i;const n=IC.vals.length,d2=parseKey(addDays(today(),i-(n-1)));const g=IC.geo;tip.innerHTML=`${P(IC.vals[i])}<small>${d2.getDate()} ${MON[d2.getMonth()]}${i===n-1?' · today':''}</small>`;tip.style.left=Math.min(Math.max(g.X(i)/g.r,56),box.clientWidth-56)+'px';tip.classList.add('on')};
-  const off=()=>{if(IC)IC.hover=-1;tip.classList.remove('on')};box.addEventListener('pointermove',mv);box.addEventListener('pointerdown',mv);box.addEventListener('pointerleave',off);box.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')setTimeout(off,1500)})}
-function ordersHTML(){const T=today(),{rt,rd}=todayCount();const groups=state.domains.filter(d=>!d.muted&&d.habits.length);
+function mountHome(quiet,old){IC=makeChart($('#cw'),$('#ic'),{axis:false});
+  if(quiet&&old&&old.disp.length){IC.disp=old.disp.slice();IC.vals=old.vals;IC.t0=-1e9;setPrice(shownPrice??LIFX(),true);updHero(true);IC.t0=-1e9}
+  else{shownPrice=null;setPrice(0,true);shownPrice=null;updHero(false);setTimeout(()=>{if(IC)setPrice(LIFX())},60)}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{$$('.ring .v').forEach(c=>{c.style.strokeDashoffset=c.dataset.off;ringPrev=+c.dataset.f})}));
+  const box=$('#cw'),tip=$('#tip');let lastI=-1;const mv=e=>{if(!IC)return;const i=IC.idx(e);if(i!==lastI&&lastI!==-1&&e.pointerType!=='mouse')haptic(2);lastI=i;IC.hover=i;const n=IC.vals.length,d2=parseKey(addDays(today(),i-(n-1)));const g=IC.geo;tip.innerHTML=`${P(IC.vals[i])}<small>${d2.getDate()} ${MON[d2.getMonth()]}${i===n-1?' · today':''}</small>`;tip.style.left=Math.min(Math.max(g.X(i)/g.r,56),box.clientWidth-56)+'px';tip.classList.add('on')};
+  const off=()=>{if(IC)IC.hover=-1;lastI=-1;tip.classList.remove('on')};box.addEventListener('pointermove',mv);box.addEventListener('pointerdown',mv);box.addEventListener('pointerleave',off);box.addEventListener('pointercancel',off);box.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')setTimeout(off,1400)})}
+function ordersHTML(){const T=today(),{rt,rd}=todayCount();const groups=state.domains.filter(d=>!d.muted&&d.habits.length);let n=0;
   return`<div class="st-in"><h1 class="vt">Today’s orders</h1><p class="vs">Swipe right to fill. Tap the circle if you prefer.</p>
    <div class="prog"><div class="bar"><i id="pbar" style="--w:${rt?rd/rt*100:0}%"></i></div><b id="pnum">${rd}/${rt}</b></div>
-   ${groups.map(d=>`<div class="og"><div class="og-h" style="--c:${esc(d.color)}"><i></i>${esc(d.name)}<span class="tkr" style="--c:${esc(d.color)};margin-left:auto">${ticker(d)}</span></div>${d.habits.map(h=>{const s=streak(h);return`<div class="ord" data-d="${d.id}" data-h="${h.id}" data-on="${h.days[T]?1:0}"><div class="bgtxt">${CHK.replace('stroke-width="3"','stroke="currentColor" stroke-width="3"')} Fill order</div><div class="oin"><button class="ckb" data-action="fill" data-d="${d.id}" data-h="${h.id}" aria-label="Fill ${esc(h.name)}">${CHK}</button><div class="ot"><b>${esc(h.name)}</b><span>${habitWeek(h)} of 7 this week</span></div><span class="str ${s>=3?'hot':''}">${s?FL+s:''}</span></div></div>`}).join('')}</div>`).join('')||`<div class="empty"><b>No orders yet</b>Open a holding and add a ritual: something you do on a day.</div>`}
+   ${groups.map(d=>`<div class="og"><div class="og-h" style="--c:${esc(d.color)}"><i></i>${esc(d.name)}<span class="tkr" style="--c:${esc(d.color)};margin-left:auto">${ticker(d)}</span></div>${d.habits.map(h=>{const s=streak(h);return`<div class="ord rv" style="--i:${n++%3}" data-d="${d.id}" data-h="${h.id}" data-on="${h.days[T]?1:0}"><div class="bgtxt">${CHKC} Fill order</div><div class="oin"><button class="ckb" data-action="fill" data-d="${d.id}" data-h="${h.id}" aria-label="Fill ${esc(h.name)}">${CHK}</button><div class="ot"><b>${esc(h.name)}</b><span>${habitWeek(h)} of 7 this week</span></div><span class="str ${s>=3?'hot':''}">${s?FL+s:''}</span></div></div>`}).join('')}</div>`).join('')||`<div class="empty"><b>No orders yet</b>Open a holding and add a ritual: something you do on a day.</div>`}
    ${groups.length?`<p class="hint">Swipe right on an order ${ARR}</p>`:''}</div>`}
 function mountOrders(){$$('.ord').forEach(o=>{const inn=o.querySelector('.oin');let x0=null,y0=0,dx=0,mode=null;
   o.addEventListener('pointerdown',e=>{if(e.target.closest('.ckb'))return;x0=e.clientX;y0=e.clientY;dx=0;mode=null});
   o.addEventListener('pointermove',e=>{if(x0==null)return;const mx=e.clientX-x0,my=e.clientY-y0;if(!mode&&Math.hypot(mx,my)>8){mode=Math.abs(mx)>Math.abs(my)&&mx>0?'swipe':'scroll';if(mode==='swipe'){o.classList.add('dragging');try{o.setPointerCapture(e.pointerId)}catch(_){}}}
-    if(mode==='swipe'){dx=Math.max(0,mx);const lim=o.clientWidth*.42;inn.style.transform=`translateX(${dx<lim?dx:lim+(dx-lim)*.25}px)`;if(dx>lim&&!o._arm){o._arm=1;haptic(8)}else if(dx<=lim)o._arm=0}});
-  const end=()=>{if(x0==null)return;o.classList.remove('dragging');inn.style.transform='';if(mode==='swipe'&&dx>o.clientWidth*.42){fill(o.dataset.d,o.dataset.h,o.querySelector('.ckb'))}x0=null;mode=null;o._arm=0};
+    if(mode==='swipe'){dx=Math.max(0,mx);const lim=o.clientWidth*.38;inn.style.transform=`translateX(${dx<lim?dx:lim+(dx-lim)*.25}px)`;o.style.setProperty('--sw',Math.min(1,dx/lim));if(dx>lim&&!o._arm){o._arm=1;o.classList.add('armed');haptic(8)}else if(dx<=lim&&o._arm){o._arm=0;o.classList.remove('armed')}}});
+  const end=()=>{if(x0==null)return;o.classList.remove('dragging','armed');inn.style.transform='';o.style.setProperty('--sw',0);if(mode==='swipe'&&dx>o.clientWidth*.38){fill(o.dataset.d,o.dataset.h,o.querySelector('.ckb'))}x0=null;mode=null;o._arm=0};
   o.addEventListener('pointerup',end);o.addEventListener('pointercancel',end)})}
 function holdHTML(){return`<div class="st-in"><h1 class="vt">Holdings</h1><p class="vs">${state.domains.length} areas of your life. Tap one for its chart and details.</p>
-  <div class="hl">${state.domains.map(d=>{const m=momentum(d)*100;return`<button class="hr" data-action="open" data-d="${d.id}"><span class="av" style="--c:${esc(d.color)}">${ticker(d)}</span><span class="nm"><b>${esc(d.name)}</b><span>${moodOf(prog(d))}${d.muted?' · paused':''}</span></span>${sparkSvg(series(d,30),m>=0?'var(--up)':'var(--down)')}<span class="pr ${cls(m/100)}"><b style="color:var(--ink)">${P(prog(d))}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(2)}</span></span></button>`}).join('')}</div>
-  <button class="addh" data-action="new-area">+ Add a holding</button></div>`}
+  <div class="hl">${state.domains.map((d,i)=>{const m=momentum(d)*100;return`<button class="hr rv" style="--i:${i%4}" data-action="open" data-d="${d.id}"><span class="av" style="--c:${esc(d.color)};--fg:${fgOf(d.color)}">${ticker(d)}</span><span class="nm"><b>${esc(d.name)}</b><span>${moodOf(prog(d))}${d.muted?' · paused':''}</span></span>${sparkSvg(series(d,30),m>=0?'var(--up)':'var(--down)')}<span class="pr ${cls(m/100)}"><b style="color:var(--ink)">${cu(prog(d)*100,2)}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(2)}</span></span></button>`}).join('')}</div>
+  <button class="addh rv" data-action="new-area">+ Add a holding</button></div>`}
 function deskHTML(){const all=lifeSeries(15),w=(all[all.length-1]-all[all.length-8])*100;const ds=state.domains.filter(d=>!d.muted).map(d=>({d,m:momentum(d)*100})).sort((a,b)=>b.m-a.m);
-  const R=w>1.5?['Outperform','var(--up)']:w<-1.5?['Underperform','var(--down)']:['Hold','var(--mute)'];const lead=ds[0],lag=ds[ds.length-1];const mg=marginal().slice(0,4);
+  const R=w>1.5?['Outperform','var(--up)']:w<-1.5?['Underperform','var(--down)']:['Hold','var(--ink)'];const lead=ds[0],lag=ds[ds.length-1];const mg=marginal().slice(0,4);
   return`<div class="st-in"><h1 class="vt">Analyst desk</h1><p class="vs">Your weekly read, your best moves, and where your habits lead.</p>
-   <section class="rate" style="--rc:${R[1]}"><span class="eb">This week’s rating</span><div class="rw">${R[0]}</div><p>LIFX ${w>=0?'gained':'lost'} <b class="${cls(w/100)}">${sgn(w)}</b> in seven days.${lead&&lead.m>0?` <b>${esc(lead.d.name)}</b> is leading, up ${lead.m.toFixed(1)}.`:''}${lag&&lag.m<0&&lag!==lead?` <b>${esc(lag.d.name)}</b> is the drag at ${lag.m.toFixed(1)}; a single order there moves the index most.`:' Keep your streaks running.'}</p></section>
-   <div class="sec-h"><h3>Best moves now</h3><span class="eb">Impact on LIFX</span></div>
-   <div class="moves">${mg.map((x,i)=>`<div class="mv"><span class="rk">0${i+1}</span><div class="ml"><b>${esc(x.h.name)}</b><span><span class="tkr" style="--c:${esc(x.d.color)}">${ticker(x.d)}</span> <span class="up">+${x.gain.toFixed(2)}</span></span></div><button class="go" data-action="fill" data-d="${x.d.id}" data-h="${x.h.id}">Fill</button></div>`).join('')||`<div class="empty"><b>Every order is filled</b>Nothing left on today’s book.</div>`}</div>
-   <div class="sec-h"><h3>Compounding</h3><span class="eb">Next 60 days</span></div>
-   <section class="card proj"><span class="k">If you keep this pace, LIFX reaches</span><div class="pv"><b id="pvB">—</b><span id="pvD"></span></div><div class="pc" id="pcb"><canvas id="pc"></canvas></div>
+   <section class="rate" style="--rc:${R[1]}"><span class="eb">This week’s rating</span><div class="rw" aria-label="${R[0]}">${letters(R[0])}</div><p>LIFX ${w>=0?'gained':'lost'} <b class="${cls(w/100)}">${sgn(w)}</b> in seven days.${lead&&lead.m>0?` <b>${esc(lead.d.name)}</b> is leading, up ${lead.m.toFixed(1)}.`:''}${lag&&lag.m<0&&lag!==lead?` <b>${esc(lag.d.name)}</b> is the drag at ${lag.m.toFixed(1)}; a single order there moves the index most.`:' Keep your streaks running.'}</p></section>
+   <div class="sec-h rv"><h3>Best moves now</h3><span class="eb">Impact on LIFX</span></div>
+   <div class="moves">${mg.map((x,i)=>`<div class="mv rv" style="--i:${i}"><span class="rk">0${i+1}</span><div class="ml"><b>${esc(x.h.name)}</b><span><span class="tkr" style="--c:${esc(x.d.color)}">${ticker(x.d)}</span> <span class="up">+${x.gain.toFixed(2)}</span></span></div><button class="go" data-action="fill" data-d="${x.d.id}" data-h="${x.h.id}">Fill</button></div>`).join('')||`<div class="empty"><b>Every order is filled</b>Nothing left on today’s book.</div>`}</div>
+   <div class="sec-h rv"><h3>Compounding</h3><span class="eb">Next 60 days</span></div>
+   <section class="card proj rv"><span class="k">If you keep this pace, LIFX reaches</span><div class="pv"><b id="pvB">—</b><span id="pvD"></span></div><div class="pc" id="pcb"><canvas id="pc"></canvas></div>
     <div class="sl"><span>Orders a day</span><input class="rg" type="range" id="projR" min="0" max="10" step="1" value="5" aria-label="Orders a day"><b id="projN"></b></div><p id="projNote"></p></section>
-   <div class="sec-h"><h3>Daily frame</h3><span class="eb" id="phStreak"></span></div><section class="card" id="phBox"></section></div>`}
-function mountDesk(){const cf=curFill(),rg=$('#projR');rg.max=Math.max(1,cf.H);rg.value=Math.min(cf.H,Math.round(cf.avg));PC=makeChart($('#pcb'),$('#pc'),{axis:false});renderProj();rg.addEventListener('input',()=>{renderProj();haptic(4)})}
+   <div class="sec-h rv"><h3>Daily frame</h3><span class="eb" id="phStreak"></span></div><section class="card rv" id="phBox"></section></div>`}
+let projV=null;
+function mountDesk(quiet){const cf=curFill(),rg=$('#projR');rg.max=Math.max(1,cf.H);rg.value=projV!=null&&quiet?Math.min(projV,cf.H):Math.min(cf.H,Math.round(cf.avg));PC=makeChart($('#pcb'),$('#pc'),{axis:false});renderProj();rg.addEventListener('input',()=>{projV=+rg.value;renderProj();haptic(3)})}
 function renderProj(){const rg=$('#projR');if(!rg)return;const n=+rg.value,cf=curFill();$('#projN').textContent=`${n}/${cf.H}`;rg.style.setProperty('--f',(cf.H?n/cf.H*100:0)+'%');
   const cur=LIFX(),tgt=steady(n),D=60,vals=[...Array(D+1)].map((_,t)=>tgt+(cur-tgt)*Math.exp(-t/7));PC.opts.color=tgt>=cur?TK().up:TK().down;PC.set(vals,null,true);
-  const end=new Date();end.setDate(end.getDate()+D);const dl=(tgt-cur)*100;$('#pvB').textContent=P(tgt);$('#pvD').innerHTML=`<span class="${cls(dl/100)}">${sgn(dl)}</span> by ${end.getDate()} ${MON[end.getMonth()]}`;
+  const end=new Date();end.setDate(end.getDate()+D);const dl=(tgt-cur)*100;const pb=$('#pvB');const from=parseFloat(pb.textContent)||0,to=tgt*100,t0=performance.now();cancelAnimationFrame(pb._r);const st=nw=>{const k=Math.min(1,(nw-t0)/450),e=1-Math.pow(1-k,3);pb.textContent=(from+(to-from)*e).toFixed(2);if(k<1)pb._r=requestAnimationFrame(st)};pb._r=requestAnimationFrame(st);
+  $('#pvD').innerHTML=`<span class="${cls(dl/100)}">${sgn(dl)}</span> by ${end.getDate()} ${MON[end.getMonth()]}`;
   $('#projNote').innerHTML=dl>.3?`Fill <b>${n}</b> of ${cf.H} orders a day and you climb <b>${sgn(dl)}</b>. Small orders compound.`:dl<-.3?`At <b>${n}</b> a day the index slides <b>${sgn(dl)}</b>. One more order a day turns it.`:`At <b>${n}</b> a day you hold steady. One more order a day starts the climb.`}
 
 /* ---------- fill an order ---------- */
 function fill(did,hid,el){const d=D_(did),h=d?.habits.find(x=>x.id===hid);if(!h)return;const k=today(),was=!!h.days[k];const before=LIFX();if(was)delete h.days[k];else h.days[k]=1;
   haptic(was?6:[8,24,12]);if(!was&&el&&!RM.matches)burst(el);commit({render:false});const after=LIFX();
-  $$(`.ord[data-h="${hid}"]`).forEach(o=>o.dataset.on=was?0:1);
-  const{rt,rd}=todayCount();const pb=$('#pbar');if(pb){pb.style.setProperty('--w',(rt?rd/rt*100:0)+'%');$('#pnum').textContent=`${rd}/${rt}`}
+  $$(`.ord[data-h="${hid}"]`).forEach(o=>{o.dataset.on=was?0:1;if(!was){o.classList.remove('just');void o.offsetWidth;o.classList.add('just')}});
+  const{rt,rd}=todayCount();const pb=$('#pbar');if(pb){pb.style.setProperty('--w',(rt?rd/rt*100:0)+'%');$('#pnum').textContent=`${rd}/${rt}`;const pn=$('#pnum');pn.classList.remove('bump');void pn.offsetWidth;pn.classList.add('bump')}
   const bd=$('#badge');bd.textContent=rt-rd;bd.hidden=!(rt-rd)||NAV.v==='orders';
-  if(!was)toast(`${ticker(d)} filled · LIFX ${sgn((after-before)*100)}`);
-  if(NAV.v==='home'||NAV.v==='desk')setTimeout(()=>{const y=$('#scroll').scrollTop;renderView();$('#scroll').scrollTop=y},was?0:650);
+  if(!was&&rt&&rd===rt){setTimeout(celebrate,250);toast('Every order filled. A full day.')}else if(!was)toast(`${ticker(d)} filled · LIFX ${sgn((after-before)*100)}`);
+  if(NAV.v==='home'||NAV.v==='desk')setTimeout(()=>{const y=$('#scroll').scrollTop;renderView(false,true);$('#scroll').scrollTop=y},was?0:650);
   if(SH.kind==='area')renderArea()}
 function tick(btn){fill(btn.dataset.d,btn.dataset.h,btn)}
 function renderAll(){const n=new Date(),h=n.getHours();$('#appName').textContent=state.profile.name||'Equity';$('#greet').textContent=`${h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening'} · ${DOW[n.getDay()].slice(0,3)} ${n.getDate()} ${MON[n.getMonth()]}`;
-  const y=$('#scroll').scrollTop;renderView();$('#scroll').scrollTop=y;if(SH.kind==='area')renderArea();if(SH.kind==='settings')renderSettings()}
+  const y=$('#scroll').scrollTop;renderView(false,!!app._booted);app._booted=1;$('#scroll').scrollTop=y;if(SH.kind==='area')renderArea();if(SH.kind==='settings')renderSettings()}
 function renderMain(){renderAll()}function renderHero(){renderAll()}function setFocus(id){if(id)openSheet('area',id)}
 
 /* ---------- loop & boot ---------- */
 let last=performance.now();
 function frame(now){const dt=Math.min(50,now-last);last=now;if(!document.hidden){if(IC&&IC.cv.isConnected)IC.draw(now,dt);if(PC&&PC.cv.isConnected)PC.draw(now,dt);if(HC&&HC.cv.isConnected)HC.draw(now,dt)}requestAnimationFrame(frame)}
-function drawHolding(d){const cv=$('#hc');if(!cv)return;HC=makeChart(cv.parentElement,cv,{axis:true});HC.opts.color=momentum(d)>=0?TK().up:TK().down;HC.set(series(d,90));const box=cv.parentElement;const mv=e=>{HC.hover=HC.idx(e)};box.onpointermove=mv;box.onpointerdown=mv;box.onpointerleave=()=>HC.hover=-1}
+function drawHolding(d){const cv=$('#hc');if(!cv)return;const old=HC&&HC._d===d.id?HC:null;HC=makeChart(cv.parentElement,cv,{axis:true});HC._d=d.id;HC.opts.color=momentum(d)>=0?TK().up:TK().down;const s=series(d,90);
+  if(old&&old.disp.length===s.length){HC.disp=old.disp.slice();HC.set(s,null,true);HC.t0=-1e9}else HC.set(s);const box=cv.parentElement;let lastI=-1;const mv=e=>{const i=HC.idx(e);if(i!==lastI&&lastI!==-1&&e.pointerType!=='mouse')haptic(2);lastI=i;HC.hover=i};box.onpointermove=mv;box.onpointerdown=mv;box.onpointerleave=box.onpointercancel=()=>{HC.hover=-1;lastI=-1}}
 if(DEMO)demoPhotos();
 applyTheme();renderAll();
-addEventListener('resize',()=>{if(IC)IC.size();if(PC)PC.size();if(HC&&HC.cv.isConnected)HC.size();renderMap();moveDock();inkTo('#rng')});
+addEventListener('resize',()=>{if(IC)IC.size();if(PC)PC.size();if(HC&&HC.cv.isConnected)HC.size();if($('#map')?.classList.contains('in'))renderMap();moveDock();inkTo('#rng')});
 document.fonts?.ready.then(()=>{moveDock();inkTo('#rng')});
 requestAnimationFrame(t=>{last=t;frame(t)});
 setInterval(()=>{const k=today();if(k!==app._day){app._day=k;renderAll()}},60000);app._day=today();
