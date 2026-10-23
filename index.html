@@ -365,6 +365,7 @@ html,body{overscroll-behavior:none}
 .hd1,.hd2{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;transition:opacity .35s var(--ease),transform .45s var(--ease)}
 .hd2{opacity:0;transform:translateY(10px)}
 .hd2 b{font-size:17px}
+.hd1 b,.hd2 b,.hd1 span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .app.titled .hd1{opacity:0;transform:translateY(-10px)}
 .app.titled .hd2{opacity:1;transform:none}
 /* universal press */
@@ -454,6 +455,33 @@ main#view{view-transition-name:pg}
 .toast::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--up);flex:none;box-shadow:0 0 10px var(--up)}
 @media (min-width:900px){.app.sheet-open .scroll{transform:none;filter:brightness(.85);border-radius:0}}
 @media (prefers-reduced-motion: reduce){.rv{opacity:1;transform:none}.spsv{clip-path:none}}
+
+/* ===== v5 scroll choreography ===== */
+.zs{scale:var(--zs,1);translate:0 var(--zy,0px);transform-origin:50% 50%}
+.zs.zo,.zs.rv.in.settled{opacity:var(--zo,1)}
+.rv.settled{transition:transform .35s var(--spring);transition-delay:0s}
+.hero .price{transform-origin:0 85%;will-change:transform,opacity,filter}
+.hero .lab,.hero .chg,.hero .chartw{will-change:transform,opacity}
+.glow{will-change:translate}
+.carousel .hc{scale:var(--cs,1);filter:brightness(var(--cb,1));transform-origin:100% 50%}
+.mini{display:flex;align-items:center;gap:6px;height:34px;max-width:0;padding:0;border:0 solid var(--line2);border-radius:99px;background:color-mix(in srgb,var(--p2) 85%,transparent);overflow:hidden;white-space:nowrap;opacity:0;transform:translateY(-10px) scale(.8);pointer-events:none;flex:none;font-variant-numeric:tabular-nums;transition:max-width .55s var(--spring),padding .55s var(--spring),opacity .3s,transform .55s var(--spring),border-width .3s}
+.app.mini-on .mini{max-width:190px;padding:0 10px 0 9px;border-width:1px;opacity:1;transform:none;pointer-events:auto}
+.mini i{width:6px;height:6px;border-radius:50%;background:var(--up);flex:none;animation:live 2s infinite}
+.mini b{font-size:14.5px;font-weight:700;letter-spacing:-.02em}
+.mini .mc{font-size:11.5px;font-weight:650}
+.mini .ms2 svg{width:30px;height:14px;display:block;overflow:visible}
+.mini .ms2 .spsv{animation:none;clip-path:none}
+.mini.flash{animation:mflash .9s ease}
+@keyframes mflash{30%{box-shadow:0 0 0 4px color-mix(in srgb,var(--up) 35%,transparent);background:color-mix(in srgb,var(--up) 22%,var(--p2))}}
+.app.mini-on .sync{opacity:0;width:0;margin-left:-12px}
+.sync{transition:opacity .3s,width .3s,margin .3s}
+.sprog{position:absolute;left:0;right:0;bottom:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--up));transform-origin:0 50%;transform:scaleX(0);opacity:0;transition:opacity .3s;pointer-events:none}
+.app.scrolled .sprog{opacity:.9}
+.fadeb{position:absolute;left:0;right:0;bottom:0;height:calc(120px + env(safe-area-inset-bottom,0px));z-index:30;pointer-events:none;background:linear-gradient(to top,var(--bg) 18%,color-mix(in srgb,var(--bg) 60%,transparent) 55%,transparent)}
+.app.titled .hd2 b{animation:none}
+.og-h{position:sticky;top:calc(63px + env(safe-area-inset-top,0px));z-index:6;margin-left:-6px;margin-right:-6px;padding:8px 10px;border-radius:14px;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%)}
+@media (max-width:380px){.mini .ms2{display:none}.app.mini-on .mini{max-width:130px}.app.titled .hd2 b{font-size:15px}}
+@media (prefers-reduced-motion: reduce){.zs{scale:1;translate:none}.zs.zo,.zs.rv.in.settled{opacity:1}}
 @media (min-width:900px){.wrap{max-width:760px}.sheet{left:auto;right:24px;top:24px;bottom:24px;width:480px;max-height:none;border-radius:30px;border:1px solid var(--line2);transform:translateX(calc(100% + 40px))}.sheet.on{transform:none}.grab{display:none}}
 @media (max-width:380px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.dock button{padding:0 13px}.hr{grid-template-columns:40px minmax(0,1fr) auto}.hr svg{display:none}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0ms!important;transition-duration:.12s!important}}
@@ -465,11 +493,13 @@ main#view{view-transition-name:pg}
     <header class="top">
       <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-9"/></svg></div>
       <div class="hd"><div class="hd1"><b id="appName">Equity</b><span id="greet"></span></div><div class="hd2" aria-hidden="true"><b id="hdT"></b></div></div>
-      <span class="sync" id="sync" data-s=""></span>
+      <button class="mini" id="mini" data-action="go" data-v="home" aria-label="Life Index" tabindex="-1"><i></i><b id="miniP">0.00</b><span class="mc" id="miniC"></span><span class="ms2" id="miniS"></span></button><span class="sync" id="sync" data-s=""></span>
       <button class="avatar" data-action="settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h3M11 17h9"/><circle cx="16" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></button>
+      <span class="sprog" id="sprog"></span>
     </header>
     <main id="view"></main>
   </div></div>
+  <div class="fadeb" aria-hidden="true"></div>
   <nav class="dock" id="dock" aria-label="Sections"><span class="ink"></span>
     <button data-action="go" data-v="home" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-9"/><path d="M15 6h5v5"/></svg><span>Market</span></button>
     <button data-action="go" data-v="orders" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg><span>Orders</span><i class="badge" id="badge" hidden></i></button>
@@ -769,22 +799,42 @@ function burst(el){const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.t
 
 /* ---------- navigation ---------- */
 const NAV={v:'home',order:['home','orders','hold','desk']};
-const TITLES={home:'Market',orders:'Today’s orders',hold:'Holdings',desk:'Analyst desk'};
+const TITLES={home:'Market',orders:'Orders',hold:'Holdings',desk:'Desk'};
 function go(v){if(v===NAV.v){$('#scroll').scrollTo({top:0,behavior:RM.matches?'auto':'smooth'});return}const back=NAV.order.indexOf(v)<NAV.order.indexOf(NAV.v);NAV.v=v;
   $$('#dock button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.v===v)));moveDock();haptic(6);
   const run=()=>{$('#scroll').scrollTop=0;app.classList.remove('scrolled','titled');renderView(back,false,!!VT)};
   const VT=document.startViewTransition&&!RM.matches;
   if(VT){document.documentElement.dataset.dir=back?'b':'f';try{document.startViewTransition(run)}catch(e){run()}}else run()}
 function moveDock(){const f=()=>{const a=$('#dock [aria-current="true"]'),k=$('#dock .ink');if(a&&k){k.style.left=a.offsetLeft+'px';k.style.width=a.offsetWidth+'px'}};requestAnimationFrame(f);setTimeout(f,540)}
-$('#scroll').addEventListener('scroll',()=>{const y=$('#scroll').scrollTop;app.classList.toggle('scrolled',y>8);app.classList.toggle('titled',NAV.v!=='home'&&y>64)},{passive:true});
+/* ---------- scroll choreography ---------- */
+const SC={els:[],raf:0,hero:null};
+function collectZ(){SC.els=$$('#view .zs');const h=$('#view .hero');SC.hero=h?{lab:h.querySelector('.lab'),price:$('#price'),chg:$('#chg'),cw:$('#cw')}:null;const car=$('#car');if(car&&!car._b){car._b=1;car.addEventListener('scroll',()=>{if(!car._r)car._r=requestAnimationFrame(()=>{car._r=0;carFX(car)})},{passive:true});carFX(car)}}
+function onScroll(){if(!SC.raf)SC.raf=requestAnimationFrame(scrollFX)}
+function carFX(car){if(RM.matches)return;const L=car.getBoundingClientRect().left+parseFloat(getComputedStyle(car).paddingLeft||0);$$('.hc',car).forEach(c=>{const r=c.getBoundingClientRect(),o=(r.left-L)/(r.width+10);const past=Math.max(0,-o),far=Math.max(0,o-1.2);c.style.setProperty('--cs',(1-Math.min(.18,past*.2)-Math.min(.06,far*.05)).toFixed(4));c.style.setProperty('--cb',(1-Math.min(.5,past*.55)).toFixed(3))})}
+function scrollFX(){SC.raf=0;const sc=$('#scroll'),y=sc.scrollTop,H=sc.clientHeight,max=sc.scrollHeight-H;
+  app.classList.toggle('scrolled',y>8);app.classList.toggle('titled',NAV.v!=='home'&&y>64);app.classList.toggle('mini-on',NAV.v==='home'?y>135:y>40);
+  $('#sprog').style.transform=`scaleX(${max>0?Math.min(1,y/max):0})`;
+  $('.glow').style.translate=`0 ${(-y*.25).toFixed(1)}px`;
+  if(RM.matches)return;
+  if(SC.hero&&NAV.v==='home'){const k=Math.min(1,Math.max(0,y/330)),e=k*k*(3-2*k),hr=SC.hero;
+    hr.price.style.transform=`translate3d(0,${(y*.46).toFixed(1)}px,0) scale(${(1-.32*e).toFixed(4)})`;hr.price.style.opacity=Math.max(0,1-e*1.25).toFixed(3);hr.price.style.filter=e>.002?`blur(${(e*7).toFixed(1)}px)`:'';
+    hr.lab.style.transform=hr.chg.style.transform=`translate3d(0,${(y*.46).toFixed(1)}px,0)`;hr.lab.style.opacity=hr.chg.style.opacity=Math.max(0,1-e*1.6).toFixed(3);
+    hr.cw.style.transform=`translate3d(0,${(y*.24).toFixed(1)}px,0) scale(${(1-.06*e).toFixed(4)})`;hr.cw.style.opacity=Math.max(0,1-e*.95).toFixed(3)}
+  const vh=H;for(const el of SC.els){const r=el.getBoundingClientRect();if(r.bottom<-80||r.top>vh+80)continue;const c=(r.top+r.bottom)/2,d=(c-vh*.42)/(vh*.6);
+    const top=Math.max(0,-d-.32),bot=Math.max(0,d-.5);const s=1-Math.min(.12,top*.14)-Math.min(.07,bot*.1),o=1-Math.min(.85,top*1.05),ty=-Math.min(18,top*22)+Math.min(14,bot*18);
+    el.style.setProperty('--zs',s.toFixed(4));el.style.setProperty('--zo',o.toFixed(3));el.style.setProperty('--zy',ty.toFixed(1)+'px')}}
+$('#scroll').addEventListener('scroll',onScroll,{passive:true});
+function updMini(){const a=lifeSeries(30),v=a[a.length-1]||0,d=(a[a.length-1]-a[a.length-2])*100;const pb=$('#miniP'),old=parseFloat(pb.textContent)||0,nv=v*100;
+  pb.textContent=nv.toFixed(2);const mc=$('#miniC');mc.className='mc '+cls(d/100);mc.textContent=sgn(d);$('#miniS').innerHTML=sparkSvg(a,d>=0?'var(--up)':'var(--down)');
+  if(old&&Math.abs(old-nv)>.001){const m=$('#mini');m.classList.remove('flash');void m.offsetWidth;m.classList.add('flash')}}
 
 /* ---------- motion helpers ---------- */
 const cu=(v,d=0)=>`<span class="cu" data-v="${v}" data-d="${d}">${(+v).toFixed(d)}</span>`;
 function countUp(root){if(RM.matches)return;$$('.cu',root).forEach(el=>{if(el._done||el.closest('.rv:not(.in)'))return;el._done=1;const v=+el.dataset.v,d=+el.dataset.d||0,t0=performance.now(),D=1000+Math.random()*300;
   const st=n=>{const k=Math.min(1,(n-t0)/D),e=1-Math.pow(1-k,4);el.textContent=(v*e).toFixed(d);if(k<1)requestAnimationFrame(st)};el.textContent=(0).toFixed(d);requestAnimationFrame(st)})}
 let IO=null;
-function reveal(root,quiet){const els=$$('.rv',root);if(quiet||RM.matches||!('IntersectionObserver' in window)){els.forEach(e=>{e.classList.add('in');if(e.id==='map')renderMap()});return}
-  if(IO)IO.disconnect();IO=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');IO.unobserve(en.target);countUp(en.target);if(en.target.id==='map')renderMap()}}),{root:$('#scroll'),rootMargin:'0px 0px -6% 0px',threshold:.08});els.forEach(e=>IO.observe(e))}
+function reveal(root,quiet){const els=$$('.rv',root);if(quiet||RM.matches||!('IntersectionObserver' in window)){els.forEach(e=>{e.classList.add('in','settled');if(e.id==='map')renderMap()});return}
+  if(IO)IO.disconnect();IO=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');IO.unobserve(en.target);countUp(en.target);setTimeout(()=>en.target.classList.add('settled'),1100);if(en.target.id==='map')renderMap()}}),{root:$('#scroll'),rootMargin:'0px 0px -6% 0px',threshold:.08});els.forEach(e=>IO.observe(e))}
 function fgOf(h){const n=parseInt(String(h).replace('#',''),16);if(isNaN(n))return'#fff';const r=n>>16&255,g=n>>8&255,b=n&255;return(.299*r+.587*g+.114*b)/255>.7?'#15160F':'#fff'}
 function letters(t){return[...t].map((c,i)=>`<span style="--i:${i}">${c===' '?'&nbsp;':esc(c)}</span>`).join('')}
 function celebrate(){if(RM.matches)return;const cols=[TK().up,'#ffffff',...state.domains.map(d=>d.color)],W=innerWidth,H=innerHeight;
@@ -803,7 +853,7 @@ function renderView(back,quiet,vt){const v=$('#view');const oldIC=IC;IC=null;PC=
   v.className='view'+(quiet?' quiet':vt?' vtx':back?' back':'');if(!quiet&&!vt){v.style.animation='none';void v.offsetWidth;v.style.animation=''}
   $('#hdT').textContent=TITLES[NAV.v];
   if(NAV.v==='home')mountHome(quiet,oldIC);if(NAV.v==='desk')mountDesk(quiet);if(NAV.v==='orders')mountOrders();if(NAV.v==='desk')renderPhoto();
-  reveal(v,quiet);if(!quiet)countUp(v);else $$('.cu',v).forEach(e=>e._done=1);
+  reveal(v,quiet);if(!quiet)countUp(v);else $$('.cu',v).forEach(e=>e._done=1);collectZ();scrollFX();updMini();
   const{rt,rd}=todayCount();const bd=$('#badge');bd.hidden=!(rt-rd)||NAV.v==='orders';bd.textContent=rt-rd;moveDock()}
 function bannerHTML(){return DEMO?`<div class="banner"><p><b>Demo portfolio.</b> Try anything. Nothing is saved.</p><button class="btn ghost" data-action="exit-demo">Open my portfolio</button></div>`:state.example?`<div class="banner"><p><b>Sample portfolio.</b> Swipe an order, open a holding, scrub the chart.</p><button class="btn" data-action="start-fresh">Start mine</button><button class="btn ghost" data-action="keep-example">Keep exploring</button></div>`:''}
 const CHKC=CHK.replace('stroke-width="3"','stroke="currentColor" stroke-width="3"');
@@ -813,15 +863,15 @@ function homeHTML(){const{rt,rd}=todayCount(),C=2*Math.PI*29,f=rt?rd/rt:0,mg=mar
    <div class="rrow"><div class="pills" id="rng"><span class="ink"></span>${[[7,'1W'],[30,'1M'],[90,'3M'],[180,'6M']].map(([v,l])=>`<button data-action="rng" data-v="${v}" aria-pressed="${UI2.range===v}">${l}</button>`).join('')}</div><button class="ctb" data-action="ctype" aria-pressed="${UI2.ctype==='candle'}" aria-label="Candles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3v4M7 15v6M17 3v8M17 17v4"/><rect x="4.5" y="7" width="5" height="8" rx="1.2"/><rect x="14.5" y="11" width="5" height="6" rx="1.2"/></svg></button></div></section>
   ${bannerHTML()}
   <div class="bento">
-   <button class="card" data-action="go" data-v="orders"><span class="k">Today</span><div class="ringc"><svg class="ring" viewBox="0 0 66 66"><circle class="t" cx="33" cy="33" r="29"/><circle class="v" cx="33" cy="33" r="29" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-ringPrev)}" data-off="${C*(1-f)}" data-f="${f}"/></svg><div><div class="big">${cu(rd)}<small>/${rt}</small></div><div class="sub">orders filled</div></div></div></button>
-   <div class="card"><span class="k">${FL} Best streak</span><div class="big">${cu(bs.s)}<small>days</small></div><div class="sub">${bs.h?esc(bs.h.name):'Start one today'}</div></div>
-   <div class="card wide ${b?'glowb':''}">${b?`<div class="move"><div class="ml"><span class="k">Best next move</span><b>${esc(b.h.name)}</b><span class="gain"><span class="tkr" style="--c:${esc(b.d.color)}">${ticker(b.d)}</span> <span class="up">+${b.gain.toFixed(2)} LIFX</span></span></div><button class="cta" data-action="fill" data-d="${b.d.id}" data-h="${b.h.id}">${CHKC}Fill</button></div>`:`<div class="move"><div class="ml"><span class="k">Best next move</span><b>Every order is filled</b><span class="gain up">A full day. Well run.</span></div></div>`}</div>
-   ${top?`<button class="card wide" data-action="open" data-d="${top.id}"><div class="move"><div class="ml"><span class="k">Top mover this week</span><b>${esc(top.name)}</b><span class="gain"><span class="tkr" style="--c:${esc(top.color)}">${ticker(top)}</span> <span class="${cls(momentum(top))}">${sgn(momentum(top)*100)}</span></span></div><div style="width:110px;height:44px">${sparkSvg(series(top,30),momentum(top)>=0?'var(--up)':'var(--down)',120)}</div></div></button>`:''}
+   <button class="card zs zo" data-action="go" data-v="orders"><span class="k">Today</span><div class="ringc"><svg class="ring" viewBox="0 0 66 66"><circle class="t" cx="33" cy="33" r="29"/><circle class="v" cx="33" cy="33" r="29" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-ringPrev)}" data-off="${C*(1-f)}" data-f="${f}"/></svg><div><div class="big">${cu(rd)}<small>/${rt}</small></div><div class="sub">orders filled</div></div></div></button>
+   <div class="card zs zo"><span class="k">${FL} Best streak</span><div class="big">${cu(bs.s)}<small>days</small></div><div class="sub">${bs.h?esc(bs.h.name):'Start one today'}</div></div>
+   <div class="card wide zs zo ${b?'glowb':''}">${b?`<div class="move"><div class="ml"><span class="k">Best next move</span><b>${esc(b.h.name)}</b><span class="gain"><span class="tkr" style="--c:${esc(b.d.color)}">${ticker(b.d)}</span> <span class="up">+${b.gain.toFixed(2)} LIFX</span></span></div><button class="cta" data-action="fill" data-d="${b.d.id}" data-h="${b.h.id}">${CHKC}Fill</button></div>`:`<div class="move"><div class="ml"><span class="k">Best next move</span><b>Every order is filled</b><span class="gain up">A full day. Well run.</span></div></div>`}</div>
+   ${top?`<button class="card wide zs zo" data-action="open" data-d="${top.id}"><div class="move"><div class="ml"><span class="k">Top mover this week</span><b>${esc(top.name)}</b><span class="gain"><span class="tkr" style="--c:${esc(top.color)}">${ticker(top)}</span> <span class="${cls(momentum(top))}">${sgn(momentum(top)*100)}</span></span></div><div style="width:110px;height:44px">${sparkSvg(series(top,30),momentum(top)>=0?'var(--up)':'var(--down)',120)}</div></div></button>`:''}
   </div>
-  <div class="sec-h rv"><h3>Holdings</h3><button class="link" data-action="go" data-v="hold">See all ${ARR}</button></div>
-  <div class="carousel rv">${state.domains.map((d,i)=>{const m=momentum(d)*100;return`<button class="hc" style="--c:${esc(d.color)};--fg:${fgOf(d.color)};--i:${i}" data-action="open" data-d="${d.id}"><span class="t">${ticker(d)}</span><span class="n">${esc(d.name)}</span>${sparkSvg(series(d,30),'currentColor',120)}<span class="p"><b>${cu(prog(d)*100,2)}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(1)}</span></span></button>`}).join('')}<button class="hc add" data-action="new-area" style="--i:${state.domains.length}"><i>+</i>Add</button></div>
-  <div class="sec-h rv"><h3>Market map</h3><span class="eb">Size = weight · colour = 7d</span></div>
-  <div class="map rv" id="map"></div></div>`}
+  <div class="sec-h rv zs"><h3>Holdings</h3><button class="link" data-action="go" data-v="hold">See all ${ARR}</button></div>
+  <div class="carousel rv zs" id="car">${state.domains.map((d,i)=>{const m=momentum(d)*100;return`<button class="hc" style="--c:${esc(d.color)};--fg:${fgOf(d.color)};--i:${i}" data-action="open" data-d="${d.id}"><span class="t">${ticker(d)}</span><span class="n">${esc(d.name)}</span>${sparkSvg(series(d,30),'currentColor',120)}<span class="p"><b>${cu(prog(d)*100,2)}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(1)}</span></span></button>`}).join('')}<button class="hc add" data-action="new-area" style="--i:${state.domains.length}"><i>+</i>Add</button></div>
+  <div class="sec-h rv zs"><h3>Market map</h3><span class="eb">Size = weight · colour = 7d</span></div>
+  <div class="map rv zs" id="map"></div></div>`}
 function heat(c){const t=Math.max(-1,Math.min(1,c/12)),k=Math.abs(t);const base=[38,40,46],up=[92,170,40],dn=[200,52,78];const to=t>=0?up:dn;return`linear-gradient(145deg,rgb(${base.map((v,i)=>Math.round(v+(to[i]-v)*(k*.9+.1)+18)).join(',')}),rgb(${base.map((v,i)=>Math.round(v+(to[i]-v)*(k*.9+.1)*.75)).join(',')}))`}
 function renderMap(){const box=$('#map');if(!box)return;const W=box.clientWidth,H=box.clientHeight;if(!W)return;const items=state.domains.map(d=>({d,v:Math.max(.08,(d.muted?.2:d.weight??.75)*(.4+prog(d))),c:momentum(d)*100})).sort((a,b)=>b.v-a.v);const g=4;
   box.innerHTML=squarify(items,0,0,W,H).map((t,i)=>{const lg=t.w>140&&t.h>100;return`<button class="tile ${lg?'lg':''}" style="left:${t.x+g/2}px;top:${t.y+g/2}px;width:${t.w-g}px;height:${t.h-g}px;background:${heat(t.c)};--i:${i}" data-action="open" data-d="${t.d.id}" aria-label="${esc(t.d.name)}"><div><b>${ticker(t.d)}</b>${t.h>70&&t.w>80?`<small>${esc(t.d.name)}</small>`:''}</div>${t.h>48?`<em>${t.c>=0?'+':'−'}${Math.abs(t.c).toFixed(1)}</em>`:''}</button>`}).join('')}
@@ -842,8 +892,8 @@ function mountHome(quiet,old){IC=makeChart($('#cw'),$('#ic'),{axis:false});
   const off=()=>{if(IC)IC.hover=-1;lastI=-1;tip.classList.remove('on')};box.addEventListener('pointermove',mv);box.addEventListener('pointerdown',mv);box.addEventListener('pointerleave',off);box.addEventListener('pointercancel',off);box.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')setTimeout(off,1400)})}
 function ordersHTML(){const T=today(),{rt,rd}=todayCount();const groups=state.domains.filter(d=>!d.muted&&d.habits.length);let n=0;
   return`<div class="st-in"><h1 class="vt">Today’s orders</h1><p class="vs">Swipe right to fill. Tap the circle if you prefer.</p>
-   <div class="prog"><div class="bar"><i id="pbar" style="--w:${rt?rd/rt*100:0}%"></i></div><b id="pnum">${rd}/${rt}</b></div>
-   ${groups.map(d=>`<div class="og"><div class="og-h" style="--c:${esc(d.color)}"><i></i>${esc(d.name)}<span class="tkr" style="--c:${esc(d.color)};margin-left:auto">${ticker(d)}</span></div>${d.habits.map(h=>{const s=streak(h);return`<div class="ord rv" style="--i:${n++%3}" data-d="${d.id}" data-h="${h.id}" data-on="${h.days[T]?1:0}"><div class="bgtxt">${CHKC} Fill order</div><div class="oin"><button class="ckb" data-action="fill" data-d="${d.id}" data-h="${h.id}" aria-label="Fill ${esc(h.name)}">${CHK}</button><div class="ot"><b>${esc(h.name)}</b><span>${habitWeek(h)} of 7 this week</span></div><span class="str ${s>=3?'hot':''}">${s?FL+s:''}</span></div></div>`}).join('')}</div>`).join('')||`<div class="empty"><b>No orders yet</b>Open a holding and add a ritual: something you do on a day.</div>`}
+   <div class="prog zs zo"><div class="bar"><i id="pbar" style="--w:${rt?rd/rt*100:0}%"></i></div><b id="pnum">${rd}/${rt}</b></div>
+   ${groups.map(d=>`<div class="og"><div class="og-h" style="--c:${esc(d.color)}"><i></i>${esc(d.name)}<span class="tkr" style="--c:${esc(d.color)};margin-left:auto">${ticker(d)}</span></div>${d.habits.map(h=>{const s=streak(h);return`<div class="ord rv zs" style="--i:${n++%3}" data-d="${d.id}" data-h="${h.id}" data-on="${h.days[T]?1:0}"><div class="bgtxt">${CHKC} Fill order</div><div class="oin"><button class="ckb" data-action="fill" data-d="${d.id}" data-h="${h.id}" aria-label="Fill ${esc(h.name)}">${CHK}</button><div class="ot"><b>${esc(h.name)}</b><span>${habitWeek(h)} of 7 this week</span></div><span class="str ${s>=3?'hot':''}">${s?FL+s:''}</span></div></div>`}).join('')}</div>`).join('')||`<div class="empty"><b>No orders yet</b>Open a holding and add a ritual: something you do on a day.</div>`}
    ${groups.length?`<p class="hint">Swipe right on an order ${ARR}</p>`:''}</div>`}
 function mountOrders(){$$('.ord').forEach(o=>{const inn=o.querySelector('.oin');let x0=null,y0=0,dx=0,mode=null;
   o.addEventListener('pointerdown',e=>{if(e.target.closest('.ckb'))return;x0=e.clientX;y0=e.clientY;dx=0;mode=null});
@@ -852,18 +902,18 @@ function mountOrders(){$$('.ord').forEach(o=>{const inn=o.querySelector('.oin');
   const end=()=>{if(x0==null)return;o.classList.remove('dragging','armed');inn.style.transform='';o.style.setProperty('--sw',0);if(mode==='swipe'&&dx>o.clientWidth*.38){fill(o.dataset.d,o.dataset.h,o.querySelector('.ckb'))}x0=null;mode=null;o._arm=0};
   o.addEventListener('pointerup',end);o.addEventListener('pointercancel',end)})}
 function holdHTML(){return`<div class="st-in"><h1 class="vt">Holdings</h1><p class="vs">${state.domains.length} areas of your life. Tap one for its chart and details.</p>
-  <div class="hl">${state.domains.map((d,i)=>{const m=momentum(d)*100;return`<button class="hr rv" style="--i:${i%4}" data-action="open" data-d="${d.id}"><span class="av" style="--c:${esc(d.color)};--fg:${fgOf(d.color)}">${ticker(d)}</span><span class="nm"><b>${esc(d.name)}</b><span>${moodOf(prog(d))}${d.muted?' · paused':''}</span></span>${sparkSvg(series(d,30),m>=0?'var(--up)':'var(--down)')}<span class="pr ${cls(m/100)}"><b style="color:var(--ink)">${cu(prog(d)*100,2)}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(2)}</span></span></button>`}).join('')}</div>
-  <button class="addh rv" data-action="new-area">+ Add a holding</button></div>`}
+  <div class="hl">${state.domains.map((d,i)=>{const m=momentum(d)*100;return`<button class="hr rv zs" style="--i:${i%4}" data-action="open" data-d="${d.id}"><span class="av" style="--c:${esc(d.color)};--fg:${fgOf(d.color)}">${ticker(d)}</span><span class="nm"><b>${esc(d.name)}</b><span>${moodOf(prog(d))}${d.muted?' · paused':''}</span></span>${sparkSvg(series(d,30),m>=0?'var(--up)':'var(--down)')}<span class="pr ${cls(m/100)}"><b style="color:var(--ink)">${cu(prog(d)*100,2)}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(2)}</span></span></button>`}).join('')}</div>
+  <button class="addh rv zs" data-action="new-area">+ Add a holding</button></div>`}
 function deskHTML(){const all=lifeSeries(15),w=(all[all.length-1]-all[all.length-8])*100;const ds=state.domains.filter(d=>!d.muted).map(d=>({d,m:momentum(d)*100})).sort((a,b)=>b.m-a.m);
   const R=w>1.5?['Outperform','var(--up)']:w<-1.5?['Underperform','var(--down)']:['Hold','var(--ink)'];const lead=ds[0],lag=ds[ds.length-1];const mg=marginal().slice(0,4);
   return`<div class="st-in"><h1 class="vt">Analyst desk</h1><p class="vs">Your weekly read, your best moves, and where your habits lead.</p>
-   <section class="rate" style="--rc:${R[1]}"><span class="eb">This week’s rating</span><div class="rw" aria-label="${R[0]}">${letters(R[0])}</div><p>LIFX ${w>=0?'gained':'lost'} <b class="${cls(w/100)}">${sgn(w)}</b> in seven days.${lead&&lead.m>0?` <b>${esc(lead.d.name)}</b> is leading, up ${lead.m.toFixed(1)}.`:''}${lag&&lag.m<0&&lag!==lead?` <b>${esc(lag.d.name)}</b> is the drag at ${lag.m.toFixed(1)}; a single order there moves the index most.`:' Keep your streaks running.'}</p></section>
-   <div class="sec-h rv"><h3>Best moves now</h3><span class="eb">Impact on LIFX</span></div>
-   <div class="moves">${mg.map((x,i)=>`<div class="mv rv" style="--i:${i}"><span class="rk">0${i+1}</span><div class="ml"><b>${esc(x.h.name)}</b><span><span class="tkr" style="--c:${esc(x.d.color)}">${ticker(x.d)}</span> <span class="up">+${x.gain.toFixed(2)}</span></span></div><button class="go" data-action="fill" data-d="${x.d.id}" data-h="${x.h.id}">Fill</button></div>`).join('')||`<div class="empty"><b>Every order is filled</b>Nothing left on today’s book.</div>`}</div>
-   <div class="sec-h rv"><h3>Compounding</h3><span class="eb">Next 60 days</span></div>
-   <section class="card proj rv"><span class="k">If you keep this pace, LIFX reaches</span><div class="pv"><b id="pvB">—</b><span id="pvD"></span></div><div class="pc" id="pcb"><canvas id="pc"></canvas></div>
+   <section class="rate zs" style="--rc:${R[1]}"><span class="eb">This week’s rating</span><div class="rw" aria-label="${R[0]}">${letters(R[0])}</div><p>LIFX ${w>=0?'gained':'lost'} <b class="${cls(w/100)}">${sgn(w)}</b> in seven days.${lead&&lead.m>0?` <b>${esc(lead.d.name)}</b> is leading, up ${lead.m.toFixed(1)}.`:''}${lag&&lag.m<0&&lag!==lead?` <b>${esc(lag.d.name)}</b> is the drag at ${lag.m.toFixed(1)}; a single order there moves the index most.`:' Keep your streaks running.'}</p></section>
+   <div class="sec-h rv zs"><h3>Best moves now</h3><span class="eb">Impact on LIFX</span></div>
+   <div class="moves">${mg.map((x,i)=>`<div class="mv rv zs" style="--i:${i}"><span class="rk">0${i+1}</span><div class="ml"><b>${esc(x.h.name)}</b><span><span class="tkr" style="--c:${esc(x.d.color)}">${ticker(x.d)}</span> <span class="up">+${x.gain.toFixed(2)}</span></span></div><button class="go" data-action="fill" data-d="${x.d.id}" data-h="${x.h.id}">Fill</button></div>`).join('')||`<div class="empty"><b>Every order is filled</b>Nothing left on today’s book.</div>`}</div>
+   <div class="sec-h rv zs"><h3>Compounding</h3><span class="eb">Next 60 days</span></div>
+   <section class="card proj rv zs"><span class="k">If you keep this pace, LIFX reaches</span><div class="pv"><b id="pvB">—</b><span id="pvD"></span></div><div class="pc" id="pcb"><canvas id="pc"></canvas></div>
     <div class="sl"><span>Orders a day</span><input class="rg" type="range" id="projR" min="0" max="10" step="1" value="5" aria-label="Orders a day"><b id="projN"></b></div><p id="projNote"></p></section>
-   <div class="sec-h rv"><h3>Daily frame</h3><span class="eb" id="phStreak"></span></div><section class="card rv" id="phBox"></section></div>`}
+   <div class="sec-h rv zs"><h3>Daily frame</h3><span class="eb" id="phStreak"></span></div><section class="card rv zs" id="phBox"></section></div>`}
 let projV=null;
 function mountDesk(quiet){const cf=curFill(),rg=$('#projR');rg.max=Math.max(1,cf.H);rg.value=projV!=null&&quiet?Math.min(projV,cf.H):Math.min(cf.H,Math.round(cf.avg));PC=makeChart($('#pcb'),$('#pc'),{axis:false});renderProj();rg.addEventListener('input',()=>{projV=+rg.value;renderProj();haptic(3)})}
 function renderProj(){const rg=$('#projR');if(!rg)return;const n=+rg.value,cf=curFill();$('#projN').textContent=`${n}/${cf.H}`;rg.style.setProperty('--f',(cf.H?n/cf.H*100:0)+'%');
@@ -893,7 +943,7 @@ function drawHolding(d){const cv=$('#hc');if(!cv)return;const old=HC&&HC._d===d.
   if(old&&old.disp.length===s.length){HC.disp=old.disp.slice();HC.set(s,null,true);HC.t0=-1e9}else HC.set(s);const box=cv.parentElement;let lastI=-1;const mv=e=>{const i=HC.idx(e);if(i!==lastI&&lastI!==-1&&e.pointerType!=='mouse')haptic(2);lastI=i;HC.hover=i};box.onpointermove=mv;box.onpointerdown=mv;box.onpointerleave=box.onpointercancel=()=>{HC.hover=-1;lastI=-1}}
 if(DEMO)demoPhotos();
 applyTheme();renderAll();
-addEventListener('resize',()=>{if(IC)IC.size();if(PC)PC.size();if(HC&&HC.cv.isConnected)HC.size();if($('#map')?.classList.contains('in'))renderMap();moveDock();inkTo('#rng')});
+addEventListener('resize',()=>{onScroll();if(IC)IC.size();if(PC)PC.size();if(HC&&HC.cv.isConnected)HC.size();if($('#map')?.classList.contains('in'))renderMap();moveDock();inkTo('#rng')});
 document.fonts?.ready.then(()=>{moveDock();inkTo('#rng')});
 requestAnimationFrame(t=>{last=t;frame(t)});
 setInterval(()=>{const k=today();if(k!==app._day){app._day=k;renderAll()}},60000);app._day=today();
