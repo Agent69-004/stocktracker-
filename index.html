@@ -711,10 +711,14 @@ button:active:not(:disabled){transform:scale(.96)}
 /* replay */
 .rrow .rpl{order:-1}
 .rpl svg{width:16px;height:16px;margin-left:2px}
-.rpl[aria-pressed="true"]{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);animation:rplp 1s ease-in-out infinite}
-@keyframes rplp{50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--acc) 25%,transparent)}}
+.rpl[aria-pressed="true"]{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);animation:rplp 1.2s ease-in-out infinite}
+.rrow .ctb{width:44px;height:44px;min-width:44px;max-width:44px;flex:0 0 44px;align-self:center;padding:0}
+.rrow .ctb:active{transform:scale(.92)}
+@keyframes rplp{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--acc) 22%,transparent)}}
 .app.replaying .price .odo .dg{transition:none}
-.app.replaying #cw::after{content:"Replay";position:absolute;left:var(--gx);top:6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc-ink);background:var(--acc);padding:4px 8px;border-radius:99px;animation:pop .5s var(--spring)}
+.rplab{position:absolute;z-index:3;left:var(--gx);top:6px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--acc-ink);background:var(--acc);padding:4px 9px;border-radius:99px;pointer-events:none;opacity:0;transform:scale(.6);transition:opacity .3s,transform .5s var(--spring)}
+.app.replaying .rplab{opacity:1;transform:none}
+.app.replaying .chartw::after{opacity:0}
 /* trophy room */
 .troph{padding:14px}
 .tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
@@ -1212,6 +1216,72 @@ i.now{background:var(--up)}i.was{background:var(--p3)}
 @media (max-width:380px){.cmr{grid-template-columns:80px minmax(0,1fr) 70px}.wl{grid-template-columns:auto minmax(0,1fr) auto}.wsp{display:none}.top .srb{display:none}.looks{grid-template-columns:1fr 1fr}}
 @media (prefers-reduced-motion: reduce){.ivs i,.cmb i{width:var(--w)!important}.iwd i{transform:none!important}.ygrid i{opacity:1;transform:none}}
 
+/* ===== v13 ===== */
+.sbody .btn>svg,.btn>svg{width:17px;height:17px;margin-right:6px;flex:none}
+/* opening: orbiting holdings, flare, zoom-through exit */
+.blwrap{position:relative;width:78px;height:78px;margin-bottom:22px}
+.blwrap .blogo2{position:absolute;inset:0;margin:0;z-index:3}
+.bring2{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;border:1px solid color-mix(in srgb,var(--acc) 35%,transparent);transform:scale(.2);opacity:0;animation:br2 1.2s cubic-bezier(.2,.8,.3,1) 1s forwards}
+@keyframes br2{to{transform:scale(1);opacity:1}}
+.borbit{position:absolute;left:50%;top:50%;width:0;height:0;transform:rotateX(62deg);transform-style:preserve-3d;animation:orbspin 9s linear 1s infinite;z-index:2}
+.bo{position:absolute;left:0;top:0;transform:rotate(var(--a)) translateX(92px) rotate(calc(-1*var(--a)));transform-style:preserve-3d}
+.bo b{display:grid;place-items:center;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:12px;background:linear-gradient(145deg,var(--c),color-mix(in srgb,var(--c) 65%,#000));color:var(--fg);box-shadow:0 8px 20px -8px var(--c);transform:rotateX(-62deg) scale(0);animation:boin .7s var(--spring) both,bocounter 9s linear 1s infinite;animation-delay:calc(1.05s + var(--i)*70ms),1s}
+.bo .hico{width:17px;height:17px;margin:0}
+@keyframes boin{to{transform:rotateX(-62deg) scale(1)}}
+@keyframes orbspin{to{transform:rotateX(62deg) rotateZ(360deg)}}
+@keyframes bocounter{from{transform:rotateX(-62deg) rotateZ(0) scale(1)}to{transform:rotateX(-62deg) rotateZ(-360deg) scale(1)}}
+.bflare{position:absolute;left:50%;top:34%;width:140vmax;height:3px;margin-left:-70vmax;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--acc) 80%,#fff),transparent);opacity:0;transform:scaleX(0);animation:flare 1.4s cubic-bezier(.2,.8,.3,1) .95s both;filter:blur(1px)}
+@keyframes flare{30%{opacity:1;transform:scaleX(1)}100%{opacity:0;transform:scaleX(1.2)}}
+.bell2.short .bg1 i{animation-delay:calc(.5s + var(--i)*25ms)}.bell2.short .bg2{animation-delay:.7s}.bell2.short .bnum2{animation-delay:.6s}.bell2.short .bchip{animation-delay:1.4s}.bell2.short .bopen{animation-delay:1.6s}
+.bell2.short .blogo2{animation-delay:.35s,1.4s}.bell2.short .blogo2 path{animation-delay:.6s}.bell2.short .bring2{animation-delay:.5s}.bell2.short .bo b{animation-delay:calc(.55s + var(--i)*50ms),.5s}.bell2.short .borbit{animation-delay:.5s}.bell2.short .bflare{animation-delay:.45s}.bell2.short .bline polyline{animation-delay:.5s;animation-duration:1.2s}.bell2.short .bskip2{animation-delay:1s,1.6s}
+.bell2.out{animation:bzoom .95s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes bzoom{to{opacity:0;transform:scale(2.6);filter:blur(16px)}}
+/* lock screen */
+.lock{position:absolute;inset:0;z-index:100;display:grid;place-items:center;opacity:0;transition:opacity .35s}
+.lock.on{opacity:1}
+.lk-bg{position:absolute;inset:0;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(30px) saturate(150%);-webkit-backdrop-filter:blur(30px) saturate(150%)}
+.lk-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px;transform:translateY(20px);transition:transform .6s var(--spring)}
+.lock.on .lk-in{transform:none}
+.lk-logo{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;background:var(--acc);color:var(--acc-ink);margin-bottom:10px;box-shadow:0 18px 40px -14px var(--acc)}.lk-logo svg{width:34px;height:34px}
+.lk-in>b{font-size:20px}.lk-sub{font-size:13.5px;color:var(--mute)}
+.lk-dots{display:flex;gap:16px;margin:18px 0 22px}.lk-dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);transition:background .2s,transform .3s var(--spring)}.lk-dots i.on{background:var(--ink);transform:scale(1.1)}
+.lk-dots.big{justify-content:center}
+.lk-dots.shake{animation:shake .45s}@keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.lk-pad{display:grid;grid-template-columns:repeat(3,76px);gap:14px}
+.lk-pad button{width:76px;height:76px;border-radius:50%;background:color-mix(in srgb,var(--ink) 10%,transparent);font-size:28px;font-weight:500;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;transition:background .15s,transform .3s var(--spring)}
+.lk-pad button small{font-size:9px;letter-spacing:.14em;color:var(--mute);margin-top:3px;font-weight:700}
+.lk-pad button:active{background:color-mix(in srgb,var(--ink) 25%,transparent);transform:scale(.92)}
+.lk-pad .lk-bio{background:transparent}.lk-bio svg{width:34px;height:34px;color:var(--up)}
+.lk-pad.small{grid-template-columns:repeat(3,1fr);gap:8px}.lk-pad.small button{width:auto;height:54px;border-radius:16px;font-size:22px}.lk-pad.small span{display:block}
+.lock.ok .lk-logo{animation:pop .5s var(--spring)}.lock.out{animation:bzoom .6s cubic-bezier(.7,0,.2,1) forwards}
+/* goals */
+.gring{transform:rotate(-90deg);flex:none}.gring circle{fill:none;stroke-linecap:round}.gring .t{stroke:var(--p3)}.gring .v{stroke:var(--up);transition:stroke-dashoffset 1s var(--spring)}
+.gl .gt{text-align:left;background:none;padding:0}.gsteps{font-size:11.5px;font-weight:650;color:var(--mute)}.gsteps.add{color:var(--up)}
+.ghero{display:flex;gap:16px;align-items:center}
+.gbig{position:relative;width:96px;height:96px;flex:none}.gbig>span{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}.gbig b{font-size:22px;font-weight:750}.gbig small{font-size:11px;color:var(--mute)}
+.gpred{flex:1;min-width:0}.gpred p{margin:0;font-size:14px;line-height:1.5;color:var(--mute)}.gpred p b{color:var(--ink)}
+.gs{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);animation:rise .4s var(--ease) both;animation-delay:calc(var(--i)*30ms)}
+.gs:last-child{border-bottom:0}.gs>span{flex:1;font-size:15px;transition:color .3s}
+.gsc{width:28px;height:28px;border-radius:9px;border:2px solid var(--line2);display:grid;place-items:center;flex:none;transition:all .35s var(--spring)}
+.gsc svg{width:14px;height:14px;stroke:var(--acc-ink);stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .4s var(--ease)}
+.gs.done .gsc{background:var(--acc);border-color:var(--acc);transform:scale(1.08)}.gs.done .gsc svg{stroke-dashoffset:0}.gs.done>span{color:var(--mute);text-decoration:line-through}
+.gs.new{animation:pop .5s var(--spring)}
+.msteps{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:99px;background:var(--p3);font-size:12px;font-weight:650;color:var(--mute)}
+/* ritual library */
+.qlib{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;margin-bottom:6px;border-radius:18px;background:linear-gradient(110deg,color-mix(in srgb,var(--acc) 18%,var(--p2)),var(--p2));text-align:left}
+.qlib>span:nth-child(2){flex:1}.qlib b{display:block;font-size:15px}.qlib small{font-size:12px;color:var(--mute)}.qlib>svg{width:16px;height:16px;color:var(--mute)}
+.qli{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:var(--acc);color:var(--acc-ink)}.qli svg{width:18px;height:18px}
+.packs{display:flex;flex-direction:column;gap:10px}
+.pack{padding:14px;border-radius:22px;background:linear-gradient(140deg,color-mix(in srgb,var(--c) 22%,var(--p2)),var(--p2) 70%);border:1px solid color-mix(in srgb,var(--c) 30%,var(--line));animation:rise .5s var(--ease) both;animation-delay:calc(var(--i)*45ms)}
+.pk-h{display:flex;align-items:center;gap:12px}.pk-h>div{flex:1;min-width:0}.pk-h b{display:block;font-size:16px}.pk-h small{font-size:12px;color:var(--mute)}
+.pk-ic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,var(--c),color-mix(in srgb,var(--c) 65%,#000));color:var(--fg)}.pk-ic svg{width:22px;height:22px}
+.pk-go{height:36px;padding:0 16px;border-radius:99px;background:var(--acc);color:var(--acc-ink);font-weight:700;font-size:13.5px}.pk-go.done{background:var(--p3);color:var(--mute)}
+.pk-r{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.pk-r span{display:flex;flex-direction:column;padding:7px 10px;border-radius:12px;background:color-mix(in srgb,var(--bg) 55%,transparent);font-size:13px;font-weight:600}.pk-r small{font-size:11px;color:var(--mute);font-weight:500}
+.pack.pop{animation:mpop .6s var(--spring)}
+.libb{width:100%;height:50px;border-radius:20px;margin-top:8px;background:linear-gradient(110deg,color-mix(in srgb,var(--acc) 16%,var(--p1)),var(--p1));font-weight:650;font-size:14.5px;display:flex;align-items:center;justify-content:center;gap:8px}.libb svg{width:16px;height:16px}
+/* cloud */
+.syncode{font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.08em;padding:12px;border-radius:14px;background:var(--bg);text-align:center;word-break:break-all;user-select:text;-webkit-user-select:text}
+
 /* reduced motion */
 @media (prefers-reduced-motion: reduce){.pane.in,.pane.out{animation:none!important}}
 @media (min-width:900px){.wrap{max-width:760px}.sheet{left:auto;right:24px;top:24px;bottom:24px;width:480px;max-height:none;border-radius:30px;border:1px solid var(--line2);transform:translateX(calc(100% + 40px))}.sheet.on{transform:none}.grab{display:none}}
@@ -1268,7 +1338,7 @@ const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','De
 const DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const SWATCHES=['#3DDC97','#6C8CFF','#FFB547','#FF7A45','#FF5C8A','#A779FF','#2EC5E6','#B6E35A','#FF6B6B','#5EEAD4','#F0ABFC','#FDE047'];
 
-const DEFAULTS={mode:'auto',motion:1,haptics:true,glow:1,accent:'lime',startTab:'home',fx:'full',bell:true,look:'default',sound:false,bigText:false,remind:'20:00',tilt:false};
+const DEFAULTS={mode:'auto',motion:1,haptics:true,glow:1,accent:'lime',startTab:'home',fx:'full',bell:true,look:'default',sound:false,bigText:false,remind:'20:00',tilt:false,bellMode:'launch'};
 
 /* ---------- state ---------- */
 function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -1390,7 +1460,7 @@ const SH={kind:null,id:null};
 function openSheet(kind,id){SH.kind=kind;SH.id=id;app.classList.add('sheet-open');let veil=$('#layer .veil'),sh=$('#layer .sheet');
   if(!sh){$('#layer').innerHTML=`<div class="veil" data-action="close-sheet"></div><section class="sheet" role="dialog" aria-modal="true"><div class="grab" aria-hidden="true"><i></i></div><div class="sbody"></div></section>`;veil=$('#layer .veil');sh=$('#layer .sheet');bindDrag(sh);bindBodyDrag(sh);const sbf=sh.querySelector('.sbody');sbf.classList.add('fresh');setTimeout(()=>sbf.classList.remove('fresh'),1000);
     requestAnimationFrame(()=>requestAnimationFrame(()=>{veil.classList.add('on');sh.classList.add('on')}))}
-  kind==='area'?renderArea(true):kind==='quick'?renderQuick(true):kind==='ritual'?renderRitual(true):renderSettings(true)}
+  kind==='area'?renderArea(true):SHEETS[kind]?SHEETS[kind](true):renderSettings(true)}
 function closeSheet(){const v=$('#layer .veil'),s=$('#layer .sheet');SH.kind=null;app.classList.remove('sheet-open');if(!s)return;v.classList.remove('on');s.classList.remove('on');setTimeout(()=>{if(!SH.kind)$('#layer').innerHTML=''},450)}
 function closeLayer(){$$('.lb').forEach(x=>x.remove());$$('.modal,.mveil').forEach(x=>x.remove())}
 function bindDrag(sh){const g=sh.querySelector('.grab');let y0=null,dy=0,t0=0;g.addEventListener('pointerdown',e=>{y0=e.clientY;t0=performance.now();g.setPointerCapture(e.pointerId);sh.classList.add('drag')});g.addEventListener('pointermove',e=>{if(y0==null)return;dy=Math.max(0,e.clientY-y0);sh.style.transform=`translateY(${dy}px)`});
@@ -1633,7 +1703,7 @@ function bannerHTML(){return DEMO?`<div class="banner"><p><b>Demo portfolio.</b>
 const CHKC=CHK.replace('stroke-width="3"','stroke="currentColor" stroke-width="3"');
 function homeHTML(){const{rt,rd}=todayCount(),C=2*Math.PI*36,f=rt?rd/rt:0,mg=marginal(),b=mg[0],bs=bestStreak();const top=state.domains.filter(d=>!d.muted).sort((a,b)=>momentum(b)-momentum(a))[0];
   return`<div class="st-in"><div class="hstick" id="hstick"><div class="hbg"></div><div class="lab"><i></i>Life Index · LIFX</div><div class="price" id="price"></div><div class="chg" id="chg"></div><button class="hright" data-action="totop" aria-label="Back to the chart"><span id="hchip"></span><span id="hsp"></span></button></div><section class="hero">
-   <div class="chartw" id="cw"><canvas id="ic"></canvas><div class="tip" id="tip"></div></div>
+   <div class="chartw" id="cw"><canvas id="ic"></canvas><span class="rplab">Replay</span><div class="tip" id="tip"></div></div>
    <div class="rrow"><button class="ctb rpl" data-action="replay" aria-label="Replay the chart"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></button><div class="pills" id="rng"><span class="ink"></span>${[[1,'1D'],[7,'1W'],[14,'2W'],[30,'1M']].map(([v,l])=>`<button data-action="rng" data-v="${v}" aria-pressed="${UI2.range===v}">${l}</button>`).join('')}</div><button class="ctb" data-action="ctype" aria-pressed="${UI2.ctype==='candle'}" aria-label="Candles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3v4M7 15v6M17 3v8M17 17v4"/><rect x="4.5" y="7" width="5" height="8" rx="1.2"/><rect x="14.5" y="11" width="5" height="6" rx="1.2"/></svg></button></div></section>
   ${bannerHTML()}
   ${riskHTML()}
@@ -2288,7 +2358,7 @@ const _homeHTML=homeHTML;homeHTML=function(){return _homeHTML().replace('<div cl
 function holdHTML(){const L=sortedHold(),ro=UI2.reorder==='hold';return`<div class="st-in"><div class="vth"><h1 class="vt">Holdings</h1><button class="reob ${ro?'on':''}" data-action="reorder" data-k="hold">${ro?'Done':'Reorder'}</button></div><p class="vs">${state.domains.length} areas of your life. Tap one to open its page. Press and hold for more.</p>
   ${ro?'':`<div class="pills sortp" id="sortp"><span class="ink"></span>${[['value','Value'],['move','Momentum'],['name','A–Z'],['mine','Mine']].map(([k,l])=>`<button data-action="sort" data-k="${k}" aria-pressed="${UI2.sort===k}">${l}</button>`).join('')}</div>`}
   <div class="hl ${ro?'ro':''}" id="hl">${L.map((d,i)=>{const m=momentum(d)*100;return`<button class="hr rv zs" style="--i:${i%4}" data-action="${ro?'':'open'}" data-d="${d.id}"><span class="av" style="--c:${esc(d.color)};--fg:${fgOf(d.color)}">${hIcon(d)}<small>${ticker(d)}</small></span><span class="nm"><b>${esc(d.name)}${d.pin?`<i class="pinm">${HI_STAR}</i>`:''}</b><span>${moodOf(prog(d))}${d.muted?' · paused':''}</span></span>${sparkSvg(series(d,30),m>=0?'var(--up)':'var(--down)')}<span class="pr ${cls(m/100)}"><b style="color:var(--ink)">${cu(prog(d)*100,2)}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(2)}</span></span>${ro?'<span class="grip" aria-hidden="true"><i></i><i></i><i></i></span>':''}</button>`}).join('')}</div>
-  <button class="addh rv zs" data-action="new-area">+ Add a holding</button></div>`}
+  <button class="addh rv zs" data-action="new-area">+ Add a holding</button><button class="libb rv zs" data-action="library">${HI_STAR.replace('<svg','<svg style="color:var(--up)"')}Browse the ritual library</button></div>`}
 /* desk extras: insights, compare periods, year in pixels, backup nudge */
 function cmpHTML(){const N=UI2.cmp==='week'?7:30,T=today();const H=state.domains.filter(d=>!d.muted).flatMap(d=>d.habits);const L=lifeSeries(N*2);
   const per=(o)=>{const ks=[...Array(N)].map((_,i)=>addDays(T,-o-i));let du=0,dn=0,strong=0,nn=0,mm=[];ks.forEach(k=>{H.forEach(h=>{if(due(h,k)){du++;dn+=frac(h,k)}});if(dayScore(k)>=.5)strong++;if(notes()[k])nn++;if(moods()[k])mm.push(moods()[k])});const lx=avg(L.slice(o?0:N,o?N:N*2))*100;return{lx,rate:du?dn/du*100:0,strong,nn,mood:mm.length?avg(mm):null,filled:Math.round(dn)}};
@@ -2330,6 +2400,174 @@ Object.assign(actions,{pin:a=>{const d=D_(a.dataset.d);if(!d)return;d.pin=!d.pin
   cmp:a=>{UI2.cmp=a.dataset.k;renderPane('desk','quiet');haptic(HAP.tap)},ymode:a=>{UI2.ymode=a.dataset.k;renderPane('desk','quiet');haptic(HAP.tap)},
   tilt:()=>tiltToggle(),'onboard':()=>{closeSheet();setTimeout(()=>onboarding(true),350)}});
 
+/* ===================== STAGE 5: opening every launch, lock, goal steps, ritual packs, CSV ===================== */
+var SHEETS={quick:f=>renderQuick(f),ritual:f=>renderRitual(f)};
+/* ---- opening: plays on every launch (short version after the first of the day) ---- */
+let BOOTED=false;
+function bellMode(){const s=state.settings;if(s.bell===false&&!s.bellMode)return'off';return s.bellMode||'launch'}
+function openingBell(force){const mode=bellMode();if(!force&&(DEMO||mode==='off'||RM.matches))return;let last='';try{last=localStorage.getItem('equity-bell')||''}catch(_){}const T=today();const first=last!==T;if(!force&&mode==='daily'&&!first)return;try{localStorage.setItem('equity-bell',T)}catch(_){}
+  const short=!force&&!first;const n=new Date(),hr=n.getHours(),a=lifeSeries(30),v=a[29]*100,y=a[28]*100,d=v-y;const{rt,rd}=todayCount();const mg=marginal()[0];const A=TK().up||'#C8FF4D';
+  const lo=Math.min(...a),hi=Math.max(...a,lo+.01);const pts=a.map((x,i)=>`${(i/29*400).toFixed(1)},${(150-(x-lo)/(hi-lo)*120).toFixed(1)}`).join(' ');
+  const greet=hr<5?'Good night':hr<12?'Good morning':hr<18?'Good afternoon':'Good evening';const H=state.domains.filter(x=>!x.muted).slice(0,8);
+  const o=document.createElement('div');o.className='bell2'+(short?' short':'');o.innerHTML=`<canvas class="bcv"></canvas><div class="bflare"></div>
+   <svg class="bline" viewBox="0 0 400 160" preserveAspectRatio="none"><defs><linearGradient id="blg" x1="0" x2="1"><stop offset="0" style="stop-color:var(--acc);stop-opacity:0"/><stop offset=".5" style="stop-color:var(--acc);stop-opacity:.7"/><stop offset="1" style="stop-color:#fff"/></linearGradient></defs><polyline points="${pts}" pathLength="1"/></svg>
+   <div class="bin2"><div class="blwrap"><div class="borbit">${H.map((x,i)=>`<span class="bo" style="--a:${(i/H.length*360).toFixed(1)}deg;--c:${esc(x.color)};--fg:${fgOf(x.color)};--i:${i}"><b>${hIcon(x)}</b></span>`).join('')}</div><div class="bring2"></div><div class="blogo2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-9"/></svg></div></div>
+    <span class="bg1">${[...greet].map((c,i)=>`<i style="--i:${i}">${c===' '?'&nbsp;':c}</i>`).join('')}</span>
+    <span class="bg2">${DOW[n.getDay()]} · ${n.getDate()} ${MONTHS[n.getMonth()]}</span>
+    <div class="bnum2" id="bnum2">${y.toFixed(2)}</div>
+    <span class="bchip ${d>=0?'up':'down'}">${d>=0?'▲ +':'▼ −'}${Math.abs(d).toFixed(2)} since yesterday</span>
+    ${short?'':`<div class="bstat"><div><b>${rt-rd}</b><span>orders left</span></div><div><b>${bestStreak().s}</b><span>best streak</span></div><div><b>${(badges()?Object.keys(badges()).length:0)}</b><span>trophies</span></div></div>
+    ${mg?`<span class="bmove">Best move · <b>${esc(mg.h.name)}</b></span>`:''}`}<span class="bopen">The market is open</span></div><span class="bskip2">Tap to enter</span>`;
+  app.appendChild(o);app.classList.add('belled');sfx('whoosh');
+  const cv=o.querySelector('.bcv'),cx=cv.getContext('2d'),R=Math.min(2,devicePixelRatio||1);let W=cv.width=innerWidth*R,Hh=cv.height=innerHeight*R;
+  const lg=o.querySelector('.blogo2').getBoundingClientRect();const c0=(lg.left+lg.width/2)*R,c1=(lg.top+lg.height/2)*R;
+  const P=[...Array(short?60:110)].map(()=>{const ang=Math.random()*6.283,dist=(.55+Math.random()*.7)*Math.max(W,Hh);return{a:ang,d:dist,s:.6+Math.random()*2,sp:.5+Math.random()*.9,tw:Math.random()*6,c:Math.random()<.25&&H.length?H[Math.floor(Math.random()*H.length)].color:A}});
+  const t0=performance.now(),k1=short?.7:1.1;let done=false,raf=0;
+  const loop=now=>{if(done)return;const t=(now-t0)/1000;cx.clearRect(0,0,W,Hh);cx.globalCompositeOperation='lighter';
+    for(const p of P){let x,yy,al;if(t<k1){const e=1-Math.pow(1-t/k1,3);const r=p.d*(1-e*p.sp*.92);x=c0+Math.cos(p.a+e*1.6)*r;yy=c1+Math.sin(p.a+e*1.6)*r;al=.15+e*.85}else{const e=1-Math.pow(1-Math.min(1,(t-k1)/1.8),2);const r=p.d*.08*(1-p.sp*.9)+e*(140+p.d*.3)*R*.55;x=c0+Math.cos(p.a+1.6+e*.7)*r;yy=c1+Math.sin(p.a+1.6+e*.7)*r;al=(1-e)*.9}
+      cx.globalAlpha=Math.max(0,al)*(.55+.45*Math.sin(t*7+p.tw));cx.fillStyle=p.c;cx.beginPath();cx.arc(x,yy,p.s*R,0,6.283);cx.fill()}
+    cx.globalAlpha=1;cx.globalCompositeOperation='source-over';if(t<3.4)raf=requestAnimationFrame(loop)};raf=requestAnimationFrame(loop);
+  const num=o.querySelector('#bnum2');const tn0=performance.now()+(short?700:1500);const cnt=now=>{if(done)return;const k=Math.min(1,Math.max(0,(now-tn0)/(short?900:1400))),e=1-Math.pow(1-k,4);num.textContent=(y+(v-y)*e).toFixed(2);if(k<1)requestAnimationFrame(cnt);else{num.classList.add('land');haptic(HAP.fill)}};requestAnimationFrame(cnt);
+  setTimeout(()=>{if(!done)haptic(HAP.tap)},short?600:1100);
+  const end=()=>{if(done)return;done=true;cancelAnimationFrame(raf);const r=o.querySelector('.blogo2').getBoundingClientRect();o.style.transformOrigin=`${r.left+r.width/2}px ${r.top+r.height/2}px`;o.classList.add('out');app.classList.remove('belled');app.classList.add('rise');sfx('step');setTimeout(()=>{o.remove();app.classList.remove('rise')},1000);haptic(HAP.step)};
+  o.addEventListener('click',end);setTimeout(end,short?2600:5600)}
+/* ---- app lock: Face ID / Touch ID via passkey, PIN fallback ---- */
+const LK={get(){try{return JSON.parse(localStorage.getItem('equity-lock')||'null')}catch(_){return null}},set(v){try{if(v)localStorage.setItem('equity-lock',JSON.stringify(v));else localStorage.removeItem('equity-lock')}catch(_){}},hiddenAt:0,open:false};
+const b64=buf=>btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const unb64=s=>Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((s.length+3)%4)),c=>c.charCodeAt(0));
+async function hashPin(pin,salt){const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(salt+':'+pin));return b64(d)}
+function canPasskey(){return!!(window.PublicKeyCredential&&navigator.credentials&&location.protocol==='https:')}
+async function passkeyCreate(){const ch=crypto.getRandomValues(new Uint8Array(32)),uidb=crypto.getRandomValues(new Uint8Array(16));const c=await navigator.credentials.create({publicKey:{challenge:ch,rp:{name:'Equity'},user:{id:uidb,name:'equity',displayName:'Equity'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required',residentKey:'preferred'},timeout:60000}});return b64(c.rawId)}
+async function passkeyGet(id){const ch=crypto.getRandomValues(new Uint8Array(32));const r=await navigator.credentials.get({publicKey:{challenge:ch,allowCredentials:[{type:'public-key',id:unb64(id)}],userVerification:'required',timeout:60000}});return!!r}
+function showLock(){const L=LK.get();if(!L||!L.pin||LK.open)return false;LK.open=true;const o=document.createElement('div');o.className='lock';let entry='';
+  o.innerHTML=`<div class="lk-bg"></div><div class="lk-in"><div class="lk-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-9"/></svg></div><b>Equity is locked</b><span class="lk-sub">Enter your PIN${L.cred?' or use Face ID':''}</span>
+   <div class="lk-dots">${[0,1,2,3].map(()=>'<i></i>').join('')}</div><div class="lk-pad">${[1,2,3,4,5,6,7,8,9].map(n=>`<button data-k="${n}">${n}<small>${['','ABC','DEF','GHI','JKL','MNO','PQRS','TUV','WXYZ'][n-1]}</small></button>`).join('')}<button data-k="bio" class="lk-bio" ${L.cred&&canPasskey()?'':'style="visibility:hidden"'} aria-label="Use Face ID"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2M9 9v1.5M15 9v1.5M12 9v4h-1M9.5 16s1 1 2.5 1 2.5-1 2.5-1"/></svg></button><button data-k="0">0</button><button data-k="del" aria-label="Delete">⌫</button></div></div>`;
+  app.appendChild(o);requestAnimationFrame(()=>o.classList.add('on'));
+  const dots=()=>o.querySelectorAll('.lk-dots i').forEach((x,i)=>x.classList.toggle('on',i<entry.length));
+  const ok=()=>{haptic(HAP.fill);sfx('fill');o.classList.add('ok');setTimeout(()=>{o.classList.add('out');setTimeout(()=>{o.remove();LK.open=false;if(!BOOTED){BOOTED=true;openingBell()}},600)},350)};
+  const bad=()=>{haptic(HAP.warn);sfx('undo');const d=o.querySelector('.lk-dots');d.classList.remove('shake');void d.offsetWidth;d.classList.add('shake');entry='';setTimeout(dots,300)};
+  o.addEventListener('click',async e=>{const b=e.target.closest('[data-k]');if(!b)return;const k=b.dataset.k;haptic(HAP.tap);
+    if(k==='bio'){try{if(await passkeyGet(L.cred))ok();}catch(_){toast('Face ID was cancelled. Use your PIN.')}return}
+    if(k==='del'){entry=entry.slice(0,-1);dots();return}if(entry.length>=4)return;entry+=k;dots();if(entry.length===4){const h=await hashPin(entry,L.salt);h===L.pin?ok():bad()}});
+  return true}
+document.addEventListener('visibilitychange',()=>{const L=LK.get();if(!L||!L.pin)return;if(document.hidden)LK.hiddenAt=Date.now();else if(LK.hiddenAt&&Date.now()-LK.hiddenAt>=(L.after??1)*60e3){LK.hiddenAt=0;showLock()}});
+let PINSET=null;
+function renderLockSetup(fresh){const sb=$('#layer .sbody');if(!sb)return;const L=LK.get();const st=PINSET||{step:'menu',a:''};
+  sb.innerHTML=`<div class="s-hd"><div class="s-orb" style="--c:var(--acc)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:26px;height:26px;color:#111"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><div><h2>App lock</h2><p>Keep your notes and moods private</p></div><button class="xbtn" data-action="close-sheet" aria-label="Close">${ICON.x}</button></div>
+   ${st.step==='menu'?`<div class="card"><div class="row"><span style="font-size:15px;font-weight:600">${L&&L.pin?'Lock is on':'Lock is off'}</span><span class="sp"></span><button class="btn ${L&&L.pin?'bad':''}" data-action="lk-${L&&L.pin?'off':'pin'}">${L&&L.pin?'Turn off':'Set a PIN'}</button></div>
+    ${L&&L.pin?`<div class="row" style="margin-top:14px"><span style="font-size:14px">Face ID / Touch ID</span><span class="sp"></span><button class="tgl2 ${L.cred?'on':''}" data-action="lk-bio" aria-pressed="${!!L.cred}"><i></i></button></div>${canPasskey()?'':'<p class="rhint">Face ID works on your own site over https, after installing it to the home screen. It is not available in this preview.</p>'}
+    <span class="lbl" style="margin-top:16px">Lock again after</span><div class="seg">${[[0,'Right away'],[1,'1 min'],[5,'5 min'],[15,'15 min']].map(([v,l])=>`<button aria-pressed="${(L.after??1)===v}" data-action="lk-after" data-k="${v}">${l}</button>`).join('')}</div><button class="btn ghost" style="width:100%;margin-top:14px" data-action="lk-pin">Change PIN</button>`:'<p class="rhint">You will need the PIN each time you open the app. It stays on this device only and is never synced.</p>'}</div>`
+   :`<div class="card pinset"><span class="lbl">${st.step==='a'?'Choose a 4-digit PIN':'Enter it again'}</span><div class="lk-dots big">${[0,1,2,3].map(i=>`<i class="${i<st.cur.length?'on':''}"></i>`).join('')}</div><div class="lk-pad small">${[1,2,3,4,5,6,7,8,9,'',0,'del'].map(n=>n===''?'<span></span>':`<button data-action="lk-key" data-k="${n}">${n==='del'?'⌫':n}</button>`).join('')}</div></div>`}`}
+SHEETS.lock=f=>renderLockSetup(f);
+/* ---- goals with steps and a predicted finish ---- */
+const GE={d:null,m:null};
+function goalPred(m){const st=m.steps||[];const n=st.length,c=st.filter(x=>x.done).length,T=today();if(!n)return null;const start=m.created||st.reduce((a,x)=>x.at&&x.at<a?x.at:a,T);const days=Math.max(1,dayDiff(start,T));
+  if(c===n)return{c,n,txt:'Every step done. Ready to mark it reached.',ok:true};if(!c)return{c,n,txt:m.due?`${dayDiff(T,m.due)} days to the deadline. Tick your first step to see a forecast.`:'Tick your first step to see a forecast.'};
+  const rate=c/days,eta=addDays(T,Math.ceil((n-c)/rate)),ed=parseKey(eta);let txt=`At this pace you finish around <b>${ed.getDate()} ${MON[ed.getMonth()]}</b>`,ok=true;
+  if(m.due){const diff=dayDiff(eta,m.due);if(diff>=0)txt+=` · <span class="up">${diff} days early</span>`;else{ok=false;const need=(n-c)/Math.max(1,dayDiff(T,m.due));txt+=` · <span class="down">${-diff} days late</span>. Aim for ${need>=1?Math.ceil(need)+' steps a day':'a step every '+Math.round(1/need)+' days'}.`}}return{c,n,txt:txt+'.',ok}}
+function ringSVG(f,size=40,w=4){const r=(size-w)/2,C=2*Math.PI*r;return`<svg class="gring" viewBox="0 0 ${size} ${size}" style="width:${size}px;height:${size}px"><circle cx="${size/2}" cy="${size/2}" r="${r}" stroke-width="${w}" class="t"/><circle cx="${size/2}" cy="${size/2}" r="${r}" stroke-width="${w}" class="v" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-f)}"/></svg>`}
+function goalsHTML(){const T=today();const L=[];state.domains.forEach(d=>d.milestones.forEach(m=>{if(!m.done)L.push({d,m})}));const all=state.domains.reduce((n,d)=>n+d.milestones.length,0),done=state.domains.reduce((n,d)=>n+d.milestones.filter(m=>m.done).length,0);
+  L.sort((a,b)=>(a.m.due||'9999')<(b.m.due||'9999')?-1:1);const top=L.slice(0,5);
+  const lab=m=>{if(!m.due)return'<span class="gdue">No date</span>';const n=dayDiff(T,m.due);return n<0?`<span class="gdue late">${-n}d overdue</span>`:n===0?'<span class="gdue soon">Today</span>':n<=7?`<span class="gdue soon">In ${n}d</span>`:`<span class="gdue">In ${n}d</span>`};
+  return`<div class="sec-h rv zs"><h3>Upcoming goals</h3><span class="eb">${done}/${all} reached</span></div><section class="card goals rv zs">${all?`<div class="gbar"><i style="--w:${all?done/all*100:0}%"></i></div>`:''}${top.map(({d,m},i)=>{const st=m.steps||[],c=st.filter(x=>x.done).length;return`<div class="gl" style="--i:${i}"><button class="gck" data-action="goal-done" data-d="${d.id}" data-ms="${m.id}" aria-label="Mark ${esc(m.text)} reached">${CHK}</button><button class="gt" data-action="goal-open" data-d="${d.id}" data-ms="${m.id}"><b>${esc(m.text)}</b><span><span class="tkr" style="--c:${esc(d.color)}">${ticker(d)}</span>${lab(m)}${st.length?`<span class="gsteps">${c}/${st.length} steps</span>`:'<span class="gsteps add">+ steps</span>'}</span></button>${st.length?ringSVG(c/st.length,34,4):''}</div>`}).join('')||emptyArt('goals','No open goals','Open a holding and add one under Goals.')}</section>`}
+function renderGoal(fresh){const sb=$('#layer .sbody');if(!sb)return;const d=D_(GE.d),m=d?.milestones.find(x=>x.id===GE.m);if(!m){closeSheet();return}m.steps=m.steps||[];const p=goalPred(m),c=m.steps.filter(x=>x.done).length,n=m.steps.length;$('#layer .sheet').style.setProperty('--c',d.color);
+  sb.innerHTML=`<div class="s-hd"><div class="s-orb" style="--c:${esc(d.color)}">${hIcon(d,true)}</div><div style="min-width:0"><h2 contenteditable="true" spellcheck="false" data-bind="ms:text" data-d="${d.id}" data-ms="${m.id}">${esc(m.text)}</h2><p>${ticker(d)} · ${esc(d.name)}${m.done?' · reached':''}</p></div><button class="xbtn" data-action="close-sheet" aria-label="Close">${ICON.x}</button></div>
+   <div class="card ghero"><div class="gbig">${ringSVG(n?c/n:0,96,9)}<span><b>${n?Math.round(c/n*100):0}%</b><small>${c}/${n} steps</small></span></div><div class="gpred">${p?`<p>${p.txt}</p>`:'<p>Break this goal into small steps. Equity will forecast when you will finish.</p>'}<div class="row" style="margin-top:10px;gap:8px"><input class="field" type="date" value="${esc(m.due||'')}" data-bind="ms:due" data-d="${d.id}" data-ms="${m.id}" style="flex:1;height:40px;font-size:14px" aria-label="Deadline"></div></div></div>
+   <div class="card"><span class="lbl">Steps</span><div class="gsl">${m.steps.map((x,i)=>`<div class="gs ${x.done?'done':''}" style="--i:${i}"><button class="gsc" data-action="gs-tog" data-k="${x.id}" aria-label="Done">${CHK}</button><span>${esc(x.t)}</span><button class="x" data-action="gs-del" data-k="${x.id}" aria-label="Remove">${ICON.x}</button></div>`).join('')||'<p class="rhint" style="margin:0">No steps yet.</p>'}</div>
+    <form class="row" data-form="gs-add" style="margin-top:12px"><input class="field" name="t" required maxlength="80" placeholder="Next step, e.g. Run 5 km" style="flex:1"><button class="btn">Add</button></form></div>
+   ${m.done?'':`<button class="btn" style="width:100%;height:52px" data-action="goal-done" data-d="${d.id}" data-ms="${m.id}">${CHKC}Mark goal reached</button>`}`;if(fresh)sb.scrollTop=0}
+SHEETS.goal=f=>renderGoal(f);
+forms['gs-add']=f=>{const d=D_(GE.d),m=d?.milestones.find(x=>x.id===GE.m);const t=f.elements.t.value.trim();if(!m||!t)return;m.steps=m.steps||[];if(!m.created)m.created=today();m.steps.push({id:uid(),t:t.slice(0,80),done:false});commit({render:false});NAV.order.forEach(v=>DIRTY[v]=true);renderGoal();haptic(HAP.step);setTimeout(()=>{const i=$('#layer .gsl .gs:last-child');if(i)i.classList.add('new')},10);const inp=$('#layer [data-form="gs-add"] input');if(inp)inp.focus()};
+/* ---- ritual library: one-tap packs ---- */
+const PACKS=[['Morning routine','sun','#FFB547','Mind',[['Wake up at 7:00',{t:'daily'}],['Make the bed',{t:'daily'}],['Stretch 10 min',{t:'daily'}],['No phone first hour',{t:'daily'}]]],
+ ['Fitness starter','dumbbell','#3DDC97','Health',[['Workout',{t:'weekly',n:3}],['Walk 8,000 steps',{t:'daily'}],['Drink water',{t:'daily'},8,'glasses']]],
+ ['Deep work','brief','#A779FF','Career',[['2-hour focus block',{t:'days',days:[1,2,3,4,5]}],['Plan tomorrow',{t:'days',days:[1,2,3,4,5]}],['Inbox zero',{t:'days',days:[5]}]]],
+ ['Better sleep','moon','#6C8CFF','Health',[['Lights out by 23:00',{t:'daily'}],['No screens after 22:00',{t:'daily'}],['No caffeine after 14:00',{t:'daily'}]]],
+ ['Mindful','brain','#2EC5E6','Mind',[['Meditate 10 min',{t:'daily'}],['Three gratitudes',{t:'daily'},3,'things'],['Journal',{t:'daily'}]]],
+ ['Learner','book','#5EEAD4','Learning',[['Read 20 pages',{t:'daily'},20,'pages'],['Language practice',{t:'days',days:[1,2,3,4,5]}],['Course lesson',{t:'weekly',n:3}]]],
+ ['Money habits','coin','#FF7A45','Wealth',[['Log expenses',{t:'daily'}],['No-spend day',{t:'weekly',n:2}],['Review the budget',{t:'days',days:[0]}]]],
+ ['Connection','users','#FF5C8A','Bonds',[['Call family',{t:'weekly',n:2}],['Message a friend',{t:'daily'}],['Date night',{t:'days',days:[6]}]]]];
+function renderLibrary(fresh){const sb=$('#layer .sbody');if(!sb)return;$('#layer .sheet').style.setProperty('--c','var(--acc)');
+  sb.innerHTML=`<div class="s-hd"><div class="s-orb qorb"></div><div><h2>Ritual library</h2><p>Proven routines, added in one tap</p></div><button class="xbtn" data-action="close-sheet" aria-label="Close">${ICON.x}</button></div>
+   <div class="packs">${PACKS.map(([n,ic,c,dom,R],i)=>{const d=state.domains.find(x=>x.name.toLowerCase()===dom.toLowerCase());const have=d?R.filter(r=>d.habits.some(h=>h.name.toLowerCase()===r[0].toLowerCase())).length:0;return`<div class="pack" style="--c:${c};--fg:${fgOf(c)};--i:${i}"><div class="pk-h"><span class="pk-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${HI[ic]}"/></svg></span><div><b>${n}</b><small>into ${esc(dom)}${d?'':' (new holding)'}</small></div><button class="pk-go ${have===R.length?'done':''}" data-action="pack-add" data-k="${i}">${have===R.length?'Added':'Add'}</button></div><div class="pk-r">${R.map(r=>`<span>${esc(r[0])}<small>${r[2]?r[2]+' '+r[3]+' · ':''}${schedLabel({sched:r[1]})}</small></span>`).join('')}</div></div>`}).join('')}</div>`;if(fresh)sb.scrollTop=0}
+SHEETS.library=f=>renderLibrary(f);
+function addPack(i,btn){const[n,ic,c,dom,R]=PACKS[i];let d=state.domains.find(x=>x.name.toLowerCase()===dom.toLowerCase());let created=false;if(!d){d=newDomain(dom,'●',c);d.icon=ic;state.domains.push(d);created=true}let added=0;
+  R.forEach(([nm,sc,t,u])=>{if(d.habits.some(h=>h.name.toLowerCase()===nm.toLowerCase()))return;const h={id:uid(),name:nm,days:{},sched:sc};if(t){h.target=t;h.unit=u}d.habits.push(h);added++});
+  commit({render:false});NAV.order.forEach(v=>DIRTY[v]=true);haptic(HAP.big);sfx('full');if(btn&&!RM.matches)burst(btn);const card=btn&&btn.closest('.pack');if(card){card.classList.remove('pop');void card.offsetWidth;card.classList.add('pop')}
+  toast(added?`${n}: ${added} ritual${added>1?'s':''} added${created?' in a new holding':''}`:`${n} is already in your portfolio`);setTimeout(()=>renderLibrary(),500)}
+/* ---- CSV export ---- */
+function exportCSV(){const q=v=>{v=String(v??'');return/[",\n]/.test(v)?`"${v.replace(/"/g,'""')}"`:v};const rows=[['type','date','holding','item','value','target','unit','done']];
+  state.domains.forEach(d=>{d.habits.forEach(h=>Object.keys(h.days).sort().forEach(k=>{const c=hcount(h,k);rows.push(['ritual',k,d.name,h.name,c,HT(h),h.unit||'',c>=HT(h)?1:0])}));d.metrics.forEach(m=>m.entries.forEach(e=>rows.push(['signal',e.d,d.name,m.name,e.v,m.target||'',m.unit||'',''])));d.milestones.forEach(m=>rows.push(['goal',m.doneAt||m.due||'',d.name,m.text,(m.steps||[]).filter(x=>x.done).length,(m.steps||[]).length,'steps',m.done?1:0]))});
+  Object.entries(moods()).forEach(([k,v])=>rows.push(['mood',k,'','',v,5,'',''])),Object.entries(notes()).forEach(([k,v])=>v&&rows.push(['note',k,'',v,'','','','']));for(let i=0;i<180;i++){const k=addDays(today(),-i);rows.push(['score',k,'','Life Index',(dayScore(k)*100).toFixed(1),'','',''])}
+  const csv=rows.map(r=>r.map(q).join(',')).join('\n'),name=`equity-${today()}.csv`,blob=new Blob([csv],{type:'text/csv'});
+  (async()=>{try{const f=new File([blob],name,{type:'text/csv'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Equity data'});return}}catch(e){if(e&&e.name==='AbortError')return}try{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),1000);toast(`Saved ${name}`)}catch(_){toast('Could not save the file here')}})()}
+Object.assign(actions,{
+  'goal-open':a=>{GE.d=a.dataset.d;GE.m=a.dataset.ms;if(SH.kind&&SH.kind!=='goal'){closeSheet();setTimeout(()=>openSheet('goal'),330)}else openSheet('goal');haptic(HAP.tap)},
+  'gs-tog':a=>{const d=D_(GE.d),m=d?.milestones.find(x=>x.id===GE.m),s=m?.steps.find(x=>x.id===a.dataset.k);if(!s)return;s.done=!s.done;s.at=s.done?today():undefined;if(!m.created)m.created=today();commit({render:false});NAV.order.forEach(v=>DIRTY[v]=true);haptic(s.done?HAP.fill:HAP.undo);sfx(s.done?'step':'undo');renderGoal();if(s.done&&m.steps.every(x=>x.done)){setTimeout(()=>{celebrate();toast('Every step done. Mark the goal reached!')},300)}},
+  'gs-del':a=>{const d=D_(GE.d),m=d?.milestones.find(x=>x.id===GE.m);if(!m)return;m.steps=m.steps.filter(x=>x.id!==a.dataset.k);commit({render:false});renderGoal()},
+  library:()=>{if(SH.kind){closeSheet();setTimeout(()=>openSheet('library'),330)}else openSheet('library')},'pack-add':a=>addPack(+a.dataset.k,a),csv:()=>exportCSV(),
+  'lock-setup':()=>{PINSET=null;if(SH.kind){closeSheet();setTimeout(()=>openSheet('lock'),330)}else openSheet('lock')},
+  'lk-pin':()=>{PINSET={step:'a',a:'',cur:''};renderLockSetup()},'lk-off':()=>confirmBox('Turn off the lock?','Anyone with your phone can open Equity.','Turn off',()=>{LK.set(null);renderLockSetup();toast('Lock is off')}),
+  'lk-after':a=>{const L=LK.get();if(!L)return;L.after=+a.dataset.k;LK.set(L);renderLockSetup();haptic(HAP.tap)},
+  'lk-bio':async()=>{const L=LK.get();if(!L)return;if(L.cred){delete L.cred;LK.set(L);renderLockSetup();return}if(!canPasskey()){toast('Face ID needs your installed app over https');return}try{L.cred=await passkeyCreate();LK.set(L);renderLockSetup();toast('Face ID is on');haptic(HAP.fill)}catch(e){toast('Face ID setup was cancelled')}},
+  'lk-key':async a=>{const st=PINSET;if(!st)return;const k=a.dataset.k;haptic(HAP.tap);if(k==='del')st.cur=st.cur.slice(0,-1);else if(st.cur.length<4)st.cur+=k;renderLockSetup();if(st.cur.length<4)return;
+    if(st.step==='a'){st.a=st.cur;st.cur='';st.step='b';setTimeout(renderLockSetup,200)}else if(st.cur===st.a){const salt=b64(crypto.getRandomValues(new Uint8Array(12)));const old=LK.get()||{};LK.set({...old,pin:await hashPin(st.a,salt),salt,after:old.after??1});PINSET=null;renderLockSetup();toast('PIN set. Equity is now locked when you open it.');haptic(HAP.fill)}else{st.cur='';st.step='a';st.a='';toast('PINs did not match. Try again.');haptic(HAP.warn);setTimeout(renderLockSetup,200)}}});
+
+/* ===================== STAGE 6: cloud sync, live share link, push reminders ===================== */
+const CL={ok:null,id:null,timer:0,pulling:false,share:null};
+try{CL.id=localStorage.getItem('equity-sync')||null;CL.share=localStorage.getItem('equity-share')||null}catch(_){}
+const onOwnSite=()=>location.protocol==='https:'&&!/claude\.(ai|site)|claudeusercontent/.test(location.hostname);
+async function cloudCheck(){if(CL.ok!==null)return CL.ok;if(!onOwnSite()){CL.ok=false;return false}try{const r=await fetch('/api/health',{cache:'no-store'});const j=await r.json();CL.ok=!!(r.ok&&j.ok&&j.kv)}catch(_){CL.ok=false}return CL.ok}
+function newSyncId(){const a='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';return[...crypto.getRandomValues(new Uint8Array(24))].map(x=>a[x%a.length]).join('')}
+async function cloudPush(){if(!CL.id||DEMO||!CL.ok)return;try{const r=await fetch('/api/sync?id='+CL.id,{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({json:JSON.stringify(state),updatedAt:state.updatedAt||Date.now()})});if(r.status===409)cloudPull(true);else if(r.ok){setSync('ok');syncStamp()}}catch(_){setSync('')}}
+async function cloudPull(force){if(!CL.id||DEMO||CL.pulling)return;if(!(await cloudCheck()))return;CL.pulling=true;try{const r=await fetch('/api/sync?id='+CL.id,{cache:'no-store'});if(r.ok){const o=await r.json();if(o.updatedAt>(state.updatedAt||0)||force){const s=migrate(JSON.parse(o.json));if(s){s.updatedAt=o.updatedAt;state=s;saveLocal();applyTheme();renderAll();toast('Synced from your other device');sfx('step')}}else if((state.updatedAt||0)>o.updatedAt)cloudPush();syncStamp()}else if(r.status===404)cloudPush()}catch(_){}CL.pulling=false}
+function syncStamp(){try{localStorage.setItem('equity-synced',Date.now())}catch(_){}}
+const _commit2=commit;commit=function(o){_commit2(o);if(CL.id&&CL.ok){clearTimeout(CL.timer);CL.timer=setTimeout(cloudPush,1200)}clearTimeout(CL.bt);CL.bt=setTimeout(writeBrief,800);if(CL.share){clearTimeout(CL.st);CL.st=setTimeout(()=>shareLink(true),60e3)}};
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)cloudPull()});
+/* brief for the service worker: lets reminders say how many orders are left */
+async function writeBrief(){try{if(!('caches' in window))return;const T=today(),{rt,rd}=todayCount(),mg=marginal()[0];const risk=todayList().filter(({h})=>!done(h,T)&&due(h,T)&&streak(h)>=2).map(({h})=>`${h.name} ${streak(h)}d`);const c=await caches.open('equity-brief');await c.put('/__brief.json',new Response(JSON.stringify({date:T,left:rt-rd,total:rt,best:mg?mg.h.name:'',risk:risk.slice(0,2),lifx:(LIFX()*100).toFixed(2)}),{headers:{'content-type':'application/json'}}))}catch(_){}}
+/* live share link */
+function shareSnap(){const a=lifeSeries(30),w=weekData(7),A=ACC[state.settings.accent]||ACC.lime;return{name:state.profile.name||'Equity',lifx:a[29]*100,chg:(a[29]-a[0])*100,series:a,filled:w.filled,week:`${w.filled} orders this week`,streak:bestStreak().s,trophies:badges()?Object.keys(badges()).length:0,acc:A.c,holdings:state.domains.filter(d=>!d.muted).map(d=>({t:ticker(d),n:d.name,v:prog(d)*100,m:momentum(d)*100,c:d.color}))}}
+async function shareLink(silent){if(!(await cloudCheck())){if(!silent)toast('Live links need the cloud setup on your site');return}try{const r=await fetch('/api/share',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:CL.share,snap:shareSnap()})});const j=await r.json();if(!j.url)throw 0;CL.share=j.id;try{localStorage.setItem('equity-share',j.id)}catch(_){}
+  if(silent)return;haptic(HAP.fill);try{if(navigator.share){await navigator.share({title:'My Life Index',text:'Follow my Life Index on Equity',url:j.url});return}}catch(e){if(e&&e.name==='AbortError')return}try{await navigator.clipboard.writeText(j.url);toast('Link copied. It updates as you go.')}catch(_){prompt('Your live link',j.url)}}catch(_){if(!silent)toast('Could not create the link. Try again.')}}
+async function shareStop(){if(!CL.share)return;try{await fetch('/api/share?id='+CL.share,{method:'DELETE'})}catch(_){}CL.share=null;try{localStorage.removeItem('equity-share')}catch(_){}toast('Live link turned off');renderSettings()}
+/* push reminders */
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const u8=s=>Uint8Array.from(atob(s.replace(/-/g,'+').replace(/_/g,'/')+'==='.slice((s.length+3)%4)),c=>c.charCodeAt(0));
+async function pushOn(){if(!(await cloudCheck())){toast('Notifications need the cloud setup on your site');return}if(!('serviceWorker' in navigator)||!('PushManager' in window)){toast(/iPhone|iPad/.test(navigator.userAgent)&&!isStandalone()?'Add Equity to your Home Screen first, then open it from there.':'This browser does not support notifications');return}
+  try{const perm=await Notification.requestPermission();if(perm!=='granted'){toast('Notifications were not allowed');return}const reg=await navigator.serviceWorker.ready;const{key}=await (await fetch('/api/push')).json();let sub=await reg.pushManager.getSubscription();if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(key)});
+    const time=($('#pushT')&&$('#pushT').value)||state.settings.remind||'20:00';state.settings.remind=time;const r=await fetch('/api/push',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({sub:sub.toJSON(),time,tz:Intl.DateTimeFormat().resolvedOptions().timeZone})});if(!r.ok)throw 0;
+    try{localStorage.setItem('equity-push','1')}catch(_){}writeBrief();commit({render:false});renderSettings();haptic(HAP.fill);toast(`Daily reminder at ${time}`)}catch(e){toast('Could not turn on notifications. Try again.')}}
+async function pushOff(){try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();if(sub){await fetch('/api/push',{method:'DELETE',headers:{'content-type':'application/json'},body:JSON.stringify({endpoint:sub.endpoint})});await sub.unsubscribe()}}catch(_){}try{localStorage.removeItem('equity-push')}catch(_){}renderSettings();toast('Notifications off')}
+async function pushTest(){try{writeBrief();const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();if(!sub){toast('Turn notifications on first');return}const r=await fetch('/api/push/test',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({sub:sub.toJSON()})});toast(r.ok?'Test sent. It should arrive in a few seconds.':'The test could not be delivered')}catch(_){toast('The test could not be delivered')}}
+/* settings: cloud cards */
+const _renderSettings2=renderSettings;renderSettings=function(f){_renderSettings2(f);const sb=$('#layer .sbody');if(!sb||sb.querySelector('.cloudc'))return;const ok=CL.ok,pushed=(()=>{try{return localStorage.getItem('equity-push')==='1'}catch(_){return false}})();const last=(()=>{try{return+localStorage.getItem('equity-synced')||0}catch(_){return 0}})();
+  const first=sb.querySelector('.card');const lockL=LK.get();
+  const html=`<div class="card cloudc"><span class="lbl">Sync across devices</span>${ok?(CL.id?`<p class="rhint" style="margin:0 0 10px">On. Your portfolio stays the same on every device that uses this code.${last?` Last sync ${Math.max(0,Math.round((Date.now()-last)/6e4))} min ago.`:''}</p><div class="syncode">${CL.id.replace(/(.{6})/g,'$1 ').trim()}</div><div class="row" style="margin-top:10px;gap:8px"><button class="btn ghost" style="flex:1" data-action="sync-copy">Copy code</button><button class="btn ghost" style="flex:1" data-action="sync-now">Sync now</button></div><button class="btn bad" style="width:100%;margin-top:8px" data-action="sync-off">Stop syncing on this device</button>`
+     :`<p class="rhint" style="margin:0 0 12px">Keep your phone, laptop and the installed app in step. Start here, then enter the code on your other devices. Daily photos stay on each device.</p><div class="row" style="gap:8px"><button class="btn" style="flex:1" data-action="sync-on">Start syncing</button></div><form class="row" data-form="sync-join" style="margin-top:10px;gap:8px"><input class="field" name="c" placeholder="Have a code? Paste it" style="flex:1" autocomplete="off"><button class="btn ghost">Join</button></form>`)
+     :`<p class="rhint" style="margin:0">${onOwnSite()?'Upload the full app folder and connect the free Cloudflare storage to turn on sync, live links and notifications. The setup guide shows the steps.':'Sync, live links and notifications work on your own site after the Cloudflare setup. Here the app saves to your Claude account instead.'}</p>`}</div>
+   ${ok?`<div class="card"><span class="lbl">Notifications</span><p class="rhint" style="margin:0 0 12px">A daily reminder with how many orders are left and which streaks are at risk. On iPhone this works in the installed app.</p><div class="row" style="gap:8px"><input class="field" type="time" id="pushT" value="${esc(state.settings.remind||'20:00')}" style="flex:1" aria-label="Reminder time"><button class="btn ${pushed?'bad':''}" data-action="${pushed?'push-off':'push-on'}">${pushed?'Turn off':'Turn on'}</button></div>${pushed?'<button class="btn ghost" style="width:100%;margin-top:8px" data-action="push-test">Send a test now</button>':''}</div>
+   <div class="card"><span class="lbl">Accountability partner</span><p class="rhint" style="margin:0 0 12px">Share a live, read-only page of your Life Index, holdings and streaks. It never shows notes, moods or photos.</p><div class="row" style="gap:8px"><button class="btn" style="flex:1" data-action="share-link">${CL.share?'Share the link again':'Create a live link'}</button>${CL.share?'<button class="btn bad" data-action="share-stop">Turn off</button>':''}</div></div>`:''}
+   <div class="card"><span class="lbl">Privacy</span><div class="row"><span style="font-size:14px">App lock<small style="display:block;color:var(--mute);font-size:12px">${lockL&&lockL.pin?`On${lockL.cred?' · Face ID':''}`:'PIN or Face ID when you open Equity'}</small></span><span class="sp"></span><button class="btn ghost" data-action="lock-setup">${lockL&&lockL.pin?'Manage':'Set up'}</button></div></div>`;
+  const dataCard=sb.querySelector('[data-action="copy"]')?.closest('.card');if(dataCard){dataCard.insertAdjacentHTML('beforebegin',html);const row=dataCard.querySelector('[data-action="copy"]').parentElement;row.insertAdjacentHTML('afterbegin','<button class="btn ghost" data-action="csv">Export CSV</button>')}
+  const bellRow=sb.querySelector('[data-bind="set:bell"]');if(bellRow){const r=bellRow.closest('.row');r.outerHTML=`<span class="lbl" style="margin-top:16px">Opening animation</span><div class="seg">${[['launch','Every launch'],['daily','Once a day'],['off','Off']].map(([k,l])=>`<button aria-pressed="${bellMode()===k}" data-action="bell-mode" data-k="${k}">${l}</button>`).join('')}</div>`}
+  if(CL.ok===null)cloudCheck().then(v=>{if(v&&SH.kind==='settings'){const c=$('#layer .cloudc');if(c){[...$$('#layer .card')].forEach(()=>{});renderSettings()}}})};
+forms['sync-join']=async f=>{const c=f.elements.c.value.replace(/\s+/g,'');if(!/^[A-Za-z0-9_-]{16,64}$/.test(c)){toast('That code does not look right');return}try{const r=await fetch('/api/sync?id='+c,{cache:'no-store'});if(!r.ok){toast('No portfolio found for that code');return}const o=await r.json();const s=migrate(JSON.parse(o.json));if(!s)throw 0;
+  confirmBox('Join this portfolio?',`${s.domains.length} holdings from your other device will replace what is on this one.`,'Join',()=>{CL.id=c;try{localStorage.setItem('equity-sync',c)}catch(_){}s.updatedAt=o.updatedAt;state=s;saveLocal();applyTheme();renderAll();renderSettings();toast('Synced. Both devices now match.');celebrate()})}catch(_){toast('Could not reach your sync storage')}};
+Object.assign(actions,{
+  'sync-on':async()=>{if(!(await cloudCheck()))return;CL.id=newSyncId();try{localStorage.setItem('equity-sync',CL.id)}catch(_){}state.updatedAt=Date.now();await cloudPush();renderSettings();haptic(HAP.fill);toast('Sync is on. Enter the code on your other devices.')},
+  'sync-off':()=>confirmBox('Stop syncing here?','This device keeps its current data but stops sending and receiving changes.','Stop',()=>{CL.id=null;try{localStorage.removeItem('equity-sync')}catch(_){}renderSettings()}),
+  'sync-copy':async()=>{try{await navigator.clipboard.writeText(CL.id);toast('Code copied')}catch(_){prompt('Your sync code',CL.id)}},'sync-now':()=>{cloudPull(false).then(()=>cloudPush());toast('Syncing…')},
+  'push-on':()=>pushOn(),'push-off':()=>pushOff(),'push-test':()=>pushTest(),'share-link':()=>shareLink(false),'share-stop':()=>shareStop(),
+  'bell-mode':a=>{state.settings.bellMode=a.dataset.k;state.settings.bell=a.dataset.k!=='off';commit({render:false});renderSettings();haptic(HAP.tap)}});
+cloudCheck().then(v=>{if(v){if(CL.id)cloudPull();writeBrief()}});
+
+/* reopening a sheet while the previous one is still closing must slide it back in */
+const _openSheet=openSheet;openSheet=function(k,id){_openSheet(k,id);const v=$('#layer .veil'),sh=$('#layer .sheet');if(v&&sh&&!sh.classList.contains('on')){sh.classList.remove('morphout');requestAnimationFrame(()=>requestAnimationFrame(()=>{v.classList.add('on');sh.classList.add('on')}))}};
+/* entry points for the new sheets */
+const _renderQuick=renderQuick;renderQuick=function(f){_renderQuick(f);const sb=$('#layer .sbody');if(!sb||sb.querySelector('.qlib'))return;const hd=sb.querySelector('.s-hd');if(hd)hd.insertAdjacentHTML('afterend',`<button class="qlib" data-action="library"><span class="qli">${HI_STAR}</span><span><b>Ritual library</b><small>8 proven routines, added in one tap</small></span>${ARR}</button>`)};
+const _renderArea3=renderArea;renderArea=function(f){_renderArea3(f);const d=D_(SH.id),sb=$('#layer .sbody');if(!d||!sb||ui.tab!=='milestones')return;sb.querySelectorAll('[data-action="del-ms"]').forEach(x=>{if(x.previousElementSibling&&x.previousElementSibling.classList.contains('msteps'))return;const m=d.milestones.find(z=>z.id===x.dataset.ms);if(!m)return;const st=m.steps||[],c=st.filter(s=>s.done).length;const b=document.createElement('button');b.className='msteps';b.dataset.action='goal-open';b.dataset.d=d.id;b.dataset.ms=m.id;b.innerHTML=st.length?`${ringSVG(c/st.length,26,3)}<span>${c}/${st.length}</span>`:'<span>+ Steps</span>';x.before(b)})};
+
 /* ---------- loop & boot ---------- */
 let last=performance.now();
 function frame(now){const dt=Math.min(50,now-last);last=now;if(!document.hidden){const hv=PANE.home.classList.contains('on'),dv=PANE.desk.classList.contains('on');if(IC&&hv&&IC.cv.isConnected)IC.draw(now,dt);if(PC&&dv&&PC.cv.isConnected)PC.draw(now,dt);if(HC&&SH.kind==='area'&&HC.cv.isConnected)HC.draw(now,dt)}requestAnimationFrame(frame)}
@@ -2338,7 +2576,7 @@ function drawHolding(d){const cv=$('#hc');if(!cv)return;const old=HC&&HC._d===d.
 if(DEMO)demoPhotos();
 applyTheme();PANE.home.className='pane on';renderAll();$('#v-home').classList.add('ent');app.dataset.tab='home';
 if(state.settings.startTab&&state.settings.startTab!=='home'&&NAV.order.includes(state.settings.startTab))setTimeout(()=>go(state.settings.startTab),60);
-FT.restore();checkBadges(true);onboarding();if(!$('.onb'))openingBell();if(state.settings.tilt)tiltStart();try{if(localStorage.getItem('equity-story')!==today())app.classList.add('story-new')}catch(_){}
+FT.restore();checkBadges(true);onboarding();if(!$('.onb')){if(!showLock()){BOOTED=true;openingBell()}}writeBrief();if(state.settings.tilt)tiltStart();try{if(localStorage.getItem('equity-story')!==today())app.classList.add('story-new')}catch(_){}
 setTimeout(()=>{['desk','orders','hold'].forEach((v,i)=>setTimeout(()=>{if(!BUILT[v]&&NAV.v!==v&&!SH.kind)renderPane(v,'fresh')},i*400))},2500);
 addEventListener('resize',()=>{if(IC){IC.size();IC._ck=''}if(PC)PC.size();if(HC&&HC.cv.isConnected)HC.size();if($('#map')?.classList.contains('in'))renderMap();moveDock();inkTo('#rng');onScroll()});
 document.fonts?.ready.then(()=>{moveDock();inkTo('#rng')});
