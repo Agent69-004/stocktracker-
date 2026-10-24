@@ -34,7 +34,7 @@ button{cursor:pointer;background:none;border:0;padding:0;touch-action:manipulati
 @keyframes gl{to{transform:translateX(-46%) scale(1.08)}}
 .panes{position:absolute;inset:0;overflow:hidden;overflow:clip;transform-origin:50% 0;transition:transform .6s cubic-bezier(.2,1.05,.3,1),filter .6s,border-radius .6s}
 .pane{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;visibility:hidden;pointer-events:none;contain:strict}
-.pane.on{visibility:visible;pointer-events:auto}
+.pane.pon{visibility:visible;pointer-events:auto}
 .pane.out{pointer-events:none}
 .wrap{max-width:720px;margin:0 auto;padding:calc(62px + env(safe-area-inset-top,0px)) var(--gxr) calc(130px + env(safe-area-inset-bottom,0px)) var(--gx)}
 
@@ -868,7 +868,7 @@ button.logo::before{content:"";position:absolute;inset:-4px;border-radius:14px;p
 .s-go{align-self:stretch;height:56px;font-size:16px;margin-top:10px}
 /* swipe between tabs */
 .pane{touch-action:pan-y}
-.app.swiping .pane.on{will-change:transform}
+.app.swiping .pane.pon{will-change:transform}
 
 /* ===== v11 ===== */
 .hero .rrow{position:relative;z-index:4}
@@ -1559,6 +1559,10 @@ i.now{background:var(--up)}i.was{background:var(--p3)}
 .bell2 .bcv{will-change:contents}
 .bell2 .borbit,.bell2 .bring2,.bell2 .bflare{will-change:transform,opacity}
 .app.belled .panes,.app.belled .top,.app.belled .dock,.app.belled .ambcv,.app.belled .glow{visibility:hidden}
+
+/* v17: tab switching without restyling the whole section */
+.pane{visibility:visible!important;pointer-events:auto!important}
+.pane:not(.pon){transform:translate3d(120%,0,0);opacity:0}
 </style>
 
 <div class="app" id="app">
@@ -1902,14 +1906,14 @@ const PANE={},DIRTY={home:true,orders:true,hold:true,desk:true},BUILT={};
 NAV.order.forEach(v=>{PANE[v]=$('#pane-'+v)});
 const pane=()=>PANE[NAV.v];
 let navT=0;
-function go(v){const p0=pane();if(v===NAV.v){p0.scrollTo({top:0,behavior:RM.matches?'auto':'smooth'});return}
+function go(v){const p0=pane();if(v===NAV.v){p0.scrollTo({top:0,behavior:RM.matches?'auto':'smooth'});return}if(!DOCKQ)haptic(6);DOCKQ=false;
   const back=NAV.order.indexOf(v)<NAV.order.indexOf(NAV.v),from=NAV.v;NAV.v=v;const p1=PANE[v],fresh=!BUILT[v];if(fresh)renderPane(v,'fresh');
   $$('#dock button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.v===v)));moveDock(true);
   clearTimeout(navT);NAV.order.forEach(k=>{if(k!==v&&k!==from)PANE[k].className='pane'});app.classList.add('navving');
-  p0.className='pane on out '+(back?'ob':'of');p1.className='pane on in '+(back?'ib':'if');if(fresh&&!RM.matches)$('#v-'+v).classList.add('ent');
-  navT=setTimeout(()=>{p0.className='pane';p1.className='pane on';app.classList.remove('navving');if(DIRTY[v]&&NAV.v===v)renderPane(v,'quiet')},420);
+  p0.className='pane pon out '+(back?'ob':'of');p1.className='pane pon in '+(back?'ib':'if');if(fresh&&!RM.matches)$('#v-'+v).classList.add('ent');
+  navT=setTimeout(()=>{p0.className='pane';p1.className='pane pon';app.classList.remove('navving');if(DIRTY[v]&&NAV.v===v)renderPane(v,'quiet')},420);
   $('#hdT').textContent=TITLES[v];app.dataset.tab=v;const lp=$('.logo path');if(lp){lp.style.animation='none';requestAnimationFrame(()=>{lp.style.animation=''})}
-  requestAnimationFrame(()=>{scrollFX();updMini()});haptic(6)}
+  requestAnimationFrame(()=>{scrollFX();updMini()})}
 function moveDock(stretch){const f=()=>{const a=$('#dock [aria-current="true"]'),k=$('#dock .ink');if(a&&k){k.style.left=a.offsetLeft+'px';k.style.width=a.offsetWidth+'px'}};requestAnimationFrame(f);setTimeout(f,560);
   if(stretch&&!RM.matches){const k=$('#dock .ink');k.animate([{scale:'1 1'},{scale:'1.12 .86',offset:.35},{scale:'.96 1.04',offset:.7},{scale:'1 1'}],{duration:560,easing:'ease-out'})}}
 
@@ -3101,13 +3105,18 @@ Object.assign(actions,{flip:(a,e)=>{if(e)e.stopPropagation();flipCard(a.closest(
 const _renderQuick2=renderQuick;renderQuick=function(f){_renderQuick2(f);if(QA.type!=='ritual')return;const inp=$('#layer .qform input[name="t"]');if(!inp||$('#layer .qshort'))return;inp.insertAdjacentHTML('afterend',`<label class="qshort"><input type="checkbox" name="short"><span class="qs-box"></span><span><b>Short position</b><small>Something to avoid, like social media or smoking. Clean days gain value.</small></span></label>`)};
 const _qa=forms.qa;forms.qa=f=>{const isShort=QA.type==='ritual'&&f.elements.short&&f.elements.short.checked;const d=D_(QA.d),n0=d?d.habits.length:0;_qa(f);if(isShort&&d&&d.habits.length>n0){const h=d.habits[d.habits.length-1];h.short=true;h.since=today();h.slip={};commit();toast(`Short position opened: ${h.name}`)}};
 
+
+/* v17: switch tabs the moment a finger touches the dock */
+let DOCKQ=false,DOCKD=null;
+(function(){const dk=$('#dock');if(!dk)return;dk.addEventListener('pointerdown',e=>{if(e.button>0)return;const b=e.target.closest('button[data-v]');if(!b||b.dataset.v===NAV.v)return;if(SH.kind)closeSheet();DOCKD={v:b.dataset.v,t:performance.now()};DOCKQ=true;go(b.dataset.v)},{passive:true})})();
+const _actGo=actions.go;actions.go=(a,e)=>{if(DOCKD&&DOCKD.v===a.dataset.v&&performance.now()-DOCKD.t<1200){DOCKD=null;haptic(6);return}DOCKD=null;_actGo(a,e)};
 /* ---------- loop & boot ---------- */
 let last=performance.now();
-function frame(now){const dt=Math.min(50,now-last);last=now;if(!document.hidden){const hv=PANE.home.classList.contains('on'),dv=PANE.desk.classList.contains('on');if(IC&&hv&&IC.cv.isConnected)IC.draw(now,dt);if(PC&&dv&&PC.cv.isConnected)PC.draw(now,dt);if(HC&&SH.kind==='area'&&HC.cv.isConnected)HC.draw(now,dt)}requestAnimationFrame(frame)}
+function frame(now){const dt=Math.min(50,now-last);last=now;if(!document.hidden){const hv=PANE.home.classList.contains('pon'),dv=PANE.desk.classList.contains('pon');if(IC&&hv&&IC.cv.isConnected)IC.draw(now,dt);if(PC&&dv&&PC.cv.isConnected)PC.draw(now,dt);if(HC&&SH.kind==='area'&&HC.cv.isConnected)HC.draw(now,dt)}requestAnimationFrame(frame)}
 function drawHolding(d){const cv=$('#hc');if(!cv)return;const old=HC&&HC._d===d.id?HC:null;HC=makeChart(cv.parentElement,cv,{axis:true});HC._d=d.id;HC.opts.color=momentum(d)>=0?TK().up:TK().down;const s=series(d,90);
   if(old&&old.disp.length===s.length){HC.disp=old.disp.slice();HC.set(s,null,true);HC.t0=-1e9}else HC.set(s);const box=cv.parentElement;let lastI=-1;const mv=e=>{const i=HC.idx(e);if(i!==lastI&&lastI!==-1&&e.pointerType!=='mouse')haptic(2);lastI=i;HC.hover=i};box.onpointermove=mv;box.onpointerdown=mv;box.onpointerleave=box.onpointercancel=()=>{HC.hover=-1;lastI=-1}}
 if(DEMO)demoPhotos();
-applyTheme();PANE.home.className='pane on';renderAll();$('#v-home').classList.add('ent');app.dataset.tab='home';
+applyTheme();PANE.home.className='pane pon';renderAll();$('#v-home').classList.add('ent');app.dataset.tab='home';
 if(state.settings.startTab&&state.settings.startTab!=='home'&&NAV.order.includes(state.settings.startTab))setTimeout(()=>go(state.settings.startTab),60);
 FT.restore();checkBadges(true);onboarding();if(!$('.onb')){if(!showLock()){BOOTED=true;openingBell()}}writeBrief();if(state.settings.tilt)tiltStart();try{if(localStorage.getItem('equity-story')!==today())app.classList.add('story-new')}catch(_){}
 setTimeout(()=>{let wasB=false;(function pb(){if(app.classList.contains('belled')){wasB=true;setTimeout(pb,500);return}if(wasB){wasB=false;setTimeout(pb,1500);return}['desk','orders','hold'].forEach((v,i)=>setTimeout(()=>{if(!BUILT[v]&&NAV.v!==v&&!SH.kind)renderPane(v,'fresh')},i*400))})()},2500);
