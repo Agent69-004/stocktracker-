@@ -462,7 +462,7 @@ button:active:not(:disabled){transform:scale(.96)}
 .app.scrolled .sprog{opacity:.9}
 .fadeb{position:absolute;left:0;right:0;bottom:0;height:calc(120px + env(safe-area-inset-bottom,0px));z-index:30;pointer-events:none;background:linear-gradient(to top,var(--bg) 18%,color-mix(in srgb,var(--bg) 60%,transparent) 55%,transparent)}
 .app.titled .hd2 b{animation:none}
-.og-h{position:sticky;top:calc(63px + env(safe-area-inset-top,0px));z-index:6;margin-left:-6px;margin-right:-6px;padding:8px 10px;border-radius:14px;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%)}
+.og-h{position:sticky;top:calc(63px + env(safe-area-inset-top,0px));z-index:6;margin-left:-6px;margin-right:-6px;padding:8px 10px;border-radius:14px;background:color-mix(in srgb,var(--bg) 94%,transparent)}
 @media (max-width:380px){.mini .ms2{display:none}.app.mini-on .mini{max-width:130px}.app.titled .hd2 b{font-size:15px}}
 
 
@@ -865,6 +865,49 @@ button.logo::before{content:"";position:absolute;inset:-4px;border-radius:14px;p
 /* swipe between tabs */
 .pane{touch-action:pan-y}
 .app.swiping .pane.on{will-change:transform}
+
+/* ===== v11 ===== */
+.hero .rrow{position:relative;z-index:4}
+.hero .chartw{z-index:1}
+/* rating header: label and button share one row, never overlap */
+.rhd{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.rhd .wkbtn{position:static;flex:none}
+.app[data-dark="0"] .rate .rw{color:color-mix(in srgb,var(--rc),#000 30%)}
+/* faster, lighter tab switching */
+.pane.in.if{animation-duration:.42s}.pane.in.ib{animation-duration:.42s}.pane.out.of,.pane.out.ob{animation-duration:.3s}
+.app.navving .top,.app.navving .dock{-webkit-backdrop-filter:none;backdrop-filter:none}
+.app.navving .dock{background:color-mix(in srgb,var(--p2) 96%,transparent)}
+.app.navving .app.scrolled .top{background:var(--bg)}
+.app.navving .glow,.app.navving .hbg::after,.app.navving .hc::before,.app.navving .glowb::before{animation-play-state:paused}
+/* replay */
+.app.replaying #v-home .st-in>*:not(.hstick):not(.hero){opacity:.28;filter:saturate(.4);transition:opacity .8s,filter .8s}
+#v-home .st-in>*{transition:opacity .8s,filter .8s}
+.app.replaying .hero .chartw{transform:scale(1.03)!important;transition:transform 1.2s var(--ease)}
+.app.replaying .hstick .price{color:var(--up);text-shadow:none}
+.app.replaying .tip{background:var(--acc);color:var(--acc-ink);transition:none}
+.ctb:disabled{opacity:.35}
+/* ticker tape */
+.tape{margin:14px calc(-1*var(--gxr)) 0 calc(-1*var(--gx));overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--p1) 60%,transparent);-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.tape-in{display:flex;width:max-content;animation:tape var(--dur) linear infinite}
+.tape span{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;font-family:var(--mono);font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tape b{font-weight:700;color:var(--ink)}.tape em{font-style:normal;font-weight:600}
+.tape .lx b{color:var(--up)}
+@keyframes tape{to{transform:translateX(-50%)}}
+.app.calm .tape-in{animation-duration:calc(var(--dur)*3)}
+/* streaks at risk */
+.risk{display:flex;align-items:center;gap:14px;width:100%;margin-top:12px;text-align:left;border-color:color-mix(in srgb,#FF8A3D 40%,var(--line));background-image:linear-gradient(110deg,color-mix(in srgb,#FF8A3D 16%,var(--p1)),var(--p1) 70%)}
+.rfl{width:44px;height:44px;flex:none;border-radius:14px;display:grid;place-items:center;background:color-mix(in srgb,#FF8A3D 22%,transparent);color:#FF8A3D;animation:rflp 1.6s ease-in-out infinite}
+.rfl .fl{width:24px;height:24px}
+@keyframes rflp{50%{box-shadow:0 0 0 8px color-mix(in srgb,#FF8A3D 0%,transparent),0 0 24px color-mix(in srgb,#FF8A3D 50%,transparent);transform:scale(1.06)}}
+.risk>div{flex:1;min-width:0}.risk b{display:block;font-size:15.5px}.risk span{font-size:12.5px;color:var(--mute)}
+.rgo{color:var(--mute)}.rgo svg{width:18px;height:18px}
+/* pull to refresh */
+.ptr{position:absolute;z-index:24;left:50%;top:calc(66px + env(safe-area-inset-top,0px));width:36px;height:36px;margin-left:-18px;border-radius:50%;background:var(--p2);border:1px solid var(--line2);display:grid;place-items:center;opacity:0;transform:translateY(calc(var(--k,0)*24px)) scale(calc(.5 + var(--k,0)*.5)) rotate(calc(var(--k,0)*270deg));pointer-events:none;transition:opacity .2s}
+.ptr.show{opacity:1}
+.ptr svg{width:24px;height:24px;transform:rotate(-90deg)}
+.ptr circle{fill:none;stroke:var(--acc);stroke-width:3;stroke-linecap:round;stroke-dasharray:88;stroke-dashoffset:calc(88 - var(--k,0)*66)}
+.ptr.armed{background:var(--acc)}.ptr.armed circle{stroke:var(--acc-ink)}
+.ptr.spin{opacity:1;transform:translateY(24px)}.ptr.spin svg{animation:spinr .8s linear infinite}
 /* reduced motion */
 @media (prefers-reduced-motion: reduce){.pane.in,.pane.out{animation:none!important}}
 @media (min-width:900px){.wrap{max-width:760px}.sheet{left:auto;right:24px;top:24px;bottom:24px;width:480px;max-height:none;border-radius:30px;border:1px solid var(--line2);transform:translateX(calc(100% + 40px))}.sheet.on{transform:none}.grab{display:none}}
@@ -887,7 +930,7 @@ button.logo::before{content:"";position:absolute;inset:-4px;border-radius:14px;p
     <div class="pane" id="pane-hold"><div class="wrap"><main class="view" id="v-hold"></main></div></div>
     <div class="pane" id="pane-desk"><div class="wrap"><main class="view" id="v-desk"></main></div></div>
   </div>
-  <div class="fadeb" aria-hidden="true"></div>
+  <div class="ptr" id="ptr" aria-hidden="true"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="14"/></svg></div><div class="fadeb" aria-hidden="true"></div>
   <nav class="dock" id="dock" aria-label="Sections"><span class="ink"></span>
     <button data-action="go" data-v="home" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 3 8-9"/><path d="M15 6h5v5"/></svg><span>Market</span></button>
     <button data-action="go" data-v="orders" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg><span>Orders</span><i class="badge" id="badge" hidden></i></button>
@@ -1157,14 +1200,14 @@ function makeChart(box,cv,opts){const C={box,cv,ctx:cv.getContext('2d'),vals:[],
   C.pulse=(now)=>{const p=C.lp;if(!p)return;const{ctx}=C,r=C.r||1,pu=(Math.sin(now/420)+1)/2;ctx.fillStyle=p.col;ctx.globalAlpha=.22*pu;ctx.beginPath();ctx.arc(p.x,p.y,(5+7*pu)*r,0,6.283);ctx.fill();ctx.globalAlpha=1;ctx.beginPath();ctx.arc(p.x,p.y,3.6*r,0,6.283);ctx.fill()};
   C.draw=(now,dt)=>{const{ctx}=C,W=cv.width,H=cv.height,r=C.r||1;if(!W||!C.vals.length)return;const cs=TK(),ink=cs.ink,mute=cs.faint,line=cs.line2,up=cs.up,down=cs.down;
     const k=Math.min(1,dt/200);let moving=false;for(let i=0;i<C.vals.length;i++){const df=C.vals[i]-C.disp[i];if(Math.abs(df)>2e-5){moving=true;C.disp[i]+=df*k}else C.disp[i]=C.vals[i]}
-    const prog=Math.min(1,(now-C.t0)/(opts.reveal||900)),v=C.disp,n=v.length;const rise=v[n-1]>=v[0],col=opts.color||(rise?up:down);
+    const prog=Math.max(0,Math.min(1,(now-C.t0)/(opts.reveal||900))),v=C.disp,n=v.length;const rise=v[n-1]>=v[0],col=opts.color||(rise?up:down);
     const key=W+'|'+H+'|'+col+'|'+!!opts.candle+'|'+C.hover+'|'+THEMEV;
     if(!moving&&prog>=1&&C._cache&&C._ck===key){ctx.clearRect(0,0,W,H);ctx.drawImage(C._cache,0,0);C.pulse(now);return}
     const padL=6*r,padR=(opts.axis?42:8)*r,padT=14*r,padB=(opts.axis?22:6)*r;let lo=Math.min(...v,...(opts.candle?C.lows():[])),hi=Math.max(...v,...(opts.candle?C.highs():[]));if(hi-lo<.04){const m=(hi+lo)/2;lo=m-.02;hi=m+.02}const pd=(hi-lo)*.12;lo=Math.max(0,lo-pd);hi=Math.min(1,hi+pd);if(hi-lo<.04)hi=lo+.04;
     const X=i=>padL+i/(n-1||1)*(W-padL-padR),Y=y=>padT+(1-(y-lo)/(hi-lo))*(H-padT-padB);ctx.clearRect(0,0,W,H);
     if(opts.axis){ctx.font=`${10*r}px ${cs.mono}`;ctx.fillStyle=mute;ctx.textAlign='left';ctx.textBaseline='middle';for(let g=0;g<=3;g++){const yv=lo+(hi-lo)*(g/3),yy=Y(yv);ctx.strokeStyle=line;ctx.globalAlpha=.5;ctx.setLineDash([2*r,4*r]);ctx.beginPath();ctx.moveTo(padL,yy);ctx.lineTo(W-padR,yy);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;ctx.fillText((yv*100).toFixed(1),W-padR+6*r,yy)}
       const T=today(),step=Math.max(1,Math.round(n/5));ctx.textAlign='center';ctx.textBaseline='alphabetic';for(let i=n-1;i>=0;i-=step){const d2=parseKey(addDays(T,i-(n-1)));ctx.fillText(i===n-1?'Today':`${d2.getDate()} ${MON[d2.getMonth()]}`,Math.min(Math.max(X(i),24*r),W-padR-20*r),H-6*r)}}
-    C.rise=rise;const ease=1-Math.pow(1-prog,3);
+    C.rise=rise;const ease=opts.easeFn?opts.easeFn(prog):1-Math.pow(1-prog,3);
     ctx.save();ctx.beginPath();ctx.rect(0,0,padL+(W-padL-padR)*ease+2,H);ctx.clip();
     if(opts.candle&&C.ohlc){const cw=Math.max(1.5*r,(W-padL-padR)/n*.62);C.ohlc.forEach((c,i)=>{const x=X(i),u=c.c>=c.o;ctx.strokeStyle=ctx.fillStyle=u?up:down;ctx.lineWidth=Math.max(1,r);ctx.beginPath();ctx.moveTo(x,Y(c.h));ctx.lineTo(x,Y(c.l));ctx.stroke();const y1=Y(Math.max(c.o,c.c)),y2=Y(Math.min(c.o,c.c));ctx.fillRect(x-cw/2,y1,cw,Math.max(1.5*r,y2-y1))})}
     else{const g=ctx.createLinearGradient(0,padT,0,H-padB);g.addColorStop(0,hexA(col,.34));g.addColorStop(.6,hexA(col,.08));g.addColorStop(1,hexA(col,0));const path=()=>{ctx.beginPath();ctx.moveTo(X(0),Y(v[0]));for(let i=1;i<n;i++){const xm=(X(i-1)+X(i))/2;ctx.bezierCurveTo(xm,Y(v[i-1]),xm,Y(v[i]),X(i),Y(v[i]))}};
@@ -1172,6 +1215,8 @@ function makeChart(box,cv,opts){const C={box,cv,ctx:cv.getContext('2d'),vals:[],
       path();ctx.strokeStyle=hexA(col,.35);ctx.lineWidth=7*r;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();
       path();ctx.strokeStyle=col;ctx.lineWidth=2.4*r;ctx.stroke()}
     ctx.restore();
+    if(opts.beam&&prog<1){const bx=padL+(W-padL-padR)*ease,fi=ease*(n-1),i0=Math.floor(fi),i1=Math.min(n-1,i0+1),vy=v[i0]+(v[i1]-v[i0])*(fi-i0),by=Y(vy);const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,hexA(col,0));bg.addColorStop(.5,hexA(col,.3));bg.addColorStop(1,hexA(col,0));ctx.fillStyle=bg;ctx.fillRect(bx-22*r,0,44*r,H);ctx.fillStyle=hexA(col,.85);ctx.fillRect(bx-.75*r,0,1.5*r,H);
+      const rg=ctx.createRadialGradient(bx,by,0,bx,by,26*r);rg.addColorStop(0,'rgba(255,255,255,.95)');rg.addColorStop(.22,hexA(col,.85));rg.addColorStop(1,hexA(col,0));ctx.fillStyle=rg;ctx.beginPath();ctx.arc(bx,by,26*r,0,6.283);ctx.fill();C.beam={x:bx/r,v:vy,i:fi}}else C.beam=null;
     if(opts.axis&&!opts.candle){ctx.strokeStyle=line;ctx.setLineDash([3*r,3*r]);ctx.beginPath();ctx.moveTo(padL,Y(v[0]));ctx.lineTo(W-padR,Y(v[0]));ctx.stroke();ctx.setLineDash([])}
     if(C.hover>=0&&C.hover<n){const x=X(C.hover),y=Y(v[C.hover]);ctx.strokeStyle=ink;ctx.globalAlpha=.45;ctx.lineWidth=r;ctx.setLineDash([3*r,3*r]);ctx.beginPath();ctx.moveTo(x,padT);ctx.lineTo(x,H-padB);ctx.stroke();ctx.setLineDash([]);ctx.globalAlpha=1;ctx.fillStyle=cs.p1;ctx.strokeStyle=col;ctx.lineWidth=2.4*r;ctx.beginPath();ctx.arc(x,y,6*r,0,6.283);ctx.fill();ctx.stroke()}
     C.lp=prog>=1?{x:X(n-1),y:Y(v[n-1]),col}:null;C.geo={X,padL,padR,W,n,r};
@@ -1210,14 +1255,13 @@ NAV.order.forEach(v=>{PANE[v]=$('#pane-'+v)});
 const pane=()=>PANE[NAV.v];
 let navT=0;
 function go(v){const p0=pane();if(v===NAV.v){p0.scrollTo({top:0,behavior:RM.matches?'auto':'smooth'});return}
-  const back=NAV.order.indexOf(v)<NAV.order.indexOf(NAV.v),from=NAV.v;NAV.v=v;haptic(6);
+  const back=NAV.order.indexOf(v)<NAV.order.indexOf(NAV.v),from=NAV.v;NAV.v=v;const p1=PANE[v],fresh=!BUILT[v];if(fresh)renderPane(v,'fresh');
   $$('#dock button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.v===v)));moveDock(true);
-  if(DIRTY[v])renderPane(v,BUILT[v]?'quiet':'fresh');
-  const p1=PANE[v];clearTimeout(navT);NAV.order.forEach(k=>{if(k!==v&&k!==from)PANE[k].className='pane'});
-  p0.className='pane on out '+(back?'ob':'of');p1.className='pane on in '+(back?'ib':'if');
-  const vw=$('#v-'+v);vw.classList.remove('ent');void vw.offsetWidth;if(!RM.matches)vw.classList.add('ent');
-  navT=setTimeout(()=>{p0.className='pane';p1.className='pane on'},520);
-  $('#hdT').textContent=TITLES[v];app.dataset.tab=v;const lp=$('.logo path');if(lp){lp.style.animation='none';void lp.getBoundingClientRect();lp.style.animation=''}scrollFX();updMini()}
+  clearTimeout(navT);NAV.order.forEach(k=>{if(k!==v&&k!==from)PANE[k].className='pane'});app.classList.add('navving');
+  p0.className='pane on out '+(back?'ob':'of');p1.className='pane on in '+(back?'ib':'if');if(fresh&&!RM.matches)$('#v-'+v).classList.add('ent');
+  navT=setTimeout(()=>{p0.className='pane';p1.className='pane on';app.classList.remove('navving');if(DIRTY[v]&&NAV.v===v)renderPane(v,'quiet')},420);
+  $('#hdT').textContent=TITLES[v];app.dataset.tab=v;const lp=$('.logo path');if(lp){lp.style.animation='none';requestAnimationFrame(()=>{lp.style.animation=''})}
+  requestAnimationFrame(()=>{scrollFX();updMini()});haptic(6)}
 function moveDock(stretch){const f=()=>{const a=$('#dock [aria-current="true"]'),k=$('#dock .ink');if(a&&k){k.style.left=a.offsetLeft+'px';k.style.width=a.offsetWidth+'px'}};requestAnimationFrame(f);setTimeout(f,560);
   if(stretch&&!RM.matches){const k=$('#dock .ink');k.animate([{scale:'1 1'},{scale:'1.12 .86',offset:.35},{scale:'.96 1.04',offset:.7},{scale:'1 1'}],{duration:560,easing:'ease-out'})}}
 
@@ -1284,8 +1328,10 @@ const CHKC=CHK.replace('stroke-width="3"','stroke="currentColor" stroke-width="3
 function homeHTML(){const{rt,rd}=todayCount(),C=2*Math.PI*36,f=rt?rd/rt:0,mg=marginal(),b=mg[0],bs=bestStreak();const top=state.domains.filter(d=>!d.muted).sort((a,b)=>momentum(b)-momentum(a))[0];
   return`<div class="st-in"><div class="hstick" id="hstick"><div class="hbg"></div><div class="lab"><i></i>Life Index · LIFX</div><div class="price" id="price"></div><div class="chg" id="chg"></div><button class="hright" data-action="totop" aria-label="Back to the chart"><span id="hchip"></span><span id="hsp"></span></button></div><section class="hero">
    <div class="chartw" id="cw"><canvas id="ic"></canvas><div class="tip" id="tip"></div></div>
-   <div class="rrow"><button class="ctb rpl" data-action="replay" aria-label="Replay the chart"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></button><div class="pills" id="rng"><span class="ink"></span>${[[7,'1W'],[30,'1M'],[90,'3M'],[180,'6M']].map(([v,l])=>`<button data-action="rng" data-v="${v}" aria-pressed="${UI2.range===v}">${l}</button>`).join('')}</div><button class="ctb" data-action="ctype" aria-pressed="${UI2.ctype==='candle'}" aria-label="Candles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3v4M7 15v6M17 3v8M17 17v4"/><rect x="4.5" y="7" width="5" height="8" rx="1.2"/><rect x="14.5" y="11" width="5" height="6" rx="1.2"/></svg></button></div></section>
+   <div class="rrow"><button class="ctb rpl" data-action="replay" aria-label="Replay the chart"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></button><div class="pills" id="rng"><span class="ink"></span>${[[1,'1D'],[7,'1W'],[14,'2W'],[30,'1M']].map(([v,l])=>`<button data-action="rng" data-v="${v}" aria-pressed="${UI2.range===v}">${l}</button>`).join('')}</div><button class="ctb" data-action="ctype" aria-pressed="${UI2.ctype==='candle'}" aria-label="Candles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 3v4M7 15v6M17 3v8M17 17v4"/><rect x="4.5" y="7" width="5" height="8" rx="1.2"/><rect x="14.5" y="11" width="5" height="6" rx="1.2"/></svg></button></div></section>
   ${bannerHTML()}
+  ${riskHTML()}
+  ${tapeHTML()}
   <div class="bento">
    <button class="card zs zo today ${rt&&rd===rt?'full':''}" data-action="go" data-v="orders"><span class="k">Today’s orders</span><div class="ringc2"><svg class="ring" viewBox="0 0 84 84"><defs><linearGradient id="rgr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--acc)"/><stop offset="1" style="stop-color:var(--up)"/></linearGradient></defs><circle class="t" cx="42" cy="42" r="36"/><circle class="v" cx="42" cy="42" r="36" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-ringPrev)}" data-off="${C*(1-f)}" data-f="${f}"/></svg><div class="rin"><b>${cu(rd)}<small>/${rt}</small></b><span>${Math.round(f*100)}%</span></div></div><div class="sub">${!rt?'Add rituals to begin':rt-rd?`${rt-rd} left · tap to fill`:'All filled today'}</div></button>
    <div class="card zs zo streakc"><span class="k">${FL} Best streak</span><div class="flm" aria-hidden="true">${FL}</div><div class="big">${cu(bs.s)}<small>days</small></div><div class="sub">${bs.h?esc(bs.h.name):'Start one today'}</div></div>
@@ -1304,9 +1350,9 @@ function setPrice(v,instant){const el=$('#price');if(!el)return;const s=(v*100).
   if(instant)el.classList.add('nt');else if(fresh)void el.offsetWidth;const dgs=el.querySelectorAll('.dg');let k=0;[...s].forEach(ch=>{if(ch==='.')return;dgs[k++].style.transform=`translateY(-${(+ch)*10}%)`});
   if(instant){void el.offsetWidth;el.classList.remove('nt')}
   if(!instant&&shownPrice!=null&&Math.abs(v-shownPrice)>1e-6){el.classList.remove('pup','pdn');void el.offsetWidth;el.classList.add(v>shownPrice?'pup':'pdn')}shownPrice=v}
-function updHero(keep){if(!IC)return;const n=UI2.range,{vals,ohlc}=idxData(n);IC.opts.candle=UI2.ctype==='candle';IC.ohlc=ohlc;IC.set(vals,null,keep);const cb=$('.ctb');if(cb)cb.setAttribute('aria-pressed',String(UI2.ctype==='candle'));setPrice(LIFX());
-  const all=lifeSeries(n+1),d1=(all[all.length-1]-all[all.length-2])*100,dn=(vals[vals.length-1]-vals[0])*100;app.dataset.trend=dn>=0?'up':'down';IC.opts.color=dn>=0?TK().up:TK().down;
-  const lbl=({7:'past week',30:'past month',90:'past 3 months',180:'past 6 months'})[n];
+function updHero(keep){if(!IC)return;const n=UI2.range;const id=n===1?intraday():idxData(n);const vals=id.vals;IC.labels=id.labels||vals.map((_,i)=>{const d2=parseKey(addDays(today(),i-(vals.length-1)));return`${d2.getDate()} ${MON[d2.getMonth()]}${i===vals.length-1?' · today':''}`});IC.opts.candle=UI2.ctype==='candle'&&n>1;IC.ohlc=id.ohlc;IC.set(vals,null,keep);const cb=$('.ctb[data-action=ctype]');if(cb){cb.setAttribute('aria-pressed',String(UI2.ctype==='candle'));cb.disabled=n===1}setPrice(LIFX());
+  const all=lifeSeries(Math.max(2,n+1)),d1=(all[all.length-1]-all[all.length-2])*100,dn=(vals[vals.length-1]-vals[0])*100;app.dataset.trend=dn>=0?'up':'down';IC.opts.color=dn>=0?TK().up:TK().down;
+  const lbl=({1:'since the open',7:'past week',14:'past 2 weeks',30:'past month'})[n]||'';
   $('#chg').innerHTML=`<span class="chip ${cls(dn/100)}">${dn>=0?UPA:DNA}${sgn(dn)}</span><span class="muted">${lbl}</span><span class="chip ${cls(d1/100)}" style="margin-left:auto">${sgn(d1)} today</span>`;
   $('#hchip').innerHTML=`<span class="chip ${cls(d1/100)}">${d1>=0?UPA:DNA}${sgn(d1)}</span>`;$('#hsp').innerHTML=sparkSvg(vals,dn>=0?'var(--up)':'var(--down)',120);
   $$('#rng button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.v===n)));inkTo('#rng')}
@@ -1315,7 +1361,7 @@ function mountHome(quiet,old){IC=makeChart($('#cw'),$('#ic'),{axis:false});
   if(quiet&&old&&old.disp.length){IC.disp=old.disp.slice();IC.vals=old.vals;setPrice(shownPrice??LIFX(),true);updHero(true);IC.t0=-1e9}
   else{shownPrice=null;setPrice(0,true);shownPrice=null;updHero(false);setTimeout(()=>{if(IC)setPrice(LIFX())},60)}
   requestAnimationFrame(()=>requestAnimationFrame(()=>{$$('.ring .v').forEach(c=>{c.style.strokeDashoffset=c.dataset.off;ringPrev=+c.dataset.f})}));
-  const box=$('#cw'),tip=$('#tip');let lastI=-1;const mv=e=>{if(!IC)return;const i=IC.idx(e);if(i!==lastI&&lastI!==-1&&e.pointerType!=='mouse')haptic(2);lastI=i;IC.hover=i;const n=IC.vals.length,d2=parseKey(addDays(today(),i-(n-1)));const g=IC.geo;tip.innerHTML=`${P(IC.vals[i])}<small>${d2.getDate()} ${MON[d2.getMonth()]}${i===n-1?' · today':''}</small>`;tip.style.left=Math.min(Math.max(g.X(i)/g.r,56),box.clientWidth-56)+'px';tip.classList.add('on')};
+  const box=$('#cw'),tip=$('#tip');let lastI=-1;const mv=e=>{if(!IC)return;const i=IC.idx(e);if(i!==lastI&&lastI!==-1&&e.pointerType!=='mouse')haptic(2);lastI=i;IC.hover=i;const n=IC.vals.length,d2=parseKey(addDays(today(),i-(n-1)));const g=IC.geo;tip.innerHTML=`${P(IC.vals[i])}<small>${IC.labels?IC.labels[i]:d2.getDate()+' '+MON[d2.getMonth()]}</small>`;tip.style.left=Math.min(Math.max(g.X(i)/g.r,56),box.clientWidth-56)+'px';tip.classList.add('on')};
   const off=()=>{if(IC)IC.hover=-1;lastI=-1;tip.classList.remove('on')};box.addEventListener('pointermove',mv);box.addEventListener('pointerdown',mv);box.addEventListener('pointerleave',off);box.addEventListener('pointercancel',off);box.addEventListener('pointerup',e=>{if(e.pointerType!=='mouse')setTimeout(off,1400)})}
 function ordersHTML(){const T=today(),{rt,rd}=todayCount();const groups=state.domains.filter(d=>!d.muted&&d.habits.length);let n=0;
   return`<div class="st-in"><h1 class="vt">Today’s orders</h1><p class="vs">Swipe right to fill. Tap the circle if you prefer.</p>
@@ -1333,9 +1379,9 @@ function holdHTML(){const L=sortedHold();return`<div class="st-in"><h1 class="vt
   <div class="hl" id="hl">${L.map((d,i)=>{const m=momentum(d)*100;return`<button class="hr rv zs" style="--i:${i%4}" data-action="open" data-d="${d.id}"><span class="av" style="--c:${esc(d.color)};--fg:${fgOf(d.color)}">${ticker(d)}</span><span class="nm"><b>${esc(d.name)}</b><span>${moodOf(prog(d))}${d.muted?' · paused':''}</span></span>${sparkSvg(series(d,30),m>=0?'var(--up)':'var(--down)')}<span class="pr ${cls(m/100)}"><b style="color:var(--ink)">${cu(prog(d)*100,2)}</b><span>${m>=0?'+':'−'}${Math.abs(m).toFixed(2)}</span></span></button>`}).join('')}</div>
   <button class="addh rv zs" data-action="new-area">+ Add a holding</button></div>`}
 function deskHTML(){const all=lifeSeries(15),w=(all[all.length-1]-all[all.length-8])*100;const ds=state.domains.filter(d=>!d.muted).map(d=>({d,m:momentum(d)*100})).sort((a,b)=>b.m-a.m);
-  const R=w>1.5?['Outperform','var(--up)']:w<-1.5?['Underperform','var(--down)']:['Hold','var(--ink)'];const lead=ds[0],lag=ds[ds.length-1];const mg=marginal().slice(0,4);
+  const R=w>1.5?['Outperform','var(--up)']:w<-1.5?['Underperform','var(--down)']:['Hold','#F5B83D'];const lead=ds[0],lag=ds[ds.length-1];const mg=marginal().slice(0,4);
   return`<div class="st-in"><h1 class="vt">Analyst desk</h1><p class="vs">Your weekly read, your best moves, and where your habits lead.</p>
-   <section class="rate zs" style="--rc:${R[1]}"><button class="wkbtn" data-action="story"><i></i>Watch your week</button><span class="eb">This week’s rating</span><div class="rw" aria-label="${R[0]}">${letters(R[0])}</div><p>LIFX ${w>=0?'gained':'lost'} <b class="${cls(w/100)}">${sgn(w)}</b> in seven days.${lead&&lead.m>0?` <b>${esc(lead.d.name)}</b> is leading, up ${lead.m.toFixed(1)}.`:''}${lag&&lag.m<0&&lag!==lead?` <b>${esc(lag.d.name)}</b> is the drag at ${lag.m.toFixed(1)}; a single order there moves the index most.`:' Keep your streaks running.'}</p></section>
+   <section class="rate zs" style="--rc:${R[1]}"><div class="rhd"><span class="eb">This week’s rating</span><button class="wkbtn" data-action="story"><i></i>Your week</button></div><div class="rw" aria-label="${R[0]}">${letters(R[0])}</div><p>LIFX ${w>=0?'gained':'lost'} <b class="${cls(w/100)}">${sgn(w)}</b> in seven days.${lead&&lead.m>0?` <b>${esc(lead.d.name)}</b> is leading, up ${lead.m.toFixed(1)}.`:''}${lag&&lag.m<0&&lag!==lead?` <b>${esc(lag.d.name)}</b> is the drag at ${lag.m.toFixed(1)}; a single order there moves the index most.`:' Keep your streaks running.'}</p></section>
    <div class="sec-h rv zs"><h3>Best moves now</h3><span class="eb">Impact on LIFX</span></div>
    <div class="moves">${mg.map((x,i)=>`<div class="mv rv zs" style="--i:${i}"><span class="rk">0${i+1}</span><div class="ml"><b>${esc(x.h.name)}</b><span><span class="tkr" style="--c:${esc(x.d.color)}">${ticker(x.d)}</span> <span class="up">+${x.gain.toFixed(2)}</span></span></div><button class="go" data-action="fill" data-d="${x.d.id}" data-h="${x.h.id}">Fill</button></div>`).join('')||`<div class="empty"><b>Every order is filled</b>Nothing left on today’s book.</div>`}</div>
    ${goalsHTML()}
@@ -1479,12 +1525,12 @@ Object.assign(actions,{
 
 /* ---------- v9: replay, trophies, opening bell ---------- */
 const RP={on:false};
-function replay(){if(!IC||RP.on)return;const vals=IC.vals,n=vals.length,D=Math.min(5200,1800+n*28);RP.on=true;app.classList.add('replaying');const b=$('.rpl');if(b)b.setAttribute('aria-pressed','true');
-  pane().scrollTo({top:0,behavior:'smooth'});IC.opts.reveal=D;IC.t0=performance.now();IC._ck='';const tip=$('#tip'),box=$('#cw');let lastI=-1;haptic(6);
-  const step=now=>{if(!IC||!RP.on)return end();const k=Math.min(1,(now-IC.t0)/D),e=1-Math.pow(1-k,3),i=Math.min(n-1,Math.floor(e*(n-1)+.0001));
-    if(i!==lastI){lastI=i;setPrice(vals[i],true);const d2=parseKey(addDays(today(),i-(n-1))),g=IC.geo;if(g&&tip){tip.innerHTML=`${P(vals[i])}<small>${d2.getDate()} ${MON[d2.getMonth()]} ${d2.getFullYear()}</small>`;tip.style.left=Math.min(Math.max(g.X(i)/g.r,56),box.clientWidth-56)+'px';tip.classList.add('on')}if(i%4===0)haptic(1)}
+function replay(){if(!IC||RP.on)return;const vals=IC.vals,n=vals.length,D=Math.min(9000,4600+n*70);RP.on=true;app.classList.add('replaying');const b=$('.rpl');if(b)b.setAttribute('aria-pressed','true');
+  pane().scrollTo({top:0,behavior:'smooth'});IC.opts.reveal=D;IC.opts.beam=true;IC.opts.easeFn=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;IC.t0=performance.now();IC._ck='';const tip=$('#tip'),box=$('#cw');let lastI=-1;haptic([6,30,6]);
+  const step=now=>{if(!IC||!RP.on)return end();const k=Math.min(1,(now-IC.t0)/D);const bm=IC.beam;
+    if(bm){setPrice(bm.v,true);const i=Math.round(bm.i);if(tip){tip.innerHTML=`${P(bm.v)}<small>${IC.labels?IC.labels[i]:''}</small>`;tip.style.left=Math.min(Math.max(bm.x,56),box.clientWidth-56)+'px';tip.classList.add('on')}if(i!==lastI){lastI=i;if(i%3===0)haptic(1)}}
     if(k<1)requestAnimationFrame(step);else end()};
-  const end=()=>{if(!RP.on)return;RP.on=false;app.classList.remove('replaying');if(IC){IC.opts.reveal=0}if(tip)tip.classList.remove('on');if(b)b.setAttribute('aria-pressed','false');setPrice(LIFX());haptic([8,30,8])};
+  const end=()=>{if(!RP.on)return;RP.on=false;app.classList.remove('replaying');if(IC){IC.opts.reveal=0;IC.opts.beam=false;IC.opts.easeFn=null;IC._ck=''}if(tip)tip.classList.remove('on');if(b)b.setAttribute('aria-pressed','false');setPrice(LIFX());haptic([8,30,8]);const pr=$('#price');if(pr){pr.classList.remove('pup');void pr.offsetWidth;pr.classList.add('pup')}};
   requestAnimationFrame(step)}
 /* trophies */
 const BI={trade:'M4 17l6-6 4 4 6-7',flame:'M12 3c1 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-5 3-6 0 2 1 3 2 3 0-4-1-6 1-8z',full:'M5 12.5l4.5 4.5L19 7',flag:'M5 21V4h11l-2 4 2 4H5',star:'M12 3l2.7 5.6 6.1.7-4.5 4.2 1.2 6.1L12 16.6 6.5 19.6l1.2-6.1L3.2 9.3l6.1-.7z',book:'M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h10',cam:'M4 8h3l2-2.5h6L17 8h3v11H4zM12 16.5a3.3 3.3 0 1 0 0-6.6 3.3 3.3 0 0 0 0 6.6',bull:'M3 17l5-5 4 3 8-9M15 6h5v5',gem:'M6 3h12l3 6-9 12L3 9zM3 9h18M12 21 8 9l4-6 4 6z',clock:'M12 21a8 8 0 1 0 0-16 8 8 0 0 0 0 16M12 9v4l3 2M9 2.5h6',grid:'M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z',crown:'M3 8l4.5 4L12 5l4.5 7L21 8l-2 11H5z'};
@@ -1567,9 +1613,23 @@ const swEnd=()=>{if(!SWP.st)return;const was=SWP.on,p=SWP.p,dx=SWP.dx,tgt=SWP.tg
 $('#panes').addEventListener('pointerup',swEnd,{passive:true});$('#panes').addEventListener('pointercancel',swEnd,{passive:true});
 Object.assign(actions,{story:()=>openStory(),'story-close':()=>closeStory(),'proj-set':a=>{const rg=$('#projR');if(!rg)return;rg.value=a.dataset.v;projV=+rg.value;renderProj();haptic(5)}});
 
+
+/* ---------- v11: intraday, ticks, tape, risk, pull to refresh ---------- */
+function recordTick(v){const T=today(),tk=state.ticks&&typeof state.ticks==='object'?state.ticks:(state.ticks={});(tk[T]=tk[T]||[]).push({t:Date.now(),v});if(tk[T].length>200)tk[T].shift();for(const k in tk)if(dayDiff(k,T)>3)delete tk[k]}
+function openVal(){const T=today(),saved=[];for(const d of state.domains)for(const h of d.habits)if(h.days[T]){saved.push(h);delete h.days[T]}const v=LIFX();saved.forEach(h=>h.days[T]=1);return v}
+function intraday(){const T=today(),s0=parseKey(T).getTime(),now=Math.max(Date.now(),s0+60e3),cur=LIFX(),op=openVal(),tk=((state.ticks||{})[T]||[]).slice().sort((a,b)=>a.t-b.t),N=64,vals=[],labels=[];
+  for(let i=0;i<N;i++){const t=s0+(now-s0)*i/(N-1);let v=op;if(tk.length){for(const x of tk)if(x.t<=t)v=x.v}else v=op+(cur-op)*Math.pow(i/(N-1),2);if(i===N-1)v=cur;vals.push(v);const d=new Date(t);labels.push(`${pad(d.getHours())}:${pad(d.getMinutes())}${i===N-1?' · now':''}`)}
+  return{vals,labels,op}}
+function tapeHTML(){const it=state.domains.map(d=>{const m=momentum(d)*100;return`<span><b>${ticker(d)}</b>${P(prog(d))}<em class="${m>=0?'up':'down'}">${m>=0?'▲':'▼'} ${Math.abs(m).toFixed(1)}</em></span>`}).join('');const a=lifeSeries(2),d=(a[1]-a[0])*100;const lead=`<span class="lx"><b>LIFX</b>${P(a[1])}<em class="${d>=0?'up':'down'}">${d>=0?'▲':'▼'} ${Math.abs(d).toFixed(2)}</em></span>`;
+  return`<div class="tape" aria-hidden="true"><div class="tape-in" style="--dur:${Math.max(18,(state.domains.length+1)*4)}s">${lead+it}${lead+it}</div></div>`}
+function riskHTML(){if(new Date().getHours()<17)return'';const T=today(),L=[];state.domains.forEach(d=>{if(d.muted)return;d.habits.forEach(h=>{if(!h.days[T]&&streak(h)>=2)L.push({d,h,s:streak(h)})})});if(!L.length)return'';L.sort((a,b)=>b.s-a.s);
+  return`<button class="card risk zs zo" data-action="go" data-v="orders"><span class="rfl">${FL}</span><div><b>${L.length} streak${L.length>1?'s':''} at risk tonight</b><span>${L.slice(0,3).map(x=>`${esc(x.h.name)} · ${x.s}d`).join(' &nbsp;·&nbsp; ')}</span></div><span class="rgo">${ARR}</span></button>`}
+/* pull down on Market to refresh */
+(()=>{const p=PANE.home,ptr=$('#ptr');let armed=false,busy=false;p.addEventListener('scroll',()=>{const y=p.scrollTop;if(busy)return;if(y<0){const k=Math.min(1,-y/90);ptr.style.setProperty('--k',k.toFixed(3));ptr.classList.add('show');if(k>=1&&!armed){armed=true;ptr.classList.add('armed');haptic(8)}}else{if(armed){armed=false;busy=true;ptr.classList.remove('armed');ptr.classList.add('spin');haptic([6,30,6]);setTimeout(()=>{renderPane('home','fresh');$('#v-home').classList.remove('ent');void $('#v-home').offsetWidth;$('#v-home').classList.add('ent');toast('Market refreshed');setTimeout(()=>{ptr.classList.remove('spin','show');busy=false},400)},650)}else ptr.classList.remove('show')}},{passive:true})})();
+
 /* ---------- fill an order ---------- */
 function fill(did,hid,el){const d=D_(did),h=d?.habits.find(x=>x.id===hid);if(!h)return;const k=today(),was=!!h.days[k];const before=LIFX();if(was)delete h.days[k];else h.days[k]=1;
-  haptic(was?6:[8,24,12]);if(!was&&el&&!RM.matches)burst(el);commit({render:false});const after=LIFX();
+  haptic(was?6:[8,24,12]);if(!was&&el&&!RM.matches)burst(el);const after=LIFX();recordTick(after);commit({render:false});
   $$(`.ord[data-h="${hid}"]`).forEach(o=>{o.dataset.on=was?0:1;if(!was){o.classList.remove('just');void o.offsetWidth;o.classList.add('just')}});
   const{rt,rd}=todayCount();const pb=$('#pbar');if(pb){pb.style.setProperty('--w',(rt?rd/rt*100:0)+'%');const pn=$('#pnum');pn.textContent=`${rd}/${rt}`;pn.classList.remove('bump');void pn.offsetWidth;pn.classList.add('bump')}
   badge();updMini();
