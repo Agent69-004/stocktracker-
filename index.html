@@ -1566,6 +1566,11 @@ i.now{background:var(--up)}i.was{background:var(--p3)}
 
 /* v19: text fields always accept the keyboard, also in the installed home-screen app */
 .app input,.app textarea,.app select,.app [contenteditable="true"],.sheet input,.sheet textarea{-webkit-user-select:auto!important;user-select:auto!important;-webkit-touch-callout:default!important;touch-action:manipulation}
+
+/* v20: keyboard-safe mode for the installed iPhone app */
+.app.kbsafe{-webkit-user-select:auto!important;user-select:auto!important;-webkit-touch-callout:default!important;overflow:hidden!important}
+.app.kbsafe button,.app.kbsafe .dock,.app.kbsafe .hc,.app.kbsafe .ord,.app.kbsafe .card>.lbl,.app.kbsafe svg{-webkit-user-select:none;user-select:none}
+.kbcard .row{gap:12px}.kbcard small{color:var(--mute);font-size:12.5px}
 </style>
 
 <div class="app" id="app">
@@ -1940,7 +1945,7 @@ function scrollFX(){const v=NAV.v,p=PANE[v],y=p.scrollTop,H=p.clientHeight,max=p
   for(const el of S.els){const r=el.getBoundingClientRect();if(r.bottom<-60||r.top>H+60)continue;const c=(r.top+r.bottom)/2,d=(c-H*.44)/(H*.6);
     const top=Math.max(0,-d-.3),bot=Math.max(0,d-.5);el.style.scale=(1-Math.min(.12,top*.14)-Math.min(.07,bot*.1)).toFixed(4);el.style.translate=`0 ${(-Math.min(18,top*22)+Math.min(16,bot*20)).toFixed(1)}px`;
     if(el.classList.contains('zo')||el.classList.contains('settled'))el.style.opacity=(1-Math.min(.85,top*1.05)).toFixed(3)}}
-app.addEventListener('scroll',()=>{if(app.scrollLeft||app.scrollTop){app.scrollLeft=0;app.scrollTop=0}});$('#panes').addEventListener('scroll',e=>{const t=e.currentTarget;if(t.scrollLeft||t.scrollTop){t.scrollLeft=0;t.scrollTop=0}});
+app.addEventListener('scroll',()=>{if(!KBSAFE&&!isEd(document.activeElement)&&(app.scrollLeft||app.scrollTop)){app.scrollLeft=0;app.scrollTop=0}});$('#panes').addEventListener('scroll',e=>{const t=e.currentTarget;if(!KBSAFE&&!isEd(document.activeElement)&&(t.scrollLeft||t.scrollTop)){t.scrollLeft=0;t.scrollTop=0}});
 NAV.order.forEach(v=>PANE[v].addEventListener('scroll',()=>{if(v===NAV.v)onScroll()},{passive:true}));
 function updMini(){const a=lifeSeries(30),v=a[a.length-1]||0,d=(a[a.length-1]-a[a.length-2])*100;const pb=$('#miniP'),old=parseFloat(pb.textContent)||0,nv=v*100;
   pb.textContent=nv.toFixed(2);const mc=$('#miniC');mc.className='mc '+cls(d/100);mc.textContent=sgn(d);$('#miniS').innerHTML=sparkSvg(a,d>=0?'var(--up)':'var(--down)');
@@ -3131,11 +3136,46 @@ const _closeSheetR=closeSheet;closeSheet=function(...a){SHPEND=false;return _clo
 const EDSEL='input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=button]):not([type=submit]):not([type=reset]):not([type=file]):not([type=color]),textarea,select,[contenteditable="true"]';
 const isEd=el=>!!(el&&el!==document.body&&el.matches&&el.matches(EDSEL));
 let EDT=0;
-function iosTap(){try{if(isEd(document.activeElement)||performance.now()-EDT<900)return;if(!HB){const l=document.createElement('label');l.setAttribute('aria-hidden','true');l.style.cssText='position:fixed;left:-200px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none';const i=document.createElement('input');i.type='checkbox';i.setAttribute('switch','');i.tabIndex=-1;l.appendChild(i);document.body.appendChild(l);HB=l}const prev=document.activeElement;HB.click();const hi=HB.firstChild;if(document.activeElement===hi){hi.blur();if(prev&&prev!==document.body&&prev.focus)try{prev.focus({preventScroll:true})}catch(_){}}}catch(_){}}
+function iosTap(){try{if(KBSAFE||isEd(document.activeElement)||performance.now()-EDT<900)return;if(!HB){const l=document.createElement('label');l.setAttribute('aria-hidden','true');l.style.cssText='position:fixed;left:-200px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none';const i=document.createElement('input');i.type='checkbox';i.setAttribute('switch','');i.tabIndex=-1;l.appendChild(i);document.body.appendChild(l);HB=l}const prev=document.activeElement;HB.click();const hi=HB.firstChild;if(document.activeElement===hi){hi.blur();if(prev&&prev!==document.body&&prev.focus)try{prev.focus({preventScroll:true})}catch(_){}}}catch(_){}}
 (function(){let sx=0,sy=0,st=0,tgt=null;
 document.addEventListener('touchstart',e=>{const t=e.touches[0];const el=e.target.closest&&e.target.closest(EDSEL);tgt=el&&!el.disabled&&!el.readOnly?el:null;if(tgt)EDT=performance.now();sx=t.clientX;sy=t.clientY;st=performance.now()},{capture:true,passive:true});
 document.addEventListener('touchend',e=>{if(!tgt)return;const el=tgt;tgt=null;const t=e.changedTouches[0];if(Math.hypot(t.clientX-sx,t.clientY-sy)>10||performance.now()-st>800)return;EDT=performance.now();if(document.activeElement!==el){try{el.focus()}catch(_){}}},{capture:true,passive:true});
 })();
+
+/* v20: keyboard check and keyboard-safe mode */
+const APPV='20';const IOS2=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const STANDALONE=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+let KBSAFE=(()=>{let v=null;try{v=localStorage.getItem('equity-kbsafe')}catch(_){}return v===null?(IOS2&&STANDALONE()):v==='1'})();
+function setKbSafe(on){KBSAFE=!!on;try{localStorage.setItem('equity-kbsafe',on?'1':'0')}catch(_){}app.classList.toggle('kbsafe',KBSAFE)}
+app.classList.toggle('kbsafe',KBSAFE);
+function openKbCheck(){if($('#kbc'))return;const iv=(navigator.userAgent.match(/OS (\d+)_(\d+)/)||[]).slice(1).join('.')||'?';
+  const o=document.createElement('div');o.id='kbc';o.style.cssText='position:fixed;inset:0;z-index:2147483000;background:#fff;color:#111;font:15px -apple-system,system-ui,sans-serif;overflow:auto;-webkit-user-select:auto;user-select:auto;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(28px + env(safe-area-inset-bottom,0px))';
+  const fs='display:block;width:100%;box-sizing:border-box;font-size:17px;padding:12px 14px;border:1.5px solid #999;border-radius:12px;margin:8px 0;background:#fff;color:#111;-webkit-user-select:auto;user-select:auto;-webkit-appearance:none';
+  const bs='height:44px;padding:0 16px;border-radius:22px;border:0;font:600 15px -apple-system,system-ui,sans-serif;margin:4px 6px 4px 0';
+  const info=()=>`Equity v${APPV} · ${STANDALONE()?'home-screen app':'browser'} · iOS ${iv} · keyboard-safe ${KBSAFE?'ON':'off'} · vibration ${state.settings.haptics?'on':'off'} · lock ${LK.get()&&LK.get().pin?'on':'off'}`;
+  o.innerHTML=`<b style="font-size:22px">Keyboard check</b><p id="kbi" style="margin:6px 0 10px;color:#555;font-size:13px">${info()}</p>
+   <p style="margin:0 0 4px;font-size:14px">1. Tap the box below. Does the keyboard open?</p><input id="kbA" type="text" placeholder="Test field: tap here" style="${fs}" autocomplete="off">
+   <textarea id="kbB" rows="2" placeholder="Second test field" style="${fs}"></textarea>
+   <p style="margin:10px 0 4px;font-size:14px">2. If not, switch keyboard-safe mode and tap the box again.</p>
+   <button id="kbS" style="${bs};background:#C8FF4D;color:#111">Keyboard-safe mode: ${KBSAFE?'ON':'off'}</button><button id="kbT" style="${bs};background:#eee;color:#111">Test in Quick add</button><button id="kbC" style="${bs};background:#eee;color:#111">Copy log</button><button id="kbX" style="${bs};background:#111;color:#fff">Close</button>
+   <p style="margin:10px 0 4px;font-size:14px">3. Take a screenshot of this screen and send it to Claude.</p>
+   <pre id="kbL" style="white-space:pre-wrap;font:11.5px ui-monospace,Menlo,monospace;background:#f4f4f4;border-radius:10px;padding:10px;margin:6px 0 0;min-height:120px"></pre>`;
+  document.body.appendChild(o);const L=$('#kbL',o),lines=[],t0=performance.now();
+  const tg=e=>!e?'-':e===document.body?'body':(e.tagName||'').toLowerCase()+(e.id?'#'+e.id:'')+(e.name?'['+e.name+']':'')+(e.className&&typeof e.className==='string'&&!e.id?'.'+e.className.split(' ')[0]:'');
+  const log=s=>{lines.push(((performance.now()-t0)/1000).toFixed(2)+'s '+s);while(lines.length>40)lines.shift();L.textContent=lines.slice().reverse().join('\n')};
+  const ev=['touchstart','touchend','mousedown','click','focusin','focusout'];const h=e=>log(e.type+' '+tg(e.target)+' · active='+tg(document.activeElement));
+  ev.forEach(t=>document.addEventListener(t,h,true));const kd=e=>log('typed '+(e.data||e.inputType||''));document.addEventListener('input',kd,true);
+  const rz=()=>log('resize '+innerWidth+'x'+innerHeight+(window.visualViewport?' vv='+Math.round(visualViewport.height):''));addEventListener('resize',rz);if(window.visualViewport)visualViewport.addEventListener('resize',rz);
+  log('opened · '+info());
+  const close=()=>{ev.forEach(t=>document.removeEventListener(t,h,true));document.removeEventListener('input',kd,true);removeEventListener('resize',rz);if(window.visualViewport)visualViewport.removeEventListener('resize',rz);o.remove()};
+  $('#kbX',o).onclick=close;
+  $('#kbS',o).onclick=()=>{setKbSafe(!KBSAFE);$('#kbS',o).textContent='Keyboard-safe mode: '+(KBSAFE?'ON':'off');$('#kbi',o).textContent=info();log('keyboard-safe '+(KBSAFE?'ON':'off'))};
+  $('#kbC',o).onclick=async()=>{try{await navigator.clipboard.writeText(info()+'\n'+lines.join('\n'));log('log copied')}catch(_){log('copy failed, take a screenshot')}};
+  $('#kbT',o).onclick=()=>{close();openSheet('quick');setTimeout(()=>{const b=$('#layer');if(b)toast('Tap the name field now')},500)}}
+const _renderSettings4=renderSettings;renderSettings=function(f){_renderSettings4(f);const sb=$('#layer .sbody');if(!sb||sb.querySelector('.kbcard'))return;
+  sb.insertAdjacentHTML('beforeend',`<div class="card kbcard"><span class="lbl">Typing and keyboard</span><div class="row" style="justify-content:space-between;margin-top:8px"><div><b style="display:block;font-size:15px">Keyboard-safe mode</b><small>Turns off the vibration effect so text fields always open the keyboard in the home-screen app.</small></div><button class="tgl2 ${KBSAFE?'on':''}" data-action="kbsafe" aria-pressed="${KBSAFE}"><i></i></button></div><button class="btn ghost" style="width:100%;margin-top:12px" data-action="kbcheck">Run keyboard check</button><small style="display:block;text-align:center;margin-top:10px">Equity v${APPV} · ${STANDALONE()?'home-screen app':'browser'}</small></div>`)};
+Object.assign(actions,{kbcheck:()=>{closeSheet();setTimeout(openKbCheck,350)},kbsafe:()=>{setKbSafe(!KBSAFE);toast('Keyboard-safe mode '+(KBSAFE?'on':'off'));renderSettings()}});
+if((location.hash||'').toLowerCase()==='#kb')setTimeout(openKbCheck,1500);
 /* ---------- loop & boot ---------- */
 let last=performance.now();
 function frame(now){const dt=Math.min(50,now-last);last=now;if(!document.hidden){const hv=PANE.home.classList.contains('pon'),dv=PANE.desk.classList.contains('pon');if(IC&&hv&&IC.cv.isConnected)IC.draw(now,dt);if(PC&&dv&&PC.cv.isConnected)PC.draw(now,dt);if(HC&&SH.kind==='area'&&HC.cv.isConnected)HC.draw(now,dt)}requestAnimationFrame(frame)}
