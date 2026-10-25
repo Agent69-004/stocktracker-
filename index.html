@@ -2294,7 +2294,7 @@ function fill(did,hid,el){const d=D_(did),h=d?.habits.find(x=>x.id===hid);if(!h)
   if(SH.kind==='area')renderArea()}
 function tick(btn){fill(btn.dataset.d,btn.dataset.h,btn)}
 function renderAll(){const n=new Date(),h=n.getHours();$('#appName').textContent=state.profile.name||'Equity';$('#greet').textContent=`${h<5?'Good night':h<12?'Good morning':h<18?'Good afternoon':'Good evening'} · ${DOW[n.getDay()].slice(0,3)} ${n.getDate()} ${MON[n.getMonth()]}`;
-  NAV.order.forEach(v=>DIRTY[v]=true);renderPane(NAV.v,BUILT[NAV.v]?'quiet':'fresh');badge();updMini();if(SH.kind==='area')renderArea();if(SH.kind==='settings')renderSettings()}
+  NAV.order.forEach(v=>DIRTY[v]=true);renderPane(NAV.v,BUILT[NAV.v]?'quiet':'fresh');badge();updMini();sheetRefresh()}
 function renderMain(){renderAll()}function renderHero(){renderAll()}function setFocus(id){if(id)openSheet('area',id)}
 
 /* ===================== STAGE 1: smarter rituals (overrides core math) ===================== */
@@ -3110,6 +3110,19 @@ const _qa=forms.qa;forms.qa=f=>{const isShort=QA.type==='ritual'&&f.elements.sho
 let DOCKQ=false,DOCKD=null;
 (function(){const dk=$('#dock');if(!dk)return;dk.addEventListener('pointerdown',e=>{if(e.button>0)return;const b=e.target.closest('button[data-v]');if(!b||b.dataset.v===NAV.v)return;if(SH.kind)closeSheet();DOCKD={v:b.dataset.v,t:performance.now()};DOCKQ=true;go(b.dataset.v)},{passive:true})})();
 const _actGo=actions.go;actions.go=(a,e)=>{if(DOCKD&&DOCKD.v===a.dataset.v&&performance.now()-DOCKD.t<1200){DOCKD=null;haptic(6);return}DOCKD=null;_actGo(a,e)};
+
+/* v18: never redraw an open sheet while someone is typing or mid-tap, so the next field keeps focus and the iPhone keyboard opens */
+let SHPEND=false,PDOWN=false;
+const editingInSheet=()=>{const a=document.activeElement;return !!(a&&a!==document.body&&a.closest&&a.closest('#layer')&&(a.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&!/^(checkbox|radio|range|button|submit|file)$/.test(a.type)))};
+function sheetRefresh(force){if(SH.kind!=='area'&&SH.kind!=='settings'){SHPEND=false;return}if(!force&&(PDOWN||editingInSheet())){SHPEND=true;return}SHPEND=false;if(SH.kind==='area')renderArea();else renderSettings()}
+const flushSheet=()=>setTimeout(()=>{if(SHPEND&&!PDOWN&&!editingInSheet())sheetRefresh()},60);
+document.addEventListener('pointerdown',()=>{PDOWN=true},{capture:true,passive:true});
+let PUT=0;const tapDone=()=>{clearTimeout(PUT);PDOWN=false;flushSheet()};
+document.addEventListener('pointerup',()=>{clearTimeout(PUT);PUT=setTimeout(tapDone,600)},{capture:true,passive:true});
+document.addEventListener('pointercancel',()=>{clearTimeout(PUT);PUT=setTimeout(tapDone,600)},{capture:true,passive:true});
+document.addEventListener('click',()=>{clearTimeout(PUT);PUT=setTimeout(tapDone,0)},true);
+document.addEventListener('focusout',e=>{const t=e.relatedTarget;if(!t||!t.closest||!t.closest('#layer'))flushSheet()},true);
+const _closeSheetR=closeSheet;closeSheet=function(...a){SHPEND=false;return _closeSheetR(...a)};
 /* ---------- loop & boot ---------- */
 let last=performance.now();
 function frame(now){const dt=Math.min(50,now-last);last=now;if(!document.hidden){const hv=PANE.home.classList.contains('pon'),dv=PANE.desk.classList.contains('pon');if(IC&&hv&&IC.cv.isConnected)IC.draw(now,dt);if(PC&&dv&&PC.cv.isConnected)PC.draw(now,dt);if(HC&&SH.kind==='area'&&HC.cv.isConnected)HC.draw(now,dt)}requestAnimationFrame(frame)}
