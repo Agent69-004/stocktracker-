@@ -1563,6 +1563,9 @@ i.now{background:var(--up)}i.was{background:var(--p3)}
 /* v17: tab switching without restyling the whole section */
 .pane{visibility:visible!important;pointer-events:auto!important}
 .pane:not(.pon){transform:translate3d(120%,0,0);opacity:0}
+
+/* v19: text fields always accept the keyboard, also in the installed home-screen app */
+.app input,.app textarea,.app select,.app [contenteditable="true"],.sheet input,.sheet textarea{-webkit-user-select:auto!important;user-select:auto!important;-webkit-touch-callout:default!important;touch-action:manipulation}
 </style>
 
 <div class="app" id="app">
@@ -3123,6 +3126,16 @@ document.addEventListener('pointercancel',()=>{clearTimeout(PUT);PUT=setTimeout(
 document.addEventListener('click',()=>{clearTimeout(PUT);PUT=setTimeout(tapDone,0)},true);
 document.addEventListener('focusout',e=>{const t=e.relatedTarget;if(!t||!t.closest||!t.closest('#layer'))flushSheet()},true);
 const _closeSheetR=closeSheet;closeSheet=function(...a){SHPEND=false;return _closeSheetR(...a)};
+
+/* v19: keyboard reliability for the installed iPhone app */
+const EDSEL='input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=button]):not([type=submit]):not([type=reset]):not([type=file]):not([type=color]),textarea,select,[contenteditable="true"]';
+const isEd=el=>!!(el&&el!==document.body&&el.matches&&el.matches(EDSEL));
+let EDT=0;
+function iosTap(){try{if(isEd(document.activeElement)||performance.now()-EDT<900)return;if(!HB){const l=document.createElement('label');l.setAttribute('aria-hidden','true');l.style.cssText='position:fixed;left:-200px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none';const i=document.createElement('input');i.type='checkbox';i.setAttribute('switch','');i.tabIndex=-1;l.appendChild(i);document.body.appendChild(l);HB=l}const prev=document.activeElement;HB.click();const hi=HB.firstChild;if(document.activeElement===hi){hi.blur();if(prev&&prev!==document.body&&prev.focus)try{prev.focus({preventScroll:true})}catch(_){}}}catch(_){}}
+(function(){let sx=0,sy=0,st=0,tgt=null;
+document.addEventListener('touchstart',e=>{const t=e.touches[0];const el=e.target.closest&&e.target.closest(EDSEL);tgt=el&&!el.disabled&&!el.readOnly?el:null;if(tgt)EDT=performance.now();sx=t.clientX;sy=t.clientY;st=performance.now()},{capture:true,passive:true});
+document.addEventListener('touchend',e=>{if(!tgt)return;const el=tgt;tgt=null;const t=e.changedTouches[0];if(Math.hypot(t.clientX-sx,t.clientY-sy)>10||performance.now()-st>800)return;EDT=performance.now();if(document.activeElement!==el){try{el.focus()}catch(_){}}},{capture:true,passive:true});
+})();
 /* ---------- loop & boot ---------- */
 let last=performance.now();
 function frame(now){const dt=Math.min(50,now-last);last=now;if(!document.hidden){const hv=PANE.home.classList.contains('pon'),dv=PANE.desk.classList.contains('pon');if(IC&&hv&&IC.cv.isConnected)IC.draw(now,dt);if(PC&&dv&&PC.cv.isConnected)PC.draw(now,dt);if(HC&&SH.kind==='area'&&HC.cv.isConnected)HC.draw(now,dt)}requestAnimationFrame(frame)}
